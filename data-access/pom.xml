@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.lazydog.data.access</groupId>
         <artifactId>data-access-parent</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>data-access</artifactId>
     <packaging>jar</packaging>
