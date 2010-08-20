@@ -14,7 +14,7 @@ import javax.persistence.Query;
  */
 public abstract class AbstractDataAccessObject implements DataAccessObject {
 
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     /**
      * Find the entity.
