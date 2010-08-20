@@ -47,7 +47,7 @@ public interface DataAccessObject {
     /**
      * Persist the entity.
      *
-     * @param  the entity.
+     * @param  entity  the entity.
      *
      * @return  the persisted entity.
      */
@@ -56,7 +56,7 @@ public interface DataAccessObject {
     /**
      * Persist the list of entities.
      *
-     * @param  the entities.
+     * @param  entities  the entities.
      *
      * @return  the persisted list of entities.
      */

@@ -22,7 +22,7 @@ public class Order {
     /**
      * Descending order.
      * 
-     * @param  property  the property.
+     * @param  operand  the operand.
      * 
      * @return  the resulting criterion.
      */
@@ -33,8 +33,8 @@ public class Order {
     /**
      * Order.
      * 
-     * @param  order    the order direction.
-     * @param  operand  the operand.
+     * @param  orderDirection  the order direction.
+     * @param  operand         the operand.
      * 
      * @return  the resulting criterion.
      */
