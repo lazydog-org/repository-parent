@@ -12,7 +12,7 @@ import javax.persistence.Query;
  * 
  * @author  Ron Rickard
  */
-public class AbstractDataAccessObject implements DataAccessObject {
+public abstract class AbstractDataAccessObject implements DataAccessObject {
 
     private EntityManager entityManager;
 
@@ -226,4 +226,11 @@ public class AbstractDataAccessObject implements DataAccessObject {
             this.remove(entity);
         }
     }
+
+    /**
+     * Set the entity manager.
+     *
+     * @param  entityManager  the entity manager.
+     */
+    public abstract void setEntityManager(EntityManager entityManager);
 }
