@@ -79,7 +79,7 @@ public interface DataAccessObject {
     /**
      * Remove the list of entities.
      *
-     * @param  the entities.
+     * @param  entities  the entities.
      */
     public <T> void removeList(List<T> entities);
 }

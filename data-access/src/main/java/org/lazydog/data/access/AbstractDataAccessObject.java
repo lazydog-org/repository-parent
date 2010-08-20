@@ -214,7 +214,7 @@ public abstract class AbstractDataAccessObject implements DataAccessObject {
     /**
      * Remove the list of entities.
      *
-     * @param  the entities.
+     * @param  entities  the entities.
      */
     @Override
     public <T> void removeList(List<T> entities) {
