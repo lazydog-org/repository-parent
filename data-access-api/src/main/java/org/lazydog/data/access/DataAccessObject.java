@@ -13,7 +13,8 @@ public interface DataAccessObject {
     /**
      * Find the entity.
      *
-     * @param  id  the ID.
+     * @param  entityClass  the entity class.
+     * @param  id           the ID.
      *
      * @return  the entity.
      */
@@ -22,14 +23,17 @@ public interface DataAccessObject {
     /**
      * Find the entity.
      *
-     * @param  criteria  the criteria.
+     * @param  entityClass  the entity class.
+     * @param  criteria     the criteria.
      *
      * @return  the entity.
      */
-    public <T> T find(Criteria<T> criteria);
+    public <T> T find(Class<T> entityClass, Criteria<T> criteria);
 
     /**
      * Find the list of entities.
+     *
+     * @param  entityClass  the entity class.
      *
      * @return  the list of entities.
      */
@@ -38,11 +42,21 @@ public interface DataAccessObject {
     /**
      * Find the list of entities.
      *
-     * @param  criteria  the criteria.
-     *
+     * @param  entityClass  the entity class.
+     * @param  criteria     the criteria.
+     * 
      * @return  the list of entities.
      */
-    public <T> List<T> findList(Criteria<T> criteria);
+    public <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria);
+
+    /**
+     * Get the criteria.
+     * 
+     * @param  entityClass  the entity class.
+     * 
+     * @return  the criteria.
+     */
+    public <T> Criteria<T> getCriteria(Class<T> entityClass);
 
     /**
      * Persist the entity.
@@ -72,7 +86,8 @@ public interface DataAccessObject {
     /**
      * Remove the entity.
      *
-     * @param  id  the ID.
+     * @param  entityClass  the entity class.
+     * @param  id           the ID.
      */
     public <T> void remove(Class<T> entityClass, Integer id);
 
@@ -82,4 +97,12 @@ public interface DataAccessObject {
      * @param  entities  the entities.
      */
     public <T> void removeList(List<T> entities);
+
+    /**
+     * Remove the entities specified by the list of IDs.
+     *
+     * @param  entityClass  the entity class.
+     * @param  ids          the IDs.
+     */
+    public <T> void removeList(Class<T> entityClass, List<Integer> ids);
 }
