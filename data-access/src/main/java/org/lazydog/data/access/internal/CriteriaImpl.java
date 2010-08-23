@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
 import org.lazydog.data.access.Criteria;
 import org.lazydog.data.access.criterion.Criterion;
 
@@ -30,14 +33,15 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @param  entityClass  the entity class.
      */
-    public CriteriaImpl(Class<T> entityClass) {
+    public CriteriaImpl(Class<T> entityClass, EntityManager entityManager) {
 
         // Declare.
         String entityName;
+        EntityType<T> entityType;
 
         // Get the entity name.
         entityName = entityClass.getSimpleName();
-        
+
         // Get the entity alias.
         this.entityAlias = entityName.toLowerCase();
 
@@ -49,6 +53,29 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                            .append(entityName)
                            .append(" ")
                            .append(this.entityAlias);
+
+        // Get the metamodel entity type.
+        entityType = entityManager.getMetamodel().entity(entityClass);
+
+        // Loop through the attributes.
+        for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {
+
+            // Check if the persistent attribute type is many-to-many, many-to-one,
+            // one-to-many, or one-to-one.
+            if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
+                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
+                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
+                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE) {
+
+                // Add the LEFT JOIN FETCH-clause to the query language string.
+                this.qlStringBuffer.append(" left join fetch ")
+                                   .append(this.entityAlias)
+                                   .append(".")
+                                   .append(attribute.getName());
+            }
+        }
+
+        // Initialize the orders string.
         this.ordersStringBuffer = new StringBuffer();
         
         // Initialize the parameters.
@@ -218,7 +245,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @param  criterion  the restriction criterion.
      *
-     * @return  true if the order criterion is processed, otherwise false.
+     * @return  true if the restriction criterion is processed, otherwise false.
      */
     private boolean processRestriction(Criterion criterion) {
 

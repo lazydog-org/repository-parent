@@ -20,6 +20,7 @@ public class CriteriaFactoryImpl extends CriteriaFactory {
      */
     @Override
     public <T> Criteria<T> createCriteria(Class<T> entityClass) {
-        return new CriteriaImpl<T>(entityClass);
+        //return new CriteriaImpl<T>(entityClass);
+        return null;
     }
 }

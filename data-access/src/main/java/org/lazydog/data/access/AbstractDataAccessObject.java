@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import org.lazydog.data.access.internal.CriteriaImpl;
 
 
 /**
@@ -14,13 +15,40 @@ import javax.persistence.Query;
  */
 public abstract class AbstractDataAccessObject implements DataAccessObject {
 
-    protected EntityManager entityManager;
+    private EntityManager entityManager;
+
+    /**
+     * Create the query from the criteria.
+     *
+     * @param  entityClass  the entity class.
+     * @param  criteria     the criteria.
+     * 
+     * @return  the query.
+     */
+    private <T> TypedQuery<T> createQuery(Class<T> entityClass, Criteria<T> criteria) {
+
+        // Declare.
+        TypedQuery<T> query;
+
+        // Create the query from the criteria query language string.
+        query = this.entityManager.createQuery(criteria.getQlString(), entityClass);
+
+        // Loop through the parameters.
+        for(String key : criteria.getParameters().keySet()) {
+
+            // Set the query parameters.
+            query.setParameter(key, criteria.getParameters().get(key));
+        }
+
+        return query;
+    }
 
     /**
      * Find the entity.
      *
-     * @param  id  the ID.
-     *
+     * @param  entityClass  the entity class.
+     * @param  id           the ID.
+     * 
      * @return  the entity.
      */
     @Override
@@ -31,112 +59,67 @@ public abstract class AbstractDataAccessObject implements DataAccessObject {
     /**
      * Find the entity.
      *
-     * @param  criteria  the criteria.
+     * @param  entityClass  the entity class.
+     * @param  criteria     the criteria.
      * 
      * @return  the entity.
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T find(Criteria<T> criteria) {
+    public <T> T find(Class<T> entityClass, Criteria<T> criteria) {
 
         // Declare.
-        T result;
+        T entity;
 
         // Initialize.
-        result = null;
+        entity = null;
         
         try {
 
-            // Declare.
-            Query query;
-
-            // Create the query.
-            query = this.entityManager.createQuery(
-                    criteria.getQlString());
-
-            // Loop through the parameters.
-            for(String key : criteria.getParameters().keySet()) {
-
-                // Set the query parameters.
-                query.setParameter(
-                        key, criteria.getParameters().get(key));
-            }
-
-            // Get the query result.
-            result = (T)query.getSingleResult();
+            // Get the entity.
+            entity = this.createQuery(entityClass, criteria).getSingleResult();
         }
         catch(NoResultException e) {
             // Ignore.
         }
 
-        return result;
+        return entity;
     }
 
     /**
      * Find the list of entities.
      *
-     * @return  the list of entities.
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> List<T> findList(Class<T> entityClass) {
-
-        // Declare.
-        List<T> entities;
-        Query query;
-
-        // Create the named query.
-        query = this.entityManager.createNamedQuery(
-            entityClass.getSimpleName() + ".findAll");
-
-        // Get the query result.
-        entities = query.getResultList();
-
-        return entities;
-    }
-
-    /**
-     * Find the list of entities.
-     *
-     * @param  criteria  the criteria.
+     * @param  entityClass  the entity class.
      * 
      * @return  the list of entities.
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> List<T> findList(Criteria<T> criteria) {
+    public <T> List<T> findList(Class<T> entityClass) {
+        return this.findList(entityClass, this.getCriteria(entityClass));
+    }
 
-        // Declare.
-        List<T> entities;
-        Query query;
-        List result;
+    /**
+     * Find the list of entities.
+     *
+     * @param  entityClass  the entity class.
+     * @param  criteria     the criteria.
+     *
+     * @return  the list of entities.
+     */
+    @Override
+    public <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria) {
+        return this.createQuery(entityClass, criteria).getResultList();
+    }
 
-        // Initialize.
-        entities = null;
-
-        // Create the query.
-        query = this.entityManager.createQuery(
-                criteria.getQlString());
-
-        // Loop through the parameters.
-        for(String key : criteria.getParameters().keySet()) {
-
-            // Set the query parameters.
-            query.setParameter(
-                    key, criteria.getParameters().get(key));
-        }
-
-        // Get the query result.
-        result = query.getResultList();
-
-        // Check if the result is not null.
-        if (result != null) {
-
-            // Convert the result.
-            entities = new ArrayList<T>(result);
-        }
-        
-        return entities;
+    /**
+     * Get the criteria.
+     *
+     * @param  entityClass  the entity class.
+     *
+     * @return  the criteria.
+     */
+    @Override
+    public <T> Criteria<T> getCriteria(Class<T> entityClass) {
+        return new CriteriaImpl<T>(entityClass, this.entityManager);
     }
 
     /**
@@ -194,9 +177,10 @@ public abstract class AbstractDataAccessObject implements DataAccessObject {
     }
 
     /**
-     * Remove the entity.
+     * Remove the entity specified by ID.
      *
-     * @param  id  the ID.
+     * @param  entityClass  the entity class.
+     * @param  id           the ID.
      */
     @Override
     public <T> void remove(Class<T> entityClass, Integer id) {
@@ -228,9 +212,28 @@ public abstract class AbstractDataAccessObject implements DataAccessObject {
     }
 
     /**
+     * Remove the entities specified by the list of IDs.
+     *
+     * @param  entityClass  the entity class.
+     * @param  ids          the IDs.
+     */
+    @Override
+    public <T> void removeList(Class<T> entityClass, List<Integer> ids) {
+
+        // Loop through the IDs.
+        for (Integer id: ids) {
+
+            // Remove the entity.
+            this.remove(entityClass, id);
+        }
+    }
+
+    /**
      * Set the entity manager.
      *
      * @param  entityManager  the entity manager.
      */
-    public abstract void setEntityManager(EntityManager entityManager);
+    protected void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }
