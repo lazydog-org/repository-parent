@@ -31,13 +31,14 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     /**
      * Constructor.
      *
-     * @param  entityClass  the entity class.
+     * @param  entityClass    the entity class.
+     * @param  entityManager  the entity manager.
      */
     public CriteriaImpl(Class<T> entityClass, EntityManager entityManager) {
 
         // Declare.
         String entityName;
-        //EntityType<T> entityType;
+        List<String> leftJoinFetchClauses;
 
         // Get the entity name.
         entityName = entityClass.getSimpleName();
@@ -45,15 +46,56 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Get the entity alias.
         this.entityAlias = entityName.toLowerCase();
 
+        // Get the LEFT JOIN FETCH-clauses.
+        leftJoinFetchClauses = getLeftJoinFetchClauses(entityClass, entityManager, this.entityAlias);
+
         // Initialize the query language string.
         this.qlStringBuffer = new StringBuffer();
         this.qlStringBuffer.append("select ")
+                           .append((leftJoinFetchClauses.size() > 0) ? "distinct " : "")
                            .append(this.entityAlias)
                            .append(" from ")
                            .append(entityName)
                            .append(" ")
                            .append(this.entityAlias);
-/*
+
+        // Loop through the LEFT JOIN FETCH-clauses.
+        for (String leftJoinFetchClause : leftJoinFetchClauses) {
+
+            // Add the LEFT JOIN FETCH-clause to the query language string.
+            this.qlStringBuffer.append(leftJoinFetchClause);
+        }
+
+        // Initialize the orders string.
+        this.ordersStringBuffer = new StringBuffer();
+        
+        // Initialize the parameters.
+        this.parameters = new LinkedHashMap<String, Object>();
+
+        // Initialize the orders and restrictions.
+        this.orders = new ArrayList<Criterion>();
+        this.restrictions = new ArrayList<Criterion>();
+    }
+
+    /**
+     * Get the LEFT JOIN FETCH-clauses.
+     *
+     * @param  entityClass    the entity class.
+     * @param  entityManager  the entity manager.
+     * @param  entityAlias    the entity alias.
+     *
+     * @return  the LEFT JOIN FETCH-clauses.
+     */
+    private static <T> List<String> getLeftJoinFetchClauses(
+            Class<T> entityClass, EntityManager entityManager, String entityAlias) {
+
+        // Declare.
+        EntityType<T> entityType;
+        List<String> leftJoinFetchClauses;
+
+        // Initialize.
+        leftJoinFetchClauses = new ArrayList<String>();
+
         // Get the metamodel entity type.
         entityType = entityManager.getMetamodel().entity(entityClass);
 
@@ -67,23 +109,25 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE) {
 
-                // Add the LEFT JOIN FETCH-clause to the query language string.
-                this.qlStringBuffer.append(" left join fetch ")
-                                   .append(this.entityAlias)
+                // Declare.
+                StringBuffer leftJoinFetchClause;
+
+                // Initialize.
+                leftJoinFetchClause = new StringBuffer();
+
+                // Create the LEFT JOIN FETCH-clause.
+                leftJoinFetchClause.append(" left join fetch ")
+                                   .append(entityAlias)
                                    .append(".")
                                    .append(attribute.getName());
+
+                // Add the LEFT JOIN FETCH-clause to the list.
+                leftJoinFetchClauses.add(leftJoinFetchClause.toString());
+
             }
         }
-*/
-        // Initialize the orders string.
-        this.ordersStringBuffer = new StringBuffer();
-        
-        // Initialize the parameters.
-        this.parameters = new LinkedHashMap<String, Object>();
 
-        // Initialize the orders and restrictions.
-        this.orders = new ArrayList<Criterion>();
-        this.restrictions = new ArrayList<Criterion>();
+        return leftJoinFetchClauses;
     }
 
     /**

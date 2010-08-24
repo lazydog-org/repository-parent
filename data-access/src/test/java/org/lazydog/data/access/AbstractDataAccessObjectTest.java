@@ -29,8 +29,14 @@ import org.lazydog.addressbook.model.State;
 public class AbstractDataAccessObjectTest {
 
     private static final String ADDRESS_BOOK_SEED = "org/lazydog/addressbook/data/addressbook-seed.xml";
+    //private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    //private static final String JDBC_PASSWORD = "tek.book";
+    //private static final String JDBC_URL = "jdbc:mysql://localhost:3306/addressbook";
+    //private static final String JDBC_USER = "rjrjr";
     private static final String JDBC_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String JDBC_URL = "jdbc:derby:addressbook;user=addressbookuser";
+    private static final String JDBC_URL = "jdbc:derby:addressbook";
+    private static final String JDBC_USER = "addressbookuser";
+    private static final String JDBC_PASSWORD = "addressbookuser";
 
     private static AddressBookDataAccessObject dao;
     private static DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
@@ -57,9 +63,6 @@ public class AbstractDataAccessObjectTest {
         addresses = dao.findList(Address.class);
         endTime = new Date();
         System.out.println(addresses.size() + " addresses retrieved in " + duration(startTime, endTime) + " seconds");
-        for (Address address : addresses) {
-            System.out.println(address);
-        }
     }
 
     @Test
@@ -73,9 +76,6 @@ public class AbstractDataAccessObjectTest {
         employees = dao.findList(Employee.class);
         endTime = new Date();
         System.out.println(employees.size() + " employees retrieved in " + duration(startTime, endTime) + " seconds");
-        //for (Employee employee : employees) {
-        //    System.out.println(employee);
-        //}
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AbstractDataAccessObjectTest {
 
         Class.forName(JDBC_DRIVER);
 
-        return new DatabaseConnection(DriverManager.getConnection(JDBC_URL));
+        return new DatabaseConnection(DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD));
     }
 
     private static IDataSet getDataSet()

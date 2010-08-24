@@ -2,9 +2,8 @@ package org.lazydog.addressbook.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
 import javax.persistence.Column;
-import javax.persistence.FetchType;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,7 +18,10 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Employee {
 
-    @ManyToMany(mappedBy="employees", fetch=FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name="EMPLOYEE_ADDRESS",
+        joinColumns=@JoinColumn(name="EMPLOYEE_ID", referencedColumnName="ID", columnDefinition="INTEGER"),
+        inverseJoinColumns=@JoinColumn(name="ADDRESS_ID", referencedColumnName="ID", columnDefinition="INTEGER"))
     private List<Address> addresses = new ArrayList<Address>();
     @Column(name="FIRST_NAME", nullable=false)
     private String firstName;

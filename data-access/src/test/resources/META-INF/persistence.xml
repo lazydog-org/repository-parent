@@ -12,6 +12,12 @@
         <class>org.lazydog.addressbook.model.Employee</class>
         <class>org.lazydog.addressbook.model.State</class>
         <properties>
+            <!--
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/addressbook"/>
+            <property name="javax.persistence.jdbc.user" value="rjrjr"/>
+            <property name="javax.persistence.jdbc.password" value="tek.book"/>
+            -->
             <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:derby:addressbook;create=true"/>
             <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
