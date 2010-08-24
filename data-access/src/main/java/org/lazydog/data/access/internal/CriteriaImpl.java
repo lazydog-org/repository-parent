@@ -37,7 +37,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
         // Declare.
         String entityName;
-        EntityType<T> entityType;
+        //EntityType<T> entityType;
 
         // Get the entity name.
         entityName = entityClass.getSimpleName();
@@ -53,7 +53,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                            .append(entityName)
                            .append(" ")
                            .append(this.entityAlias);
-
+/*
         // Get the metamodel entity type.
         entityType = entityManager.getMetamodel().entity(entityClass);
 
@@ -74,7 +74,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                                    .append(attribute.getName());
             }
         }
-
+*/
         // Initialize the orders string.
         this.ordersStringBuffer = new StringBuffer();
         

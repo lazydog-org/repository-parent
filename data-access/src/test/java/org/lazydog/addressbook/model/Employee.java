@@ -19,16 +19,13 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Employee {
 
-    @ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="employee_address",
-        joinColumns=@JoinColumn(name="employee_id", referencedColumnName="id", columnDefinition="INTEGER"),
-        inverseJoinColumns=@JoinColumn(name="address_id", referencedColumnName="id", columnDefinition="INTEGER"))
+    @ManyToMany(mappedBy="employees", fetch=FetchType.LAZY)
     private List<Address> addresses = new ArrayList<Address>();
-    @Column(nullable=false)
+    @Column(name="FIRST_NAME", nullable=false)
     private String firstName;
     @Id
     private Integer id;
-    @Column(nullable=false)
+    @Column(name="LAST_NAME", nullable=false)
     private String lastName;
 
     /**
@@ -101,5 +98,26 @@ public class Employee {
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    /**
+     * Get this object as a string.
+     *
+     * @return  this object as a string.
+     */
+    @Override
+    public String toString() {
+
+        StringBuffer buffer;
+
+        buffer = new StringBuffer();
+        buffer.append("Employee = [");
+        buffer.append("id = " + this.id).append(",");
+        buffer.append("firstName = " + this.firstName).append(",");
+        buffer.append("lastName = " + this.lastName).append(",");
+        buffer.append("addresses = " + this.addresses);
+        buffer.append("]");
+
+        return buffer.toString();
     }
 }

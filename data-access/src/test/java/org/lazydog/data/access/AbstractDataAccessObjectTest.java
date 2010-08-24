@@ -47,7 +47,22 @@ public class AbstractDataAccessObjectTest {
     }
 
     @Test
-    @Ignore
+    public void findListAddress() {
+
+        Date endTime;
+        Date startTime;
+        List<Address> addresses;
+
+        startTime = new Date();
+        addresses = dao.findList(Address.class);
+        endTime = new Date();
+        System.out.println(addresses.size() + " addresses retrieved in " + duration(startTime, endTime) + " seconds");
+        for (Address address : addresses) {
+            System.out.println(address);
+        }
+    }
+
+    @Test
     public void findListEmployee() {
 
         Date endTime;
@@ -58,6 +73,9 @@ public class AbstractDataAccessObjectTest {
         employees = dao.findList(Employee.class);
         endTime = new Date();
         System.out.println(employees.size() + " employees retrieved in " + duration(startTime, endTime) + " seconds");
+        //for (Employee employee : employees) {
+        //    System.out.println(employee);
+        //}
     }
 
     @Test

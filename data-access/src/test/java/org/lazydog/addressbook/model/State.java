@@ -73,4 +73,24 @@ public class State {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Get this object as a string.
+     *
+     * @return  this object as a string.
+     */
+    @Override
+    public String toString() {
+
+        StringBuffer buffer;
+
+        buffer = new StringBuffer();
+        buffer.append("State = [");
+        buffer.append("id = " + this.id).append(",");
+        buffer.append("name = " + this.name).append(",");
+        buffer.append("code = " + this.code);
+        buffer.append("]");
+
+        return buffer.toString();
+    }
 }
