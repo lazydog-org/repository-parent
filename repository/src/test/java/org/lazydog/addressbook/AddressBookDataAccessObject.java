@@ -1,7 +1,7 @@
 package org.lazydog.addressbook;
 
 import javax.persistence.Persistence;
-import org.lazydog.data.access.AbstractDataAccessObject;
+import org.lazydog.repository.AbstractRepository;
 
 
 /**
@@ -9,7 +9,7 @@ import org.lazydog.data.access.AbstractDataAccessObject;
  *
  * @author  Ron Rickard
  */
-public class AddressBookDataAccessObject extends AbstractDataAccessObject {
+public class AddressBookDataAccessObject extends AbstractRepository {
 
     public AddressBookDataAccessObject () {
         this.setEntityManager(Persistence.createEntityManagerFactory("AddressBookPU").createEntityManager());

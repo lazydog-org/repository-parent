@@ -1,4 +1,4 @@
-package org.lazydog.data.access.internal;
+package org.lazydog.repository.internal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
-import org.lazydog.data.access.Criteria;
-import org.lazydog.data.access.criterion.Criterion;
+import org.lazydog.repository.Criteria;
+import org.lazydog.repository.criterion.Criterion;
 
 
 /**

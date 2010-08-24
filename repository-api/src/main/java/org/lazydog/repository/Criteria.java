@@ -1,8 +1,8 @@
-package org.lazydog.data.access;
+package org.lazydog.repository;
 
 import java.util.List;
 import java.util.Map;
-import org.lazydog.data.access.criterion.Criterion;
+import org.lazydog.repository.criterion.Criterion;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.lazydog.data.access.criterion;
+package org.lazydog.repository.criterion;
 
 import java.io.Serializable;
 

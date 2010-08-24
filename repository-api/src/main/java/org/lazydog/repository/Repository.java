@@ -1,14 +1,14 @@
-package org.lazydog.data.access;
+package org.lazydog.repository;
 
 import java.util.List;
 
 
 /**
- * Data access object.
+ * Repository.
  *
  * @author  Ron Rickard
  */
-public interface DataAccessObject {
+public interface Repository {
 
     /**
      * Find the entity.

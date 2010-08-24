@@ -1,5 +1,6 @@
-package org.lazydog.data.access;
+package org.lazydog.repository;
 
+import org.lazydog.repository.AbstractRepository;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -23,10 +24,11 @@ import org.lazydog.addressbook.model.State;
 
 
 /**
- *
+ * Abstract repository test.
+ * 
  * @author  Ron Rickard
  */
-public class AbstractDataAccessObjectTest {
+public class AbstractRepositoryTest {
 
     private static final String ADDRESS_BOOK_SEED = "org/lazydog/addressbook/data/addressbook-seed.xml";
     //private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -101,7 +103,7 @@ public class AbstractDataAccessObjectTest {
 
     private static IDataSet getDataSet()
             throws DataSetException {
-        return new XmlDataSet(AbstractDataAccessObject.class.getClassLoader().getResourceAsStream(ADDRESS_BOOK_SEED));
+        return new XmlDataSet(AbstractRepository.class.getClassLoader().getResourceAsStream(ADDRESS_BOOK_SEED));
     }
 
     private static void setupDatabase()

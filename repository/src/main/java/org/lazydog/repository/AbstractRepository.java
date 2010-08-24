@@ -1,19 +1,19 @@
-package org.lazydog.data.access;
+package org.lazydog.repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import org.lazydog.data.access.internal.CriteriaImpl;
+import org.lazydog.repository.internal.CriteriaImpl;
 
 
 /**
- * Abstract data access object implemented using the Java Persistence API.
+ * Abstract repository implemented using the Java Persistence API.
  * 
  * @author  Ron Rickard
  */
-public abstract class AbstractDataAccessObject implements DataAccessObject {
+public abstract class AbstractRepository implements Repository {
 
     private EntityManager entityManager;
 
