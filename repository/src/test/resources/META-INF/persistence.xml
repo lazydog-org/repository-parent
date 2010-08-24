@@ -19,7 +19,7 @@
             <property name="javax.persistence.jdbc.password" value="tek.book"/>
             -->
             <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:derby:addressbook;create=true"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby:./target/addressbook;create=true"/>
             <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
             <property name="javax.persistence.jdbc.password" value="addressbookuser"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>

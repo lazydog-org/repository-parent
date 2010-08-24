@@ -1,6 +1,5 @@
 package org.lazydog.repository;
 
-import org.lazydog.repository.AbstractRepository;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -15,7 +14,6 @@ import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.DatabaseUnitException;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.lazydog.addressbook.AddressBookDataAccessObject;
 import org.lazydog.addressbook.model.Address;
@@ -36,7 +34,7 @@ public class AbstractRepositoryTest {
     //private static final String JDBC_URL = "jdbc:mysql://localhost:3306/addressbook";
     //private static final String JDBC_USER = "rjrjr";
     private static final String JDBC_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String JDBC_URL = "jdbc:derby:addressbook";
+    private static final String JDBC_URL = "jdbc:derby:./target/addressbook";
     private static final String JDBC_USER = "addressbookuser";
     private static final String JDBC_PASSWORD = "addressbookuser";
 
@@ -46,6 +44,8 @@ public class AbstractRepositoryTest {
     @BeforeClass
     public static void initialize() throws Exception {
 
+        // Ensure the derby.log file is in the target directory.
+        System.setProperty("derby.system.home", "./target");
         dao = new AddressBookDataAccessObject();
         setupDatabase();
     }
