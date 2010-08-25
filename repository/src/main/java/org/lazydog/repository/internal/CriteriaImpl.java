@@ -102,11 +102,9 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Loop through the attributes.
         for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {
 
-            // Check if the persistent attribute type is many-to-many, many-to-one,
-            // one-to-many, or one-to-one.
-            if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
+            // Check if the persistent attribute type is many-to-one
+            // or one-to-one.
+            if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE) {
 
                 // Declare.
