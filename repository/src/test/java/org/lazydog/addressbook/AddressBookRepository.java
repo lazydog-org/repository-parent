@@ -5,13 +5,13 @@ import org.lazydog.repository.AbstractRepository;
 
 
 /**
- * Address book data access object.
+ * Address book repository.
  *
  * @author  Ron Rickard
  */
-public class AddressBookDataAccessObject extends AbstractRepository {
+public class AddressBookRepository extends AbstractRepository {
 
-    public AddressBookDataAccessObject () {
+    public AddressBookRepository () {
         this.setEntityManager(Persistence.createEntityManagerFactory("AddressBookPU").createEntityManager());
     }
 }

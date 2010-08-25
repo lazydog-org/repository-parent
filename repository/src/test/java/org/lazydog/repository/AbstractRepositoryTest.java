@@ -15,7 +15,7 @@ import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.DatabaseUnitException;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.lazydog.addressbook.AddressBookDataAccessObject;
+import org.lazydog.addressbook.AddressBookRepository;
 import org.lazydog.addressbook.model.Address;
 import org.lazydog.addressbook.model.Employee;
 import org.lazydog.addressbook.model.State;
@@ -37,16 +37,16 @@ public class AbstractRepositoryTest {
     private static final String JDBC_URL = "jdbc:derby:./target/addressbook";
     private static final String JDBC_USER = "addressbookuser";
     private static final String JDBC_PASSWORD = "addressbookuser";
+    private static final DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
 
-    private static AddressBookDataAccessObject dao;
-    private static DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
-
+    private static AddressBookRepository repository;
+    
     @BeforeClass
     public static void initialize() throws Exception {
 
         // Ensure the derby.log file is in the target directory.
         System.setProperty("derby.system.home", "./target");
-        dao = new AddressBookDataAccessObject();
+        repository = new AddressBookRepository();
         setupDatabase();
     }
 
@@ -62,9 +62,10 @@ public class AbstractRepositoryTest {
         List<Address> addresses;
 
         startTime = new Date();
-        addresses = dao.findList(Address.class);
+        addresses = repository.findList(Address.class);
         endTime = new Date();
-        System.out.println(addresses.size() + " addresses retrieved in " + duration(startTime, endTime) + " seconds");
+        System.out.println(addresses.size() + " addresses retrieved in "
+                + duration(startTime, endTime) + " seconds");
     }
 
     @Test
@@ -75,9 +76,10 @@ public class AbstractRepositoryTest {
         List<Employee> employees;
 
         startTime = new Date();
-        employees = dao.findList(Employee.class);
+        employees = repository.findList(Employee.class);
         endTime = new Date();
-        System.out.println(employees.size() + " employees retrieved in " + duration(startTime, endTime) + " seconds");
+        System.out.println(employees.size()  + " employees retrieved in "
+                + duration(startTime, endTime) + " seconds");
     }
 
     @Test
@@ -88,9 +90,10 @@ public class AbstractRepositoryTest {
         List<State> states;
 
         startTime = new Date();
-        states = dao.findList(State.class);
+        states = repository.findList(State.class);
         endTime = new Date();
-        System.out.println(states.size() + " states retrieved in " + duration(startTime, endTime) + " seconds");
+        System.out.println(states.size() + " states retrieved in "
+                + duration(startTime, endTime) + " seconds");
     }
 
     private static IDatabaseConnection getConnection()
