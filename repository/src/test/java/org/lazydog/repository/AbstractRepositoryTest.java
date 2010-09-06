@@ -10,7 +10,6 @@ import org.lazydog.addressbook.model.Address1;
 import org.lazydog.addressbook.model.Address2;
 import org.lazydog.repository.criterion.ComparisonOperation;
 import org.lazydog.repository.criterion.LogicalOperation;
-import org.lazydog.repository.internal.CriteriaImpl;
 
 
 /**
