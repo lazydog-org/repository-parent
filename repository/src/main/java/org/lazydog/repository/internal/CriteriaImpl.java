@@ -33,12 +33,24 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @param  entityClass    the entity class.
      * @param  entityManager  the entity manager.
+     *
+     * @throws  IllegalArgumentException  if the entity class or entity manager are invalid.
      */
     public CriteriaImpl(Class<T> entityClass, EntityManager entityManager) {
 
         // Declare.
         String entityName;
         List<String> leftJoinFetchClauses;
+
+        // Check if the entity class is null.
+        if (entityClass == null) {
+            throw new IllegalArgumentException("The entity class is invalid.");
+        }
+
+        // Check if the entity manager is null.
+        if (entityManager == null) {
+            throw new IllegalArgumentException("The entity manager is invalid.");
+        }
 
         // Get the entity name.
         entityName = entityClass.getSimpleName();

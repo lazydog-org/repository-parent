@@ -24,11 +24,23 @@ public abstract class AbstractRepository implements Repository {
      * @param  criteria     the criteria.
      * 
      * @return  the query.
+     *
+     * @throws  IllegalArgumentException  if the entity class or criteria are invalid.
      */
     private <T> TypedQuery<T> createQuery(Class<T> entityClass, Criteria<T> criteria) {
 
         // Declare.
         TypedQuery<T> query;
+
+        // Check if the entity class is null.
+        if (entityClass == null) {
+            throw new IllegalArgumentException("The entity class is invalid.");
+        }
+
+        // Check if the criteria is null.
+        if (criteria == null) {
+            throw new IllegalArgumentException("The criteria is invalid.");
+        }
 
         // Create the query from the criteria query language string.
         query = this.entityManager.createQuery(criteria.getQlString(), entityClass);
@@ -123,6 +135,15 @@ public abstract class AbstractRepository implements Repository {
     }
 
     /**
+     * Get the entity manager.
+     * 
+     * @return  the entity manager.
+     */
+    protected EntityManager getEntityManager() {
+        return this.entityManager;
+    }
+
+    /**
      * Persist the entity.
      *
      * @param  entity  the entity.
@@ -131,7 +152,15 @@ public abstract class AbstractRepository implements Repository {
      */
     @Override
     public <T> T persist(T entity) {
-        return this.entityManager.merge(entity);
+
+        // Declare.
+        T persistedEntity;
+
+        // Persist the entity.
+        persistedEntity = this.entityManager.merge(entity);
+        this.entityManager.flush();
+
+        return persistedEntity;
     }
 
     /**
@@ -167,16 +196,6 @@ public abstract class AbstractRepository implements Repository {
     }
 
     /**
-     * Remove the entity.
-     *
-     * @param  entity  the entity.
-     */
-    @Override
-    public <T> void remove(T entity) {
-        this.entityManager.remove(entity);
-    }
-
-    /**
      * Remove the entity specified by ID.
      *
      * @param  entityClass  the entity class.
@@ -193,22 +212,6 @@ public abstract class AbstractRepository implements Repository {
 
         // Remove the entity.
         this.entityManager.remove(entity);
-    }
-
-    /**
-     * Remove the list of entities.
-     *
-     * @param  entities  the entities.
-     */
-    @Override
-    public <T> void removeList(List<T> entities) {
-
-        // Loop through the entities.
-        for (T entity : entities) {
-
-            // Remove the entity.
-            this.remove(entity);
-        }
     }
 
     /**

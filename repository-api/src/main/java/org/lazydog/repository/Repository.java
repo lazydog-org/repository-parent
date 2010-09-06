@@ -79,24 +79,10 @@ public interface Repository {
     /**
      * Remove the entity.
      *
-     * @param  entity  the entity.
-     */
-    public <T> void remove(T entity);
-
-    /**
-     * Remove the entity.
-     *
      * @param  entityClass  the entity class.
      * @param  id           the ID.
      */
     public <T> void remove(Class<T> entityClass, Integer id);
-
-    /**
-     * Remove the list of entities.
-     *
-     * @param  entities  the entities.
-     */
-    public <T> void removeList(List<T> entities);
 
     /**
      * Remove the entities specified by the list of IDs.

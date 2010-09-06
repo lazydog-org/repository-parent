@@ -8,22 +8,14 @@
         
     <persistence-unit name="AddressBookPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>org.lazydog.addressbook.model.Address</class>
-        <class>org.lazydog.addressbook.model.Employee</class>
-        <class>org.lazydog.addressbook.model.State</class>
+        <class>org.lazydog.addressbook.model.Address1</class>
         <properties>
-            <!--
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/addressbook"/>
-            <property name="javax.persistence.jdbc.user" value="rjrjr"/>
-            <property name="javax.persistence.jdbc.password" value="tek.book"/>
-            -->
             <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:derby:./target/addressbook;create=true"/>
             <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
             <property name="javax.persistence.jdbc.password" value="addressbookuser"/>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.logging.level" value="WARNING"/>
         </properties>
     </persistence-unit>
 </persistence>
