@@ -28,7 +28,7 @@ public interface Criteria<T> {
      *
      * @return  the criteria.
      */
-    public Criteria<T> add(List<Criterion> criterions) ;
+    public Criteria<T> add(List<Criterion> criterions);
 
     /**
      * Add a order criterion.
