@@ -341,24 +341,24 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" = ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case GREATER_THAN:
                     this.qlStringBuffer.append(this.entityAlias)
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" > ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case GREATER_THAN_OR_EQUAL:
                     this.qlStringBuffer.append(this.entityAlias)
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" >= ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case IS_EMPTY:
                     this.qlStringBuffer.append(this.entityAlias)
@@ -389,28 +389,28 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" < ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case LESS_THAN_OR_EQUAL:
                     this.qlStringBuffer.append(this.entityAlias)
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" <= ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case LIKE:
                     this.qlStringBuffer.append(this.entityAlias)
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" like ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case MEMBER_OF:
-                    this.qlStringBuffer.append(":param" +
-                                               (this.parameters.size() + 1))
+                    this.qlStringBuffer.append(":param")
+                                       .append(this.parameters.size() + 1)
                                        .append(" member of ")
                                        .append(this.entityAlias)
                                        .append(".")
@@ -421,20 +421,20 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" <> ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case NOT_LIKE:
                     this.qlStringBuffer.append(this.entityAlias)
                                        .append(".")
                                        .append(criterion.getOperand())
                                        .append(" not like ")
-                                       .append(":param" +
-                                               (this.parameters.size() + 1));
+                                       .append(":param")
+                                       .append(this.parameters.size() + 1);
                     break;
                 case NOT_MEMBER_OF:
-                    this.qlStringBuffer.append(":param" +
-                                               (this.parameters.size() + 1))
+                    this.qlStringBuffer.append(":param")
+                                       .append(this.parameters.size() + 1)
                                        .append(" not member of ")
                                        .append(this.entityAlias)
                                        .append(".")
@@ -456,5 +456,25 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         }
 
         return processed;
+    }
+
+    /**
+     * Check if an order criterion exists.
+     *
+     * @return  true if an order criterion exists, otherwise false.
+     */
+    @Override
+    public boolean orderExists() {
+        return !this.orders.isEmpty();
+    }
+
+    /**
+     * Check if a restriction criterion exists.
+     *
+     * @return  true if a restriction criterion exists, otherwise false.
+     */
+    @Override
+    public boolean restrictionExists() {
+        return !this.restrictions.isEmpty();
     }
 }

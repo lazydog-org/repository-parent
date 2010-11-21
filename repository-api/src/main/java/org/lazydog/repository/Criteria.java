@@ -38,6 +38,7 @@ public interface Criteria<T> {
      * @return  the criteria.
      */
     public Criteria<T> addOrder(Criterion criterion);
+
     /**
      * Add order criterions.
      *
@@ -60,4 +61,18 @@ public interface Criteria<T> {
      * @return  the query language string.
      */
     public String getQlString();
+
+    /**
+     * Check if an order criterion exists.
+     *
+     * @return  true if an order criterion exists, otherwise false.
+     */
+    public boolean orderExists();
+
+    /**
+     * Check if a restriction criterion exists.
+     *
+     * @return  true if a restriction criterion exists, otherwise false.
+     */
+    public boolean restrictionExists();
 }
