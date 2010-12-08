@@ -222,7 +222,6 @@ public class AbstractRepositoryTest {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
-        repository.remove(Address2.class, persistedAddress1.getId());
-        
+        repository.remove(Address2.class, persistedAddress1.getId());    
     }
 }

@@ -31,6 +31,24 @@ public interface Criteria<T> {
     public Criteria<T> add(List<Criterion> criterions);
 
     /**
+     * Add a join criterion.
+     *
+     * @param  criterion  the join criterion.
+     *
+     * @return  the criteria.
+     */
+    public Criteria<T> addJoin(Criterion criterion);
+
+    /**
+     * Add join criterions.
+     *
+     * @param  criterions  the join criterions.
+     *
+     * @return  the criteria.
+     */
+    public Criteria<T> addJoins(List<Criterion> criterions);
+
+    /**
      * Add a order criterion.
      *
      * @param  criterion  the order criterion.
@@ -49,6 +67,13 @@ public interface Criteria<T> {
     public Criteria<T> addOrders(List<Criterion> criterions);
 
     /**
+     * Get the hints.
+     *
+     * @return  the hints.
+     */
+    public Map<Object, String> getHints();
+
+    /**
      * Get the parameters.
      *
      * @return  the parameters.
@@ -61,6 +86,13 @@ public interface Criteria<T> {
      * @return  the query language string.
      */
     public String getQlString();
+
+    /**
+     * Check if an join criterion exists.
+     *
+     * @return  true if an join criterion exists, otherwise false.
+     */
+    public boolean joinExists();
 
     /**
      * Check if an order criterion exists.

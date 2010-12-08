@@ -45,6 +45,13 @@ public abstract class AbstractRepository implements Repository {
         // Create the query from the criteria query language string.
         query = this.entityManager.createQuery(criteria.getQlString(), entityClass);
 
+        // Loop through the hints.
+        for(Object key : criteria.getHints().keySet()) {
+
+            // Set the query hints.
+            query.setHint(criteria.getHints().get(key), key);
+        }
+
         // Loop through the parameters.
         for(String key : criteria.getParameters().keySet()) {
 

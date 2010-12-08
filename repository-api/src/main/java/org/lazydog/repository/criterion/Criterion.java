@@ -8,12 +8,12 @@ import java.io.Serializable;
  * 
  * @author  Ron Rickard
  */
-public class Criterion
-       implements Serializable {
+public class Criterion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     private ComparisonOperator comparisonOperator;
+    private JoinOperator joinOperator;
     private LogicalOperator logicalOperator;
     private String operand;
     private OrderDirection orderDirection;
@@ -27,7 +27,16 @@ public class Criterion
     public ComparisonOperator getComparisonOperator() {
         return this.comparisonOperator;
     }
-        
+
+    /**
+     * Get the join operator.
+     * 
+     * @return  the join operator.
+     */
+    public JoinOperator getJoinOperator() {
+        return this.joinOperator;
+    }
+
     /**
      * Get the logical operator.
      * 
@@ -72,7 +81,16 @@ public class Criterion
     public void setComparisonOperator(ComparisonOperator comparisonOperator) {
         this.comparisonOperator = comparisonOperator;
     }
-        
+
+    /**
+     * Set the join operator.
+     * 
+     * @param  joinOperator  the join operator.
+     */
+    public void setJoinOperator(JoinOperator joinOperator) {
+        this.joinOperator = joinOperator;
+    }
+
     /**
      * Set the logical operator.
      * 
