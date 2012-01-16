@@ -68,6 +68,6 @@
     </distributionManagement>
     <modules>
         <module>repository-api</module>
-        <module>repository</module>
+        <module>repository-jpa-impl</module>
   </modules>
 </project>

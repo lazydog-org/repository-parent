@@ -6,9 +6,9 @@
         <artifactId>repository-parent</artifactId>
         <version>1.6-SNAPSHOT</version>
     </parent>
-    <artifactId>repository</artifactId>
+    <artifactId>repository-jpa-impl</artifactId>
     <packaging>jar</packaging>
-    <name>Repository</name>
+    <name>Repository JPA Implementation</name>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
