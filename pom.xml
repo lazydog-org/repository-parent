@@ -69,5 +69,6 @@
     <modules>
         <module>repository-api</module>
         <module>repository-jpa-impl</module>
+        <module>repository-ldap-impl</module>
   </modules>
 </project>
