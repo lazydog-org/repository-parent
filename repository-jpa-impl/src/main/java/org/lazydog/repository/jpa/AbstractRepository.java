@@ -1,11 +1,13 @@
-package org.lazydog.repository;
+package org.lazydog.repository.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import org.lazydog.repository.internal.CriteriaImpl;
+import org.lazydog.repository.Criteria;
+import org.lazydog.repository.Repository;
+import org.lazydog.repository.jpa.internal.CriteriaImpl;
 
 
 /**
@@ -43,20 +45,20 @@ public abstract class AbstractRepository implements Repository {
         }
 
         // Create the query from the criteria query language string.
-        query = this.entityManager.createQuery(criteria.getQlString(), entityClass);
+        query = this.entityManager.createQuery(((CriteriaImpl<T>)criteria).getQlString(), entityClass);
 
         // Loop through the hints.
-        for(Object key : criteria.getHints().keySet()) {
+        for(Object key : ((CriteriaImpl<T>)criteria).getHints().keySet()) {
 
             // Set the query hints.
-            query.setHint(criteria.getHints().get(key), key);
+            query.setHint(((CriteriaImpl<T>)criteria).getHints().get(key), key);
         }
 
         // Loop through the parameters.
-        for(String key : criteria.getParameters().keySet()) {
+        for(String key : ((CriteriaImpl<T>)criteria).getParameters().keySet()) {
 
             // Set the query parameters.
-            query.setParameter(key, criteria.getParameters().get(key));
+            query.setParameter(key, ((CriteriaImpl<T>)criteria).getParameters().get(key));
         }
 
         return query;
@@ -71,7 +73,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the entity.
      */
     @Override
-    public <T> T find(Class<T> entityClass, Integer id) {
+    public <T,U> T find(Class<T> entityClass, U id) {
         return this.entityManager.find(entityClass, id);
     }
       
@@ -209,7 +211,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  id           the ID.
      */
     @Override
-    public <T> void remove(Class<T> entityClass, Integer id) {
+    public <T,U> void remove(Class<T> entityClass, U id) {
 
         // Declare.
         T entity;
@@ -228,10 +230,10 @@ public abstract class AbstractRepository implements Repository {
      * @param  ids          the IDs.
      */
     @Override
-    public <T> void removeList(Class<T> entityClass, List<Integer> ids) {
+    public <T,U> void removeList(Class<T> entityClass, List<U> ids) {
 
         // Loop through the IDs.
-        for (Integer id: ids) {
+        for (U id: ids) {
 
             // Remove the entity.
             this.remove(entityClass, id);

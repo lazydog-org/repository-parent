@@ -18,7 +18,7 @@ public interface Repository {
      *
      * @return  the entity.
      */
-    public <T> T find(Class<T> entityClass, Integer id);
+    public <T,U> T find(Class<T> entityClass, U id);
 
     /**
      * Find the entity.
@@ -28,7 +28,7 @@ public interface Repository {
      *
      * @return  the entity.
      */
-    public <T> T find(Class<T> entityClass, Criteria<T> criteria);
+   public <T> T find(Class<T> entityClass, Criteria<T> criteria);
 
     /**
      * Find the list of entities.
@@ -82,7 +82,7 @@ public interface Repository {
      * @param  entityClass  the entity class.
      * @param  id           the ID.
      */
-    public <T> void remove(Class<T> entityClass, Integer id);
+    public <T,U> void remove(Class<T> entityClass, U id);
 
     /**
      * Remove the entities specified by the list of IDs.
@@ -90,5 +90,5 @@ public interface Repository {
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.
      */
-    public <T> void removeList(Class<T> entityClass, List<Integer> ids);
+    public <T,U> void removeList(Class<T> entityClass, List<U> ids);
 }

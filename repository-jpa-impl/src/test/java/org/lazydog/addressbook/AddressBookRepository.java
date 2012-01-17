@@ -1,7 +1,7 @@
 package org.lazydog.addressbook;
 
 import javax.persistence.Persistence;
-import org.lazydog.repository.AbstractRepository;
+import org.lazydog.repository.jpa.AbstractRepository;
 
 
 /**

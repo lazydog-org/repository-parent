@@ -1,4 +1,4 @@
-package org.lazydog.repository;
+package org.lazydog.repository.jpa;
 
 import javax.persistence.EntityNotFoundException;
 import static org.junit.Assert.*;
@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.lazydog.addressbook.AddressBookRepository;
 import org.lazydog.addressbook.model.Address1;
 import org.lazydog.addressbook.model.Address2;
+import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.ComparisonOperation;
 import org.lazydog.repository.criterion.LogicalOperation;
 
