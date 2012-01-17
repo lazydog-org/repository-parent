@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence-ldap
+    xmlns="http://lazydog.org/xml/ns/persistence-ldap"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://lazydog.org/xml/ns/persistence-ldap
+                        http://lazydog.org/xml/ns/persistence-ldap/persistence-ldap.xsd">
+
+    <jndi name="ldapProperties"/>
+    <logging level="ALL"/>
+    <mapping-file>org/lazydog/test/em/account-em.xml</mapping-file>
+    <mapping-file>org/lazydog/test/em/group-em.xml</mapping-file>
+</persistence-ldap>

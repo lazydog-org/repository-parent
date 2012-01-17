@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence-ldap
+    xmlns="http://lazydog.org/xml/ns/persistence-ldap"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://lazydog.org/xml/ns/persistence-ldap
+                        http://lazydog.org/xml/ns/persistence-ldap/persistence-ldap.xsd">
+
+    <ldap initial-context-factory="com.sun.jndi.ldap.LdapCtxFactory" 
+          provider-url="ldap://localhost:1024" 
+          security-authentication="simple" 
+          security-principal="uid=admin,ou=system" 
+          security-credentials="secret"/>
+    <logging level="ALL"/>
+    <mapping-file>org/lazydog/test/em/account-em.xml</mapping-file>
+    <mapping-file>org/lazydog/test/em/group-em.xml</mapping-file>
+</persistence-ldap>

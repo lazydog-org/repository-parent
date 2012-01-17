@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="http://lazydog.org/xml/ns/persistence-ldap/entity-mappings"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://lazydog.org/xml/ns/persistence-ldap/entity-mappings"
+    elementFormDefault="qualified">
+
+    <xs:simpleType name="fetch-types">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EAGER"/>
+            <xs:enumeration value="LAZY"/>
+        </xs:restriction>
+    </xs:simpleType>
+        
+    <xs:simpleType name="search-scopes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ONE"/>
+            <xs:enumeration value="SUBTREE"/>
+        </xs:restriction>
+    </xs:simpleType>
+            	
+    <xs:element name="property">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The property name.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="target-entity" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The fully-qualified target entity type of the property.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="fetch-type" type="fetch-types">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The fetch type.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="attribute">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The attribute name.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="referential-integrity" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The attribute name for referential integrity.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="mapping">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="property">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The class property to map.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="attribute">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The LDAP attribute to map to.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="object-class">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="value" type="xs:string" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            An object class value.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="search-base">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The search base value.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+        
+    <xs:element name="search-scope">
+        <xs:complexType>
+            <xs:attribute name="value" type="search-scopes" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The search scope value.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="entity">
+    	<xs:complexType>
+            <xs:sequence>
+                <xs:element ref="mapping" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The class property to LDAP attribute map.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="object-class">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The object class.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="search-base">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The search base.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="search-scope">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The search scope.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="class-name" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The fully-qualified class name for the entity.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="entity-mappings">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="entity">
+                    <xs:annotation>
+                        <xs:documentation>
+	
+                            The entity.
+	
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

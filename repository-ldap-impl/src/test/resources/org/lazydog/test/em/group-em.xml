@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+    xmlns="http://lazydog.org/xml/ns/persistence-ldap/entity-mappings"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://lazydog.org/xml/ns/persistence-ldap/entity-mappings
+                        http://lazydog.org/xml/ns/persistence-ldap/entity-mappings/entity-mappings.xsd">
+
+    <entity class-name="org.lazydog.test.model.Group">
+        <mapping>
+            <property name="accounts" target-entity="org.lazydog.test.model.Account" fetch-type="EAGER"/>
+            <attribute name="member" referential-integrity="mail"/>
+        </mapping>
+        <mapping>
+            <property name="description"/>
+            <attribute name="description"/>
+        </mapping>
+        <mapping>
+            <property name="name"/>
+            <attribute name="cn"/>
+        </mapping>
+        <object-class>
+            <value>groupOfNames</value>
+            <value>top</value>
+        </object-class>
+        <search-base value="ou=system"/>
+        <search-scope value="SUBTREE"/>
+    </entity>
+</entity-mappings>

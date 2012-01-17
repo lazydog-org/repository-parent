@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="http://lazydog.org/xml/ns/persistence-ldap"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://lazydog.org/xml/ns/persistence-ldap"
+    elementFormDefault="qualified">
+
+    <xs:simpleType name="levels">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ALL"/>
+            <xs:enumeration value="TRACE"/>
+            <xs:enumeration value="DEBUG"/>
+            <xs:enumeration value="INFO"/>
+            <xs:enumeration value="WARN"/>
+            <xs:enumeration value="ERROR"/>
+            <xs:enumeration value="OFF"/>
+        </xs:restriction>
+    </xs:simpleType>
+	
+    <xs:element name="jndi">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The JNDI name.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:element name="ldap">
+        <xs:complexType>
+            <xs:attribute name="initial-context-factory" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The LDAP initial context factory.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="provider-url" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The LDAP provider URL.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="security-authentication" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The LDAP security authentication.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="security-principal" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The LDAP security principal.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="security-credentials" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The LDAP security credentials.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="logging">
+        <xs:complexType>
+            <xs:attribute name="level" type="levels" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The logging level.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+	
+    <xs:group name="connection">
+    	<xs:choice>
+            <xs:element ref="jndi">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        The JNDI resource.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="ldap">
+                <xs:annotation>
+                    <xs:documentation>
+
+                        LDAP connection information.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+    	</xs:choice>
+    </xs:group>
+    
+    <xs:element name="persistence-ldap">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="connection"/>
+                <xs:element ref="logging"/>
+                <xs:element name="mapping-file" type="xs:string" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+
+                            The location of a property to attribute mapping file.
+
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
