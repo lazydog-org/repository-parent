@@ -1,7 +1,6 @@
 package org.lazydog.repository.jpa;
 
 import javax.persistence.EntityNotFoundException;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,6 +10,8 @@ import org.lazydog.addressbook.model.Address2;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.ComparisonOperation;
 import org.lazydog.repository.criterion.LogicalOperation;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -92,7 +93,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void find() {
+    public void testFind() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -100,12 +101,12 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void findNot() {
+    public void testFindNot() {
         assertNull(repository.find(Address1.class, new Integer(1)));
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void findNullClass() {
+    public void testFindNullClass() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -113,7 +114,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void findNonEntity() {
+    public void testFindNonEntity() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -121,7 +122,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void findByCritera() {
+    public void testFindByCritera() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -131,14 +132,14 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void findByCriteriaNot() {
+    public void testFindByCriteriaNot() {
         Criteria<Address1> criteria = repository.getCriteria(Address1.class);
         criteria.add(ComparisonOperation.eq("id", new Integer(1)));
         assertNull(repository.find(Address1.class, criteria));
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void findByCriteriaNullClass() {
+    public void testFindByCriteriaNullClass() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -148,22 +149,22 @@ public class AbstractRepositoryTest {
     }
 
     @Test
-    public void getCriteria() {
+    public void testGetCriteria() {
         repository.getCriteria(Address1.class);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void getCriteriaNull() {
+    public void testGetCriteriaNull() {
         repository.getCriteria(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void getCriteriaNonEntity() {
+    public void testGetCriteriaNonEntity() {
         repository.getCriteria(Address2.class);
     }
 
     @Test
-    public void persist() {
+    public void testPersist() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -171,17 +172,17 @@ public class AbstractRepositoryTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void persistNull() {
+    public void testPersistNull() {
         repository.persist(null);
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void persistNonEntity() {
+    public void testPersistNonEntity() {
         repository.persist(address3);
     }
 
     @Test
-    public void remove() {
+    public void testRemove() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -193,7 +194,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test(expected=EntityNotFoundException.class)
-    public void removeNot() {
+    public void testRemoveNot() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -206,7 +207,7 @@ public class AbstractRepositoryTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void removeNullClass() {
+    public void testRemoveNullClass() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();
@@ -214,12 +215,12 @@ public class AbstractRepositoryTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void removeNullId() {
+    public void testRemoveNullId() {
         repository.remove(Address1.class, null);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void removeNonEntity() {
+    public void testRemoveNonEntity() {
         repository.getEntityManager().getTransaction().begin();
         persistedAddress1 = repository.persist(address1);
         repository.getEntityManager().getTransaction().commit();

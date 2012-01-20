@@ -3,13 +3,13 @@ package org.lazydog.addressbook.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GenerationType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
 /**
- * Address.
+ * Address 1.
  *
  * @author  Ron Rickard
  */
@@ -40,7 +40,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *          object.
      */
     @Override
-    public int compareTo(Address1 that) {
+    public int compareTo(final Address1 that) {
 
         // Declare.
         int lastCompare;
@@ -81,7 +81,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      * @return  true if the objects are equal; false otherwise.
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
 
         // Declare.
         boolean equals;
@@ -182,7 +182,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @throws  IllegalArgumentException  if the replacement object is null.
      */
-    private static <U, V extends U> U replaceNull(U original, V replacement) {
+    private static <U, V extends U> U replaceNull(final U original, final V replacement) {
 
         // Check if the replacement object is null.
         if (replacement == null) {
@@ -198,7 +198,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @param  city  the city.
      */
-    public void setCity(String city) {
+    public void setCity(final String city) {
         this.city = city;
     }
 
@@ -207,7 +207,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @param  id  the ID.
      */
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -216,7 +216,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @param  state  the state.
      */
-    public void setState(String state) {
+    public void setState(final String state) {
         this.state = state;
     }
 
@@ -225,7 +225,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @param  streetAddress  the street address.
      */
-    public void setStreetAddress(String streetAddress) {
+    public void setStreetAddress(final String streetAddress) {
         this.streetAddress = streetAddress;
     }
 
@@ -234,7 +234,7 @@ public class Address1 implements Comparable<Address1>, Serializable {
      *
      * @param  zipcode  the zipcode.
      */
-    public void setZipcode(String zipcode) {
+    public void setZipcode(final String zipcode) {
         this.zipcode = zipcode;
     }
 
