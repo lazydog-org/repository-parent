@@ -11,7 +11,7 @@ import java.io.Serializable;
 public abstract class LoggableException extends Exception implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    protected static boolean logState;
+    private static boolean logState;
 	
     /**
      * Constructs a new exception with no message.

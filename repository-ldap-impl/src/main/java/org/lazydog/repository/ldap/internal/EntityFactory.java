@@ -75,7 +75,7 @@ public final class EntityFactory<T> {
             throw new EntityFactoryException("Unable to instantiate the entity " + this.entityClass + ".", e, this.entityClass, null);
         }
         catch (InstantiationException e) {
-            throw new EntityFactoryException("Unable to instantiate the entity " + this.entityClass + ".", this.entityClass, null);
+            throw new EntityFactoryException("Unable to instantiate the entity " + this.entityClass + ".", e, this.entityClass, null);
         }
 
         logger.trace("Entity created in " + duration(startTime, new Date()) + "s.");
@@ -300,12 +300,12 @@ public final class EntityFactory<T> {
         catch (IllegalAccessException e) {
             throw new EntityFactoryException(
                     "Unable to invoke method '" + methodName + "' on entity " + this.entityClass + ".", 
-                    this.entityClass, methodName);
+                    e, this.entityClass, methodName);
         }
         catch(InvocationTargetException e) {
             throw new EntityFactoryException(
                     "Unable to invoke method '" + methodName + "' on entity " + this.entityClass + ".", 
-                    this.entityClass, methodName);
+                    e, this.entityClass, methodName);
         }
 
         return returnValue;

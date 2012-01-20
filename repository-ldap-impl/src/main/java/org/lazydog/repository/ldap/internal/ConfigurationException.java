@@ -21,7 +21,7 @@ public final class ConfigurationException extends LoggableException implements S
     public ConfigurationException() {
         super();
 
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -34,7 +34,7 @@ public final class ConfigurationException extends LoggableException implements S
     public ConfigurationException(String message) {
         super(message);
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public final class ConfigurationException extends LoggableException implements S
     public ConfigurationException(String message, Throwable cause) {
         super(message, cause);
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -61,7 +61,7 @@ public final class ConfigurationException extends LoggableException implements S
     public ConfigurationException(Throwable cause) {
         super(cause);
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }

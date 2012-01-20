@@ -29,7 +29,7 @@ public final class EntityFactoryException extends LoggableException implements S
         this.entityClass = entityClass;
         this.methodName = methodName;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -46,7 +46,7 @@ public final class EntityFactoryException extends LoggableException implements S
         this.entityClass = entityClass;
         this.methodName = methodName;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -64,7 +64,7 @@ public final class EntityFactoryException extends LoggableException implements S
         this.entityClass = entityClass;
         this.methodName = methodName;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -81,7 +81,7 @@ public final class EntityFactoryException extends LoggableException implements S
         this.entityClass = entityClass;
         this.methodName = methodName;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }

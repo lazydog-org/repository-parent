@@ -14,18 +14,23 @@ import org.lazydog.repository.Entity;
 public final class Validator {
 
     /**
+     * Private constructor.
+     */
+    private Validator() {    
+    }
+    
+    /**
      * Check for a valid criteria.
      * 
      * @param  criteria  the criteria.
      * 
-     * @throws  IllegalArgumentException  if the criteria is invalid.
-     * @throws  NullPointerException      if the criteria is null.
+     * @throws  IllegalArgumentException  if the criteria is null or invalid.
      */
     public static void validCriteria(Criteria<?> criteria) {
 
         // Check if the criteria is null.
         if (criteria == null) {
-            throw new NullPointerException("The criteria is null.");
+            throw new IllegalArgumentException("The criteria is null.");
         }
 
         // Check if the criteria is not a CriteriaImpl.
@@ -39,8 +44,7 @@ public final class Validator {
      * 
      * @param  entity  the entity.
      * 
-     * @throws  IllegalArgumentException  if the entity is invalid.
-     * @throws  NullPointerException      if the entity is null.
+     * @throws  IllegalArgumentException  if the entity is null or invalid.
      */
     public static <T> void validEntity(T entity) {
         validEntity(entity, null);
@@ -52,15 +56,14 @@ public final class Validator {
      * @param  entity                  the entity.
      * @param  supportedEntityClasses  the supported entity classes.
      * 
-     * @throws  IllegalArgumentException  if the entity is invalid.
-     * @throws  NullPointerException      if the entity is null.
+     * @throws  IllegalArgumentException  if the entity is null or invalid.
      */
     @SuppressWarnings("unchecked")
     public static <T> void validEntity(T entity, Set<Class<?>> supportedEntityClasses) {
 
         // Check if the entity is null.
         if (entity == null) {
-            throw new NullPointerException("the entity is null.");
+            throw new IllegalArgumentException("the entity is null.");
         }
 
         // Validate the entity class and ID.
@@ -73,8 +76,7 @@ public final class Validator {
      * 
      * @param  entityClass  the entity class.
      * 
-     * @throws  IllegalArgumentException  if the entity class is invalid.
-     * @throws  NullPointerException      if the entity class is null.
+     * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
     public static void validEntityClass(Class<?> entityClass) {
         validEntityClass(entityClass, null);
@@ -86,14 +88,13 @@ public final class Validator {
      * @param  entityClass             the entity class.
      * @param  supportedEntityClasses  the supported entity classes.
      * 
-     * @throws  IllegalArgumentException  if the entity class is invalid.
-     * @throws  NullPointerException      if the entity class is null.
+     * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
     public static void validEntityClass(Class<?> entityClass, Set<Class<?>> supportedEntityClasses) {
 
         // Check if the entity class is null.
         if (entityClass == null) {
-            throw new NullPointerException("The entity class is null.");
+            throw new IllegalArgumentException("The entity class is null.");
         }
 
         // Check if the entity class is not a subclass of Entity.
@@ -122,14 +123,13 @@ public final class Validator {
      * 
      * @param  id  the ID.
      * 
-     * @throws  IllegalArgumentException  if the ID is invalid.
-     * @throws  NullPointerException      if the ID is null.
+     * @throws  IllegalArgumentException  if the ID is null or invalid.
      */
     public static <T> void validId(T id) {
 
         // Check if the ID is null.
         if (id == null) {
-            throw new NullPointerException("The ID is null.");
+            throw new IllegalArgumentException("The ID is null.");
         }
 
         // Check if the ID is not a String.
@@ -143,14 +143,13 @@ public final class Validator {
      * 
      * @param  list  the list.
      * 
-     * @throws  IllegalArgumentException  if the list is invalid.
-     * @throws  NullPointerException      if the list is null.
+     * @throws  IllegalArgumentException  if the list is null or invalid.
      */
     public static <T> void validList(List<T> list) {
 
         // Check if the list is null.
         if (list == null) {
-            throw new NullPointerException("The list is null.");
+            throw new IllegalArgumentException("The list is null.");
         }
 
         // Check if the list is empty.

@@ -185,8 +185,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the entity.
      * 
-     * @throws  IllegalArgumentException  if the entity class or ID is invalid.
-     * @throws  NullPointerException      if the entity class or ID is null.
+     * @throws  IllegalArgumentException  if the entity class or ID is null or invalid.
      * @throws  RepositoryException       if unable to find the entity.
      */
     @Override
@@ -232,8 +231,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the entity.
      * 
-     * @throws  IllegalArgumentException  if the entity class or criteria is invalid.
-     * @throws  NullPointerException      if the entity class or criteria is null.
+     * @throws  IllegalArgumentException  if the entity class or criteria is null or invalid.
      * @throws  RepositoryException       if unable to find the entity.
      */
     @Override
@@ -259,8 +257,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the list of entities or an empty list if no entities were found.
      * 
-     * @throws  IllegalArgumentException  if the entity class is invalid.
-     * @throws  NullPointerException      if the entity class is null.
+     * @throws  IllegalArgumentException  if the entity class is null or invalid.
      * @throws  RepositoryException       if unable to find the list of entities.
      */
     @Override
@@ -276,8 +273,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @return  the list of entities or an empty list if no entities were found.
      * 
-     * @throws  IllegalArgumentException  if the entity class or criteria is invalid.
-     * @throws  NullPointerException      if the entity class or criteria is null.
+     * @throws  IllegalArgumentException  if the entity class or criteria is null or invalid.
      * @throws  RepositoryException       if unable to find the list of entities.
      */
     @Override
@@ -405,8 +401,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @return  the criteria.
      * 
-     * @throws  IllegalArgumentException  if the entity class is invalid.
-     * @throws  NullPointerException      if the entity class is null.
+     * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
     @Override
     public <T> Criteria<T> getCriteria(Class<T> entityClass) {
@@ -517,8 +512,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the persisted entity.
      * 
-     * @throws  IllegalArgumentException  if the entity is invalid.
-     * @throws  NullPointerException      if the entity is null.
+     * @throws  IllegalArgumentException  if the entity is null or invalid.
      * @throws  RepositoryException       if unable to persist the entity.
      */
     @Override
@@ -579,8 +573,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the persisted list of entities.
      * 
-     * @throws  IllegalArgumentException  if the list of entities is invalid.
-     * @throws  NullPointerException      if the list of entities is null.
+     * @throws  IllegalArgumentException  if the list of entities is null or invalid.
      * @throws  RepositoryException       if unable to persist the list of entities.
      */
     @Override
@@ -610,8 +603,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  entityClass  the entity class.
      * @param  id           the ID.
      * 
-     * @throws  IllegalArgumentException  if the entity class or ID is invalid.
-     * @throws  NullPointerException      if the entity class or ID is null.
+     * @throws  IllegalArgumentException  if the entity class or ID is null or invalid.
      * @throws  RepositoryException       if unable to remove the entity.
      */
     @Override
@@ -638,8 +630,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.
      * 
-     * @throws  IllegalArgumentException  if the entity class or list of IDs is invalid.
-     * @throws  NullPointerException      if the entity class or list of IDs is null.
+     * @throws  IllegalArgumentException  if the entity class or list of IDs is null or invalid.
      * @throws  RepositoryException       if unable to remove the entities.
      */
     @Override

@@ -25,7 +25,7 @@ public final class DirectoryException extends LoggableException implements Seria
         super();
         this.dn = dn;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -40,7 +40,7 @@ public final class DirectoryException extends LoggableException implements Seria
         super(message);
         this.dn = dn;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -56,7 +56,7 @@ public final class DirectoryException extends LoggableException implements Seria
         super(message, cause);
         this.dn = dn;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
@@ -71,7 +71,7 @@ public final class DirectoryException extends LoggableException implements Seria
         super(cause);
         this.dn = dn;
         
-        if (logState) {
+        if (getLogState()) {
             logger.error(this.getMessage());
         }
     }
