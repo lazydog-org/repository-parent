@@ -28,7 +28,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 		and a value greater than 0 if this object is greater than the object.
      */
     @Override
-    public int compareTo(Account that) {
+    public int compareTo(final Account that) {
 
         // Initialize.
         String thatName = replaceNull(that.getName(), "");
@@ -45,7 +45,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * @return  true if the objects are equal; false otherwise.
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
 
         // Initialize.
         boolean equals = false;
@@ -157,7 +157,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      *
      * @throws  IllegalArgumentException  if the replacement object is null.
      */
-    private static <U, V extends U> U replaceNull(U original, V replacement) {
+    private static <U, V extends U> U replaceNull(final U original, final V replacement) {
 
         // Check if the replacement object is null.
         if (replacement == null) {
@@ -173,7 +173,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 
      * @param  canonicalName  the canonical name.
      */
-    public void setCanonicalName(String canonicalName) {
+    public void setCanonicalName(final String canonicalName) {
         this.canonicalName = canonicalName;
     }
  
@@ -182,7 +182,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 
      * @param  displayName  the display name.
      */
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(final String displayName) {
         this.displayName = displayName;
     }
 
@@ -191,7 +191,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 
      * @param  lastName  the last name.
      */
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 	
@@ -200,7 +200,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 
      * @param  manager  the manager.
      */
-    public void setManager(Account manager) {
+    public void setManager(final Account manager) {
         this.manager = manager;
     }
 
@@ -209,7 +209,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      * 
      * @param  name  the name.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 

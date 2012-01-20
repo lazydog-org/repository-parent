@@ -28,7 +28,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      * 		and a value greater than 0 if this object is greater than the object.
      */
     @Override
-    public int compareTo(Group that) {
+    public int compareTo(final Group that) {
 
         // Initialize.
         String thatName = replaceNull(that.getName(), "");
@@ -45,7 +45,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      * @return  true if the objects are equal; false otherwise.
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
 
         // Initialize.
         boolean equals = false;
@@ -134,7 +134,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      *
      * @throws  IllegalArgumentException  if the replacement object is null.
      */
-    private static <U, V extends U> U replaceNull(U original, V replacement) {
+    private static <U, V extends U> U replaceNull(final U original, final V replacement) {
 
         // Check if the replacement object is null.
         if (replacement == null) {
@@ -150,7 +150,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      * 
      * @param  accounts  the accounts.
      */ 
-    public void setAccounts(Set<Account> accounts) {
+    public void setAccounts(final Set<Account> accounts) {
         this.accounts = replaceNull(accounts, new HashSet<Account>());
     }
 
@@ -159,7 +159,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      * 
      * @param  description  the description.
      */
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -168,7 +168,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      * 
      * @param  name  the name.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
