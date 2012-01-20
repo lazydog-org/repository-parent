@@ -18,7 +18,7 @@ public interface Repository {
      *
      * @return  the entity.
      */
-    public <T,U> T find(Class<T> entityClass, U id);
+    <T,U> T find(Class<T> entityClass, U id);
 
     /**
      * Find the entity.
@@ -28,7 +28,7 @@ public interface Repository {
      *
      * @return  the entity.
      */
-   public <T> T find(Class<T> entityClass, Criteria<T> criteria);
+   <T> T find(Class<T> entityClass, Criteria<T> criteria);
 
     /**
      * Find the list of entities.
@@ -37,7 +37,7 @@ public interface Repository {
      *
      * @return  the list of entities.
      */
-    public <T> List<T> findList(Class<T> entityClass);
+    <T> List<T> findList(Class<T> entityClass);
 
     /**
      * Find the list of entities.
@@ -47,7 +47,7 @@ public interface Repository {
      * 
      * @return  the list of entities.
      */
-    public <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria);
+    <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria);
 
     /**
      * Get the criteria.
@@ -56,7 +56,7 @@ public interface Repository {
      * 
      * @return  the criteria.
      */
-    public <T> Criteria<T> getCriteria(Class<T> entityClass);
+    <T> Criteria<T> getCriteria(Class<T> entityClass);
 
     /**
      * Persist the entity.
@@ -65,7 +65,7 @@ public interface Repository {
      *
      * @return  the persisted entity.
      */
-    public <T> T persist(T entity);
+    <T> T persist(T entity);
 
     /**
      * Persist the list of entities.
@@ -74,7 +74,7 @@ public interface Repository {
      *
      * @return  the persisted list of entities.
      */
-    public <T> List<T> persistList(List<T> entities);
+    <T> List<T> persistList(List<T> entities);
 
     /**
      * Remove the entity.
@@ -82,7 +82,7 @@ public interface Repository {
      * @param  entityClass  the entity class.
      * @param  id           the ID.
      */
-    public <T,U> void remove(Class<T> entityClass, U id);
+    <T,U> void remove(Class<T> entityClass, U id);
 
     /**
      * Remove the entities specified by the list of IDs.
@@ -90,5 +90,5 @@ public interface Repository {
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.
      */
-    public <T,U> void removeList(Class<T> entityClass, List<U> ids);
+    <T,U> void removeList(Class<T> entityClass, List<U> ids);
 }

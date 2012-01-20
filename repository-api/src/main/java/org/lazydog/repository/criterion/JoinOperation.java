@@ -1,8 +1,5 @@
 package org.lazydog.repository.criterion;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Join operation.
@@ -11,6 +8,12 @@ import java.util.List;
  */
 public class JoinOperation {
  
+    /**
+     * Private constructor.
+     */
+    private JoinOperation() {    
+    }
+    
     /**
      * Join operation.
      * 

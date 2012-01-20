@@ -9,6 +9,12 @@ package org.lazydog.repository.criterion;
 public class LogicalOperation {
 
     /**
+     * Private constructor.
+     */
+    private LogicalOperation() {    
+    }
+    
+    /**
      * And logical operation.
      * 
      * @param  criterion  the criterion.

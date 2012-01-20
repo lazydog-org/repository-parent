@@ -12,6 +12,12 @@ import java.util.List;
 public class ComparisonOperation {
 
     /**
+     * Private constructor.
+     */
+    private ComparisonOperation() {     
+    }
+   
+    /**
      * Between comparison operation.
      * 
      * @param  operand  the operand.

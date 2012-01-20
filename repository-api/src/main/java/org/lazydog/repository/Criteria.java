@@ -18,7 +18,7 @@ public interface Criteria<T> {
      *
      * @return  the criteria.
      */
-    public Criteria<T> add(Criterion criterion);
+    Criteria<T> add(Criterion criterion);
 
     /**
      * Add restriction criterions.
@@ -27,7 +27,7 @@ public interface Criteria<T> {
      *
      * @return  the criteria.
      */
-    public Criteria<T> add(List<Criterion> criterions);
+    Criteria<T> add(List<Criterion> criterions);
 
     /**
      * Add a order criterion.
@@ -36,7 +36,7 @@ public interface Criteria<T> {
      *
      * @return  the criteria.
      */
-    public Criteria<T> addOrder(Criterion criterion);
+    Criteria<T> addOrder(Criterion criterion);
 
     /**
      * Add order criterions.
@@ -45,19 +45,19 @@ public interface Criteria<T> {
      *
      * @return  the criteria.
      */
-    public Criteria<T> addOrders(List<Criterion> criterions);
+    Criteria<T> addOrders(List<Criterion> criterions);
 
     /**
      * Check if an order criterion exists.
      *
      * @return  true if an order criterion exists, otherwise false.
      */
-    public boolean orderExists();
+    boolean orderExists();
 
     /**
      * Check if a restriction criterion exists.
      *
      * @return  true if a restriction criterion exists, otherwise false.
      */
-    public boolean restrictionExists();
+    boolean restrictionExists();
 }

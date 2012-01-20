@@ -9,6 +9,12 @@ package org.lazydog.repository.criterion;
 public class Order {
 
     /**
+     * Private constructor.
+     */
+    private Order() {    
+    }
+    
+    /**
      * Ascending order.
      * 
      * @param  operand  the operand.
