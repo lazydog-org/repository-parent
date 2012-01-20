@@ -29,10 +29,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @throws  IllegalArgumentException  if the entity class or criteria are invalid.
      */
-    private <T> TypedQuery<T> createQuery(Class<T> entityClass, Criteria<T> criteria) {
-
-        // Declare.
-        TypedQuery<T> query;
+    private <T> TypedQuery<T> createQuery(final Class<T> entityClass, final Criteria<T> criteria) {
 
         // Check if the entity class is null.
         if (entityClass == null) {
@@ -45,7 +42,7 @@ public abstract class AbstractRepository implements Repository {
         }
 
         // Create the query from the criteria query language string.
-        query = this.entityManager.createQuery(((CriteriaImpl<T>)criteria).getQlString(), entityClass);
+        TypedQuery<T> query = this.entityManager.createQuery(((CriteriaImpl<T>)criteria).getQlString(), entityClass);
 
         // Loop through the hints.
         for(Object key : ((CriteriaImpl<T>)criteria).getHints().keySet()) {
@@ -73,7 +70,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the entity.
      */
     @Override
-    public <T,U> T find(Class<T> entityClass, U id) {
+    public <T,U> T find(final Class<T> entityClass, final U id) {
         return this.entityManager.find(entityClass, id);
     }
       
@@ -86,13 +83,10 @@ public abstract class AbstractRepository implements Repository {
      * @return  the entity.
      */
     @Override
-    public <T> T find(Class<T> entityClass, Criteria<T> criteria) {
-
-        // Declare.
-        T entity;
+    public <T> T find(final Class<T> entityClass, final Criteria<T> criteria) {
 
         // Initialize.
-        entity = null;
+        T entity = null;
         
         try {
 
@@ -114,7 +108,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the list of entities.
      */
     @Override
-    public <T> List<T> findList(Class<T> entityClass) {
+    public <T> List<T> findList(final Class<T> entityClass) {
         return this.findList(entityClass, this.getCriteria(entityClass));
     }
 
@@ -127,7 +121,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the list of entities.
      */
     @Override
-    public <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria) {
+    public <T> List<T> findList(final Class<T> entityClass, final Criteria<T> criteria) {
         return this.createQuery(entityClass, criteria).getResultList();
     }
 
@@ -139,7 +133,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the criteria.
      */
     @Override
-    public <T> Criteria<T> getCriteria(Class<T> entityClass) {
+    public <T> Criteria<T> getCriteria(final Class<T> entityClass) {
         return new CriteriaImpl<T>(entityClass, this.entityManager);
     }
 
@@ -160,13 +154,10 @@ public abstract class AbstractRepository implements Repository {
      * @return  the persisted entity.
      */
     @Override
-    public <T> T persist(T entity) {
-
-        // Declare.
-        T persistedEntity;
+    public <T> T persist(final T entity) {
 
         // Persist the entity.
-        persistedEntity = this.entityManager.merge(entity);
+        T persistedEntity = this.entityManager.merge(entity);
         this.entityManager.flush();
 
         return persistedEntity;
@@ -180,22 +171,16 @@ public abstract class AbstractRepository implements Repository {
      * @return  the persisted list of entities.
      */
     @Override
-    public <T> List<T> persistList(List<T> entities) {
-        
-        // Declare.
-        List<T> persistedEntities;
-        
+    public <T> List<T> persistList(final List<T> entities) {
+
         // Initialize.
-        persistedEntities = new ArrayList<T>();
+        List<T> persistedEntities = new ArrayList<T>();
 
         // Loop through the entities.
         for (T entity : entities) {
 
-            // Declare.
-            T persistedEntity;
-
             // Persist the entity.
-            persistedEntity = this.persist(entity);
+            T persistedEntity = this.persist(entity);
 
             // Add the persisted entity.
             persistedEntities.add(persistedEntity);
@@ -211,13 +196,10 @@ public abstract class AbstractRepository implements Repository {
      * @param  id           the ID.
      */
     @Override
-    public <T,U> void remove(Class<T> entityClass, U id) {
-
-        // Declare.
-        T entity;
+    public <T,U> void remove(final Class<T> entityClass, final U id) {
 
         // Get the entity.
-        entity = this.entityManager.getReference(entityClass, id);
+        T entity = this.entityManager.getReference(entityClass, id);
 
         // Remove the entity.
         this.entityManager.remove(entity);
@@ -230,7 +212,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  ids          the IDs.
      */
     @Override
-    public <T,U> void removeList(Class<T> entityClass, List<U> ids) {
+    public <T,U> void removeList(final Class<T> entityClass, final List<U> ids) {
 
         // Loop through the IDs.
         for (U id: ids) {
@@ -245,7 +227,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @param  entityManager  the entity manager.
      */
-    protected void setEntityManager(EntityManager entityManager) {
+    protected void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 }

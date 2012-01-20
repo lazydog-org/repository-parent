@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author  Ron Rickard
  */
-public class ComparisonOperation {
+public final class ComparisonOperation {
 
     /**
      * Private constructor.
@@ -26,21 +26,14 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterions.
      */
-    public static List<Criterion> between(String operand,
-                                          Object value1,
-                                          Object value2) {
-        
-        // Declare.
-        List<Criterion> criterions;
-        
+    public static List<Criterion> between(final String operand, final Object value1, final Object value2) {
+
         // Initialize.
-        criterions = new ArrayList<Criterion>();
+        List<Criterion> criterions = new ArrayList<Criterion>();
         
         // x BETWEEN y AND z is equivalent to x >= y AND x <= z
-        criterions.add(ComparisonOperation.op(
-            ComparisonOperator.GREATER_THAN_OR_EQUAL, operand, value1));
-        criterions.add(LogicalOperation.and(ComparisonOperation.op(
-            ComparisonOperator.LESS_THAN_OR_EQUAL, operand, value2)));
+        criterions.add(ComparisonOperation.op(ComparisonOperator.GREATER_THAN_OR_EQUAL, operand, value1));
+        criterions.add(LogicalOperation.and(ComparisonOperation.op(ComparisonOperator.LESS_THAN_OR_EQUAL, operand, value2)));
         
         return criterions;
     }
@@ -53,10 +46,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion eq(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.EQUAL, operand, value);
+    public static Criterion eq(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.EQUAL, operand, value);
     }
               
     /**
@@ -67,10 +58,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion ge(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.GREATER_THAN_OR_EQUAL, operand, value);
+    public static Criterion ge(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.GREATER_THAN_OR_EQUAL, operand, value);
     }
       
     /**
@@ -81,10 +70,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion gt(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.GREATER_THAN, operand, value);
+    public static Criterion gt(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.GREATER_THAN, operand, value);
     }
       
     /**
@@ -94,9 +81,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion isEmpty(String operand) {
-        return ComparisonOperation.op(
-            ComparisonOperator.IS_EMPTY, operand);
+    public static Criterion isEmpty(final String operand) {
+        return ComparisonOperation.op(ComparisonOperator.IS_EMPTY, operand);
     }
                
     /**
@@ -106,9 +92,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion isNotEmpty(String operand) {
-        return ComparisonOperation.op(
-            ComparisonOperator.IS_NOT_EMPTY, operand);
+    public static Criterion isNotEmpty(final String operand) {
+        return ComparisonOperation.op(ComparisonOperator.IS_NOT_EMPTY, operand);
     }
     
     /**
@@ -118,9 +103,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion isNotNull(String operand) {
-        return ComparisonOperation.op(
-            ComparisonOperator.IS_NOT_NULL, operand);
+    public static Criterion isNotNull(final String operand) {
+        return ComparisonOperation.op(ComparisonOperator.IS_NOT_NULL, operand);
     }
     
     /**
@@ -130,9 +114,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion isNull(String operand) {
-        return ComparisonOperation.op(
-            ComparisonOperator.IS_NULL, operand);
+    public static Criterion isNull(final String operand) {
+        return ComparisonOperation.op(ComparisonOperator.IS_NULL, operand);
     }
     
     /**
@@ -143,10 +126,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion le(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.LESS_THAN_OR_EQUAL, operand, value);
+    public static Criterion le(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.LESS_THAN_OR_EQUAL, operand, value);
     }
       
     /**
@@ -157,10 +138,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion like(String operand,
-                                 Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.LIKE, operand, value);
+    public static Criterion like(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.LIKE, operand, value);
     }
           
     /**
@@ -171,10 +150,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion lt(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.LESS_THAN, operand, value);
+    public static Criterion lt(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.LESS_THAN, operand, value);
     }
      
     /**
@@ -185,10 +162,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion memberOf(String operand,
-                                     Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.MEMBER_OF, operand, value);
+    public static Criterion memberOf(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.MEMBER_OF, operand, value);
     }
     
     /**
@@ -199,10 +174,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion ne(String operand,
-                               Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.NOT_EQUAL, operand, value);
+    public static Criterion ne(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.NOT_EQUAL, operand, value);
     }
                 
     /**
@@ -214,21 +187,14 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterions.
      */
-    public static List<Criterion> notBetween(String operand,
-                                             Object value1,
-                                             Object value2) {
-        
-        // Declare.
-        List<Criterion> criterions;
-        
+    public static List<Criterion> notBetween(final String operand, final Object value1, final Object value2) {
+
         // Initialize.
-        criterions = new ArrayList<Criterion>();
+        List<Criterion> criterions = new ArrayList<Criterion>();
         
         // x NOT BETWEEN y AND z is equivalent to x < y AND x > z
-        criterions.add(ComparisonOperation.op(
-            ComparisonOperator.LESS_THAN, operand, value1));
-        criterions.add(LogicalOperation.and(ComparisonOperation.op(
-            ComparisonOperator.GREATER_THAN, operand, value2)));
+        criterions.add(ComparisonOperation.op(ComparisonOperator.LESS_THAN, operand, value1));
+        criterions.add(LogicalOperation.and(ComparisonOperation.op(ComparisonOperator.GREATER_THAN, operand, value2)));
         
         return criterions;
     }
@@ -241,10 +207,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion notLike(String operand,
-                                    Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.NOT_LIKE, operand, value);
+    public static Criterion notLike(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.NOT_LIKE, operand, value);
     }
           
     /**
@@ -255,10 +219,8 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion notMemberOf(String operand,
-                                        Object value) {
-        return ComparisonOperation.op(
-            ComparisonOperator.NOT_MEMBER_OF, operand, value);
+    public static Criterion notMemberOf(final String operand, final Object value) {
+        return ComparisonOperation.op(ComparisonOperator.NOT_MEMBER_OF, operand, value);
     }
        
     /**
@@ -269,14 +231,10 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(ComparisonOperator comparisonOperator,
-                                String operand) {
-        
-        // Declare.
-        Criterion criterion;
+    private static Criterion op(final ComparisonOperator comparisonOperator, final String operand) {
 
         // Set the criterion.
-        criterion = new Criterion();
+        Criterion criterion = new Criterion();
         criterion.setComparisonOperator(comparisonOperator);
         criterion.setOperand(operand);
         
@@ -292,15 +250,10 @@ public class ComparisonOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(ComparisonOperator comparisonOperator,
-                                String operand,
-                                Object value) {
-        
-        // Declare.
-        Criterion criterion;
-
+    private static Criterion op(final ComparisonOperator comparisonOperator, final String operand, final Object value) {
+ 
         // Set the criterion.
-        criterion = new Criterion();
+        Criterion criterion = new Criterion();
         criterion.setComparisonOperator(comparisonOperator);
         criterion.setOperand(operand);
         criterion.setValue(value);

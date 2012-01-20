@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 
  * @author  Ron Rickard
  */
-public class Criterion implements Serializable {
+public final class Criterion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -78,7 +78,7 @@ public class Criterion implements Serializable {
      * 
      * @param  comparisonOperator  the comparison operator.
      */
-    public void setComparisonOperator(ComparisonOperator comparisonOperator) {
+    public void setComparisonOperator(final ComparisonOperator comparisonOperator) {
         this.comparisonOperator = comparisonOperator;
     }
 
@@ -87,7 +87,7 @@ public class Criterion implements Serializable {
      * 
      * @param  joinOperator  the join operator.
      */
-    public void setJoinOperator(JoinOperator joinOperator) {
+    public void setJoinOperator(final JoinOperator joinOperator) {
         this.joinOperator = joinOperator;
     }
 
@@ -96,7 +96,7 @@ public class Criterion implements Serializable {
      * 
      * @param  logicalOperator  the logical operator.
      */
-    public void setLogicalOperator(LogicalOperator logicalOperator) {
+    public void setLogicalOperator(final LogicalOperator logicalOperator) {
         this.logicalOperator = logicalOperator;
     }
       
@@ -105,7 +105,7 @@ public class Criterion implements Serializable {
      * 
      * @param  operand  the operand.
      */
-    public void setOperand(String operand) {
+    public void setOperand(final String operand) {
         this.operand = operand;
     }
           
@@ -114,7 +114,7 @@ public class Criterion implements Serializable {
      * 
      * @param  orderDirection  the order direction.
      */
-    public void setOrderDirection(OrderDirection orderDirection) {
+    public void setOrderDirection(final OrderDirection orderDirection) {
         this.orderDirection = orderDirection;
     }
     
@@ -123,7 +123,7 @@ public class Criterion implements Serializable {
      * 
      * @param  value  the value.
      */
-    public void setValue(Object value) {
+    public void setValue(final Object value) {
         this.value = value;
     }
 }

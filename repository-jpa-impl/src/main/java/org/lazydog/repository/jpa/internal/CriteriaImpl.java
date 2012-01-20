@@ -43,7 +43,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @throws  IllegalArgumentException  if the entity class or entity manager are invalid.
      */
-    public CriteriaImpl(Class<T> entityClass, EntityManager entityManager) {
+    public CriteriaImpl(final Class<T> entityClass, final EntityManager entityManager) {
 
         // Check if the entity class is null.
         if (entityClass == null) {
@@ -90,7 +90,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public Criteria<T> add(Criterion criterion) {
+    public Criteria<T> add(final Criterion criterion) {
 
         try {
 
@@ -265,7 +265,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public Criteria<T> add(List<Criterion> criterions) {
+    public Criteria<T> add(final List<Criterion> criterions) {
 
         // Loop through the restriction criterions.
         for (Criterion criterion : criterions) {
@@ -284,12 +284,9 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @return  the criteria.
      */
-    public Criteria<T> addJoin(Criterion criterion) {
+    public Criteria<T> addJoin(final Criterion criterion) {
 
         try {
-
-            // Declare.
-            EntityType<T> entityType;
 
             // Add the join operator to the joins string buffer.
             switch (criterion.getJoinOperator()) {
@@ -328,7 +325,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             this.joins.add(criterion);
 /*
             // Get the metamodel entity type.
-            entityType = this.entityManager.getMetamodel().entity(this.entityClass);
+            EntityType<T> entityType = this.entityManager.getMetamodel().entity(this.entityClass);
 
             // Loop through the attributes.
             for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {
@@ -357,7 +354,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @return  the criteria.
      */
-    public Criteria<T> addJoins(List<Criterion> criterions) {
+    public Criteria<T> addJoins(final List<Criterion> criterions) {
 
         // Loop through the join criterions.
         for (Criterion criterion : criterions) {
@@ -377,7 +374,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public Criteria<T> addOrder(Criterion criterion) {
+    public Criteria<T> addOrder(final Criterion criterion) {
 
         try {
 
@@ -428,7 +425,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public Criteria<T> addOrders(List<Criterion> criterions) {
+    public Criteria<T> addOrders(final List<Criterion> criterions) {
 
         // Loop through the order criterions.
         for (Criterion criterion : criterions) {
@@ -449,7 +446,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      *
      * @return  the new path expression.
      */
-    private static String getPathExpression(String pathExpression, String path) {
+    private static String getPathExpression(final String pathExpression, final String path) {
         return new StringBuffer()
                 .append(pathExpression)
                 .append(".")
@@ -511,7 +508,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * 
      * @return  true if the attribute can be optimized, otherwise false.
      */
-    private static boolean optimize(Attribute attribute) {
+    private static boolean optimize(final Attribute attribute) {
         return (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
@@ -524,13 +521,10 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @param  entityClass     the entity class.
      * @param  pathExpression  the path expression.
      */
-    private <U> void optimizeJoin(Class<U> entityClass, String pathExpression) {
-
-        // Declare.
-        EntityType<U> entityType;
+    private <U> void optimizeJoin(final Class<U> entityClass, final String pathExpression) {
 
         // Get the metamodel entity type.
-        entityType = this.entityManager.getMetamodel().entity(entityClass);
+        EntityType<U> entityType = this.entityManager.getMetamodel().entity(entityClass);
 
         // Loop through the attributes.
         for (Attribute<? super U, ?> attribute : entityType.getAttributes()) {
@@ -541,11 +535,8 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 //attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE) {
 
-                // Declare.
-                String newPathExpression;
-
                 // Set the new path expression.
-                newPathExpression = getPathExpression(pathExpression, attribute.getName());
+                String newPathExpression = getPathExpression(pathExpression, attribute.getName());
 
                 // Add a hint.
                 // TODO: Try QueryHints.BATCH or combination of QueryHints.LEFT_FETCH
@@ -563,11 +554,8 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      */
     private void optimizeQuery() {
 
-        // Declare.
-        EntityType<T> entityType;
-
         // Get the metamodel entity type.
-        entityType = this.entityManager.getMetamodel().entity(this.entityClass);
+        EntityType<T> entityType = this.entityManager.getMetamodel().entity(this.entityClass);
 
         // Loop through the attributes.
         for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {

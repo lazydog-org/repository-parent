@@ -6,7 +6,7 @@ package org.lazydog.repository.criterion;
  * 
  * @author  Ron Rickard
  */
-public class LogicalOperation {
+public final class LogicalOperation {
 
     /**
      * Private constructor.
@@ -21,7 +21,7 @@ public class LogicalOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion and(Criterion criterion) {
+    public static Criterion and(final Criterion criterion) {
         return LogicalOperation.op(LogicalOperator.AND, criterion);
     }
     
@@ -33,8 +33,8 @@ public class LogicalOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(LogicalOperator logicalOperator,
-                                Criterion criterion) {
+    private static Criterion op(final LogicalOperator logicalOperator,
+                                final Criterion criterion) {
         
         // Set the criterion logical operator.
         criterion.setLogicalOperator(logicalOperator);
@@ -49,7 +49,7 @@ public class LogicalOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion or(Criterion criterion) {
+    public static Criterion or(final Criterion criterion) {
         return LogicalOperation.op(LogicalOperator.OR, criterion);
     }
 }

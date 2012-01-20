@@ -6,7 +6,7 @@ package org.lazydog.repository.criterion;
  * 
  * @author  Ron Rickard
  */
-public class JoinOperation {
+public final class JoinOperation {
  
     /**
      * Private constructor.
@@ -21,9 +21,8 @@ public class JoinOperation {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion join(String operand) {
-        return JoinOperation.op(
-            JoinOperator.JOIN, operand);
+    public static Criterion join(final String operand) {
+        return JoinOperation.op(JoinOperator.JOIN, operand);
     }
 
     /**
@@ -33,9 +32,8 @@ public class JoinOperation {
      *
      * @return  the resulting criterion.
      */
-    public static Criterion joinFetch(String operand) {
-        return JoinOperation.op(
-            JoinOperator.JOIN_FETCH, operand);
+    public static Criterion joinFetch(final String operand) {
+        return JoinOperation.op(JoinOperator.JOIN_FETCH, operand);
     }
 
     /**
@@ -45,9 +43,8 @@ public class JoinOperation {
      *
      * @return  the resulting criterion.
      */
-    public static Criterion leftJoin(String operand) {
-        return JoinOperation.op(
-            JoinOperator.LEFT_JOIN, operand);
+    public static Criterion leftJoin(final String operand) {
+        return JoinOperation.op(JoinOperator.LEFT_JOIN, operand);
     }
 
     /**
@@ -57,9 +54,8 @@ public class JoinOperation {
      *
      * @return  the resulting criterion.
      */
-    public static Criterion leftJoinFetch(String operand) {
-        return JoinOperation.op(
-            JoinOperator.LEFT_JOIN_FETCH, operand);
+    public static Criterion leftJoinFetch(final String operand) {
+        return JoinOperation.op(JoinOperator.LEFT_JOIN_FETCH, operand);
     }
 
     /**
@@ -70,14 +66,10 @@ public class JoinOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(JoinOperator joinOperator,
-                                String operand) {
-        
-        // Declare.
-        Criterion criterion;
+    private static Criterion op(final JoinOperator joinOperator, final String operand) {
 
         // Set the criterion.
-        criterion = new Criterion();
+        Criterion criterion = new Criterion();
         criterion.setJoinOperator(joinOperator);
         criterion.setOperand(operand);
         

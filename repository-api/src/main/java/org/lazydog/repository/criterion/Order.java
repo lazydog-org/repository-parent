@@ -6,7 +6,7 @@ package org.lazydog.repository.criterion;
  * 
  * @author  Ron Rickard
  */
-public class Order {
+public final class Order {
 
     /**
      * Private constructor.
@@ -21,7 +21,7 @@ public class Order {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion asc(String operand) {
+    public static Criterion asc(final String operand) {
         return Order.order(OrderDirection.ASC, operand);
     }
     
@@ -32,7 +32,7 @@ public class Order {
      * 
      * @return  the resulting criterion.
      */
-    public static Criterion desc(String operand) {
+    public static Criterion desc(final String operand) {
         return Order.order(OrderDirection.DESC, operand);
     }
            
@@ -44,14 +44,10 @@ public class Order {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion order(OrderDirection orderDirection,
-                                   String operand) {
-        
-        // Declare.
-        Criterion criterion;
+    private static Criterion order(final OrderDirection orderDirection, final String operand) {
 
         // Set the criterion.
-        criterion = new Criterion();
+        Criterion criterion = new Criterion();
         criterion.setOrderDirection(orderDirection);
         criterion.setOperand(operand);
         

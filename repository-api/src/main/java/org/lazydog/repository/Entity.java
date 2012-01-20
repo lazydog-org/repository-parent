@@ -27,7 +27,7 @@ public abstract class Entity<T extends Entity<T,U>, U> implements Serializable {
      * 
      * @param  id  the ID.
      */
-    public  void setId(U id) {
+    public  void setId(final U id) {
         this.id = id;
     }
 }
