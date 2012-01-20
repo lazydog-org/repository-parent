@@ -15,7 +15,7 @@ public enum LoggingLevel {
     ERROR,
     OFF;
 
-    public static LoggingLevel getLoggingLevel(String value) {
+    public static LoggingLevel getLoggingLevel(final String value) {
         return LoggingLevel.valueOf(value.toUpperCase());
     }
 }

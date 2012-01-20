@@ -58,7 +58,7 @@ public final class EntityMappingsParser extends XMLConfigurationFileParser {
      * 
      * @throws  ParsingException  if unable to validate and parse the XML configuration file.
      */
-    private EntityMappingsParser(String configurationPathname, String schemaPathname) throws ParsingException {
+    private EntityMappingsParser(final String configurationPathname, final String schemaPathname) throws ParsingException {
     	super(configurationPathname, schemaPathname);
     }
     
@@ -143,7 +143,7 @@ public final class EntityMappingsParser extends XMLConfigurationFileParser {
      * 
      * @throws  ParsingException  if unable to validate and parse the pathname.
      */
-    public static EntityMappingsParser newInstance(String configurationPathname) throws ParsingException {
+    public static EntityMappingsParser newInstance(final String configurationPathname) throws ParsingException {
         return new EntityMappingsParser(configurationPathname, SCHEMA_PATHNAME);
     }
 
@@ -155,7 +155,7 @@ public final class EntityMappingsParser extends XMLConfigurationFileParser {
      * @throws  XMLStreamException  if unable to parse the input stream.
      */
     @Override
-    protected void parse(InputStream inputStream) throws XMLStreamException {
+    protected void parse(final InputStream inputStream) throws XMLStreamException {
 
         // Declare.
         XMLEventReader reader = null;

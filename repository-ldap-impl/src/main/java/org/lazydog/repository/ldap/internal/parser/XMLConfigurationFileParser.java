@@ -37,7 +37,7 @@ public abstract class XMLConfigurationFileParser {
      * 
      * @throws  ParsingException  if unable to validate and parse the XML configuration file.
      */
-    protected XMLConfigurationFileParser(String configurationPathname, String schemaPathname) 
+    protected XMLConfigurationFileParser(final String configurationPathname, final String schemaPathname) 
     	throws ParsingException {
 
         
@@ -122,7 +122,7 @@ public abstract class XMLConfigurationFileParser {
      *
      * @return  the attribute data.
      */
-    protected static <T extends Enum<T>> String getAttributeData(XMLEvent event, T attributeName) {
+    protected static <T extends Enum<T>> String getAttributeData(final XMLEvent event, final T attributeName) {
     	return (event.asStartElement().getAttributeByName(new QName(attributeName.toString().toLowerCase().replaceAll("_", "-"))) != null) ?
                 event.asStartElement().getAttributeByName(new QName(attributeName.toString().toLowerCase().replaceAll("_", "-"))).getValue() :
                 null;
@@ -135,7 +135,7 @@ public abstract class XMLConfigurationFileParser {
      *
      * @return  the element data.
      */
-    protected static String getElementData(XMLEvent event) {
+    protected static String getElementData(final XMLEvent event) {
         return event.asCharacters().getData();
     }
 
@@ -147,7 +147,7 @@ public abstract class XMLConfigurationFileParser {
      *
      * @return  the element name.
      */
-    protected static <T extends Enum<T>> T getElementName(Class<T> enumType, EndElement element) {
+    protected static <T extends Enum<T>> T getElementName(final Class<T> enumType, final EndElement element) {
         return getElementName(enumType, element.getName().getLocalPart());
     }
 
@@ -159,7 +159,7 @@ public abstract class XMLConfigurationFileParser {
      *
      * @return  the element name.
      */
-    protected static <T extends Enum<T>> T getElementName(Class<T> enumType, StartElement element) {
+    protected static <T extends Enum<T>> T getElementName(final Class<T> enumType, final StartElement element) {
         return getElementName(enumType, element.getName().getLocalPart());
     }
 
@@ -172,7 +172,7 @@ public abstract class XMLConfigurationFileParser {
      * @return  the element name.
      */
     @SuppressWarnings("unchecked")
-    protected static <T extends Enum<T>> T getElementName(Class<T> enumType, String name) {
+    protected static <T extends Enum<T>> T getElementName(final Class<T> enumType, final String name) {
         return (T)Enum.valueOf((Class<? extends Enum>)enumType, name.toUpperCase().replaceAll("-", "_"));
     }
     
@@ -181,7 +181,7 @@ public abstract class XMLConfigurationFileParser {
      * 
      * @return  the configuration input stream.
      */
-    private static InputStream getInputStream(String pathname) {
+    private static InputStream getInputStream(final String pathname) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(pathname);
     }
 
@@ -205,7 +205,7 @@ public abstract class XMLConfigurationFileParser {
      * @throws  SAXException  if unable to validate the configuration input stream
      *                        due to a STAX parser error.
      */
-    private static void validate(InputStream configurationStream, InputStream schemaStream) throws IOException, SAXException {
+    private static void validate(final InputStream configurationStream, final InputStream schemaStream) throws IOException, SAXException {
 
         // Validate the configuration input stream.
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

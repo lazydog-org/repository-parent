@@ -146,7 +146,7 @@ public final class Configuration {
      * 
      * @return  the attribute name.
      */
-    public String getAttributeName(Class<?> entityClass, String propertyName) {
+    public String getAttributeName(final Class<?> entityClass, final String propertyName) {
     	return this.propertyAttributeMap.get(entityClass).get(propertyName);
     }
     
@@ -157,7 +157,7 @@ public final class Configuration {
      * 
      * @return  the attribute names.
      */
-    public Set<String> getAttributeNames(Class<?> entityClass) {
+    public Set<String> getAttributeNames(final Class<?> entityClass) {
         return new HashSet<String>(this.propertyAttributeMap.get(entityClass).values());
     }
     
@@ -179,7 +179,7 @@ public final class Configuration {
      * 
      * @throws  ConfigurationException  if unable to get the directory environment.
      */
-    private static Properties getDirectoryEnvironment(PersistenceLDAPParser persistenceLDAPParser) throws ConfigurationException {
+    private static Properties getDirectoryEnvironment(final PersistenceLDAPParser persistenceLDAPParser) throws ConfigurationException {
 
         // Initialize the directory environment.
         Properties environment = new Properties();
@@ -233,7 +233,7 @@ public final class Configuration {
      * @return  the entity factory.
      */
     @SuppressWarnings("unchecked")
-	public <T> EntityFactory<T> getEntityFactory(Class<T> entityClass) {
+	public <T> EntityFactory<T> getEntityFactory(final Class<T> entityClass) {
     	return (EntityFactory<T>)this.entityFactoryMap.get(entityClass);
     }
 
@@ -245,7 +245,7 @@ public final class Configuration {
      * 
      * @return  the fetch type.
      */
-    public FetchType getFetchType(Class<?> entityClass, String propertyName) {
+    public FetchType getFetchType(final Class<?> entityClass, final String propertyName) {
     	return this.propertyFetchTypeMap.get(entityClass).get(propertyName);
     }
 
@@ -256,7 +256,7 @@ public final class Configuration {
      * 
      * @return  the object class values.
      */
-    public Set<String> getObjectClassValues(Class<?> entityClass) {
+    public Set<String> getObjectClassValues(final Class<?> entityClass) {
     	return this.objectClassValues.get(entityClass);
     }
 
@@ -267,7 +267,7 @@ public final class Configuration {
      * 
      * @return  the property name-attribute name map.
      */
-    public Map<String,String> getPropertyAttributeMap(Class<?> entityClass) {
+    public Map<String,String> getPropertyAttributeMap(final Class<?> entityClass) {
     	return this.propertyAttributeMap.get(entityClass);
     }
     
@@ -279,7 +279,7 @@ public final class Configuration {
      * 
      * @return  the property name.
      */
-    public String getPropertyName(Class<?> entityClass, String attributeName) {
+    public String getPropertyName(final Class<?> entityClass, final String attributeName) {
 
         String foundPropertyName = null;
 
@@ -306,7 +306,7 @@ public final class Configuration {
      * 
      * @return  the property names.
      */
-    public Set<String> getPropertyNames(Class<?> entityClass) {
+    public Set<String> getPropertyNames(final Class<?> entityClass) {
     	return this.propertyAttributeMap.get(entityClass).keySet();
     }
 
@@ -319,7 +319,7 @@ public final class Configuration {
      * 
      * @throws  ConfigurationException  if unable to get the property target entity classes.
      */
-    private static Map<String, Class<?>> getPropertyTargetEntityClasses(Map<String,String> propertyTargetEntityClassNames) throws ConfigurationException {
+    private static Map<String, Class<?>> getPropertyTargetEntityClasses(final Map<String,String> propertyTargetEntityClassNames) throws ConfigurationException {
 
         Map<String, Class<?>> propertyTargetEntityClasses = new HashMap<String, Class<?>>();
 		
@@ -365,7 +365,7 @@ public final class Configuration {
      * 
      * @return  the referential integrity attribute.
      */
-    public String getReferentialIntegrityAttribute(Class<?> entityClass, String attributeName) {
+    public String getReferentialIntegrityAttribute(final Class<?> entityClass, final String attributeName) {
         return this.attributeReferentialIntegrityMap.get(entityClass).get(attributeName);
     }
 
@@ -376,7 +376,7 @@ public final class Configuration {
      * 
      * @return  the attribute name-referential integrity attribute name map.
      */
-    public Map<String,String> getReferentialIntegrityMap(Class<?> entityClass) {
+    public Map<String,String> getReferentialIntegrityMap(final Class<?> entityClass) {
         return this.attributeReferentialIntegrityMap.get(entityClass);
     }
 	
@@ -387,7 +387,7 @@ public final class Configuration {
      * 
      * @return  the search base.
      */
-    public String getSearchBase(Class<?> entityClass) {
+    public String getSearchBase(final Class<?> entityClass) {
     	return this.searchBaseMap.get(entityClass);
     }
 
@@ -398,7 +398,7 @@ public final class Configuration {
      * 
      * @return the search scope.
      */
-    public SearchScope getSearchScope(Class<?> entityClass) {
+    public SearchScope getSearchScope(final Class<?> entityClass) {
         return this.searchScopeMap.get(entityClass);
     }
     
@@ -410,7 +410,7 @@ public final class Configuration {
      * 
      * @return  the target entity class.
      */
-    public Class<?> getTargetEntityClass(Class<?> entityClass, String propertyName) {
+    public Class<?> getTargetEntityClass(final Class<?> entityClass, final String propertyName) {
     	return this.propertyTargetEntityClassMap.get(entityClass).get(propertyName);
     }
     
@@ -422,7 +422,7 @@ public final class Configuration {
      * 
      * @return  true if the property is an entity type, otherwise false.
      */
-    public boolean isEntityType(Class<?> entityClass, String propertyName) {
+    public boolean isEntityType(final Class<?> entityClass, final String propertyName) {
     	return (this.propertyTargetEntityClassMap.get(entityClass).get(propertyName) != null) ? true : false;
     }
 
@@ -442,7 +442,7 @@ public final class Configuration {
      * 
      * @param  persistenceLDAPParser  the persistence LDAP parser.
      */
-    private void setLoggingLevel(PersistenceLDAPParser persistenceLDAPParser) {
+    private void setLoggingLevel(final PersistenceLDAPParser persistenceLDAPParser) {
     	
     	// Get the logging level.
     	Level level = Level.toLevel(persistenceLDAPParser.getLoggingLevel().toString());

@@ -24,7 +24,7 @@ public final class EntityFactoryException extends LoggableException implements S
      * @param  methodName   the method name.
      *
      */
-    public EntityFactoryException(Class<?> entityClass, String methodName) {
+    public EntityFactoryException(final Class<?> entityClass, final String methodName) {
         super();
         this.entityClass = entityClass;
         this.methodName = methodName;
@@ -41,7 +41,7 @@ public final class EntityFactoryException extends LoggableException implements S
      * @param  entityClass  the entity class.
      * @param  methodName   the method name.
      */
-    public EntityFactoryException(String message, Class<?> entityClass, String methodName) {
+    public EntityFactoryException(final String message, final Class<?> entityClass, final String methodName) {
         super(message);
         this.entityClass = entityClass;
         this.methodName = methodName;
@@ -59,7 +59,7 @@ public final class EntityFactoryException extends LoggableException implements S
      * @param  entityClass  the entity class.
      * @param  methodName   the method name.
      */
-    public EntityFactoryException(String message, Throwable cause, Class<?> entityClass, String methodName) {
+    public EntityFactoryException(final String message, final Throwable cause, final Class<?> entityClass, final String methodName) {
         super(message, cause);
         this.entityClass = entityClass;
         this.methodName = methodName;
@@ -76,7 +76,7 @@ public final class EntityFactoryException extends LoggableException implements S
      * @param  entityClass  the entity class.
      * @param  methodName   the method name.
      */
-    public EntityFactoryException(Throwable cause, Class<?> entityClass, String methodName) {
+    public EntityFactoryException(final Throwable cause, final Class<?> entityClass, final String methodName) {
         super(cause);
         this.entityClass = entityClass;
         this.methodName = methodName;

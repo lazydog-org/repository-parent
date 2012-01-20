@@ -26,7 +26,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the criteria is null or invalid.
      */
-    public static void validCriteria(Criteria<?> criteria) {
+    public static void validCriteria(final Criteria<?> criteria) {
 
         // Check if the criteria is null.
         if (criteria == null) {
@@ -46,7 +46,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the entity is null or invalid.
      */
-    public static <T> void validEntity(T entity) {
+    public static <T> void validEntity(final T entity) {
         validEntity(entity, null);
     }
 	
@@ -59,7 +59,7 @@ public final class Validator {
      * @throws  IllegalArgumentException  if the entity is null or invalid.
      */
     @SuppressWarnings("unchecked")
-    public static <T> void validEntity(T entity, Set<Class<?>> supportedEntityClasses) {
+    public static <T> void validEntity(final T entity, final Set<Class<?>> supportedEntityClasses) {
 
         // Check if the entity is null.
         if (entity == null) {
@@ -78,7 +78,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
-    public static void validEntityClass(Class<?> entityClass) {
+    public static void validEntityClass(final Class<?> entityClass) {
         validEntityClass(entityClass, null);
     }
 	
@@ -90,7 +90,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
-    public static void validEntityClass(Class<?> entityClass, Set<Class<?>> supportedEntityClasses) {
+    public static void validEntityClass(final Class<?> entityClass, final Set<Class<?>> supportedEntityClasses) {
 
         // Check if the entity class is null.
         if (entityClass == null) {
@@ -125,7 +125,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the ID is null or invalid.
      */
-    public static <T> void validId(T id) {
+    public static <T> void validId(final T id) {
 
         // Check if the ID is null.
         if (id == null) {
@@ -145,7 +145,7 @@ public final class Validator {
      * 
      * @throws  IllegalArgumentException  if the list is null or invalid.
      */
-    public static <T> void validList(List<T> list) {
+    public static <T> void validList(final List<T> list) {
 
         // Check if the list is null.
         if (list == null) {

@@ -31,7 +31,7 @@ public final class ConfigurationException extends LoggableException implements S
      *
      * @param  message  the message.
      */
-    public ConfigurationException(String message) {
+    public ConfigurationException(final String message) {
         super(message);
         
         if (getLogState()) {
@@ -45,7 +45,7 @@ public final class ConfigurationException extends LoggableException implements S
      * @param  message  the message.
      * @param  cause    the cause.
      */
-    public ConfigurationException(String message, Throwable cause) {
+    public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
         
         if (getLogState()) {
@@ -58,7 +58,7 @@ public final class ConfigurationException extends LoggableException implements S
      *
      * @param  cause  the cause.
      */
-    public ConfigurationException(Throwable cause) {
+    public ConfigurationException(final Throwable cause) {
         super(cause);
         
         if (getLogState()) {

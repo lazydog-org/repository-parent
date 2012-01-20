@@ -28,7 +28,7 @@ public final class EntityFactory<T> {
      * @param  entityClass     the entity class.
      * @param  supportedTypes  the supported types.
      */
-    private EntityFactory(Class<T> entityClass, List<Class<?>> supportedTypes) {
+    private EntityFactory(final Class<T> entityClass, final List<Class<?>> supportedTypes) {
         this.entityClass = entityClass;
         this.supportedTypes = supportedTypes;
         logger.info("Entity factory initialized with entity " + entityClass + ".");
@@ -44,7 +44,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to create an entity.
      */
-    public T createEntity(Map<String,Object> propertyMap) throws EntityFactoryException {
+    public T createEntity(final Map<String,Object> propertyMap) throws EntityFactoryException {
 
         Date startTime = new Date();
         logger.info("Creating a new entity of type " + this.entityClass + ".");
@@ -91,7 +91,7 @@ public final class EntityFactory<T> {
      * 
      * @return  the duration in seconds.
      */
-    private static double duration(Date startTime, Date endTime) {
+    private static double duration(final Date startTime, final Date endTime) {
         return ((double)endTime.getTime() - (double)startTime.getTime()) / 1000.0;
     }
 	
@@ -102,7 +102,7 @@ public final class EntityFactory<T> {
      * 
      * @return  the accessor method name.
      */
-    private static String getAccessorMethodName(String propertyName) {
+    private static String getAccessorMethodName(final String propertyName) {
         return "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 
@@ -115,7 +115,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to get the acessor method's return type.
      */
-    public Class<?> getAccessorReturnType(String propertyName) throws EntityFactoryException {
+    public Class<?> getAccessorReturnType(final String propertyName) throws EntityFactoryException {
         return this.getMethod(getAccessorMethodName(propertyName)).getReturnType();
     }
 	
@@ -128,7 +128,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to get the method.
      */
-    private Method getMethod(String methodName) throws EntityFactoryException {
+    private Method getMethod(final String methodName) throws EntityFactoryException {
 
         // Get the methods of the entity class.
         Method[] methods = this.entityClass.getMethods();
@@ -154,7 +154,7 @@ public final class EntityFactory<T> {
      * 
      * @return  the mutator method name.
      */
-    private static String getMutatorMethodName(String propertyName) {
+    private static String getMutatorMethodName(final String propertyName) {
         return "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 
@@ -167,7 +167,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to get the mutator method's parameter type.
      */
-    public Class<?> getMutatorParameterType(String propertyName) throws EntityFactoryException {
+    public Class<?> getMutatorParameterType(final String propertyName) throws EntityFactoryException {
         return this.getMethod(getMutatorMethodName(propertyName)).getParameterTypes()[0];
     }
 
@@ -181,7 +181,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to get the property name-property value map.
      */
-    public Map<String,Object> getPropertyMap(T entity, Set<String> propertyNames) throws EntityFactoryException {
+    public Map<String,Object> getPropertyMap(final T entity, final Set<String> propertyNames) throws EntityFactoryException {
 
         Date startTime = new Date();
         logger.info("Getting values of properties '" + propertyNames + "' for entity " + this.entityClass + ".");
@@ -216,7 +216,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to get the value of the property.
      */
-    public Object getPropertyValue(T entity, String propertyName) throws EntityFactoryException {
+    public Object getPropertyValue(final T entity, final String propertyName) throws EntityFactoryException {
 
         // Get the property value by invoking the accessor method for the property.
         String methodName = getAccessorMethodName(propertyName);
@@ -245,7 +245,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to invoke the method.
      */
-    private Object invokeMethod(T entity, Method method, Object parameterValue) throws EntityFactoryException {
+    private Object invokeMethod(final T entity, final Method method, final Object parameterValue) throws EntityFactoryException {
 
         // Initialize.
         Object returnValue = null;
@@ -319,7 +319,7 @@ public final class EntityFactory<T> {
      * 
      * @return  true if the value is an expected type, otherwise false.
      */
-    private boolean isExpectedType(Object value, Class<?> expectedType) {
+    private boolean isExpectedType(final Object value, final Class<?> expectedType) {
 
         // Initialize.
         boolean valid = false;
@@ -347,7 +347,7 @@ public final class EntityFactory<T> {
      * @return  true if the value is a supported type, otherwise false.
      */
     @SuppressWarnings("unchecked")
-    private boolean isSupportedType(Object value) {
+    private boolean isSupportedType(final Object value) {
 
         // Initialize.
         boolean isSupportedType = false;
@@ -386,7 +386,7 @@ public final class EntityFactory<T> {
      * 
      * @return  a new instance of this class.
      */
-    public static <T> EntityFactory<T> newInstance(Class<T> entityClass, List<Class<?>> supportedTypes) {
+    public static <T> EntityFactory<T> newInstance(final Class<T> entityClass, final List<Class<?>> supportedTypes) {
         return new EntityFactory<T>(entityClass, supportedTypes);
     }
 
@@ -399,7 +399,7 @@ public final class EntityFactory<T> {
      * 
      * @throws  EntityFactoryException  if unable to set the value of the property.
      */
-    private void setPropertyValue(T entity, String propertyName, Object propertyValue) throws EntityFactoryException {
+    private void setPropertyValue(final T entity, final String propertyName, final Object propertyValue) throws EntityFactoryException {
 
         // Get the mutator method for the property.
         String methodName = getMutatorMethodName(propertyName);

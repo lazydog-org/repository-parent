@@ -9,7 +9,7 @@ public enum SearchScope {
     ONE,
     SUBTREE;
     
-    public static SearchScope getSearchScope(String value) {
+    public static SearchScope getSearchScope(final String value) {
         return SearchScope.valueOf(value.toUpperCase());
     }
 }

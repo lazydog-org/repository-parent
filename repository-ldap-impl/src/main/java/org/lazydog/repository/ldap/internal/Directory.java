@@ -205,9 +205,11 @@ public final class Directory {
                         // Update the corresponding entry.
                         this.updateEntry(attributeValue, correspondingAttributeMap);
                     }
-                    else if (!correspondingAttributeMap.containsValue(dn)) {
+                    
+                    // Check if the DN is not a corresponding attribute value.
+                    else if (!correspondingAttributeMap.get(correspondingAttributeName).contains(dn)) {
 
-                        // Add this DN as the corresponding attribute's value.
+                        // Add this DN as a corresponding attribute value.
                         correspondingAttributeMap.get(correspondingAttributeName).add(dn);
 
                         // Update the corresponding entry.

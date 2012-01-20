@@ -34,7 +34,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @throws  IllegalArgumentException  if the object class values, the property 
      *                                    name-attribute name map, search base, or search scope is invalid.
      */
-    public CriteriaImpl(Set<String> objectClassValues, Map<String,String> propertyAttributeMap, String searchBase, SearchScope searchScope) {
+    public CriteriaImpl(final Set<String> objectClassValues, final Map<String,String> propertyAttributeMap, final String searchBase, final SearchScope searchScope) {
 
         // Check if the object class values is invalid.
         if (objectClassValues == null || objectClassValues.size() < 1) {
@@ -86,7 +86,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public CriteriaImpl<T> add(Criterion criterion) {
+    public CriteriaImpl<T> add(final Criterion criterion) {
 
         // Check if a restriction has not already been processed.
         if (!this.restrictionExists()) {
@@ -182,7 +182,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public CriteriaImpl<T> add(List<Criterion> criterions) {
+    public CriteriaImpl<T> add(final List<Criterion> criterions) {
     	
     	// Loop through the restriction criterions.
         for (Criterion criterion : criterions) {
@@ -202,7 +202,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public CriteriaImpl<T> addOrder(Criterion criterion) {
+    public CriteriaImpl<T> addOrder(final Criterion criterion) {
     	throw new UnsupportedOperationException("Order is not applicable to this repository implementation.");
     }
 
@@ -214,7 +214,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the criteria.
      */
     @Override
-    public CriteriaImpl<T> addOrders(List<Criterion> criterions) {
+    public CriteriaImpl<T> addOrders(final List<Criterion> criterions) {
     	throw new UnsupportedOperationException("Order is not applicable to this repository implementation.");
     }
 
@@ -255,29 +255,6 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
     	return false;
     }
 
-    /**
-     * Replace the original object with the replacement object
-     * if the original object is null.
-     *
-     * @param  original     the original object.
-     * @param  replacement  the replacement object.
-     *
-     * @return  the original object if it is not null, otherwise the replacement
-     *          object.
-     *
-     * @throws  IllegalArgumentException  if the replacement object is null.
-     */
-    private static <U, V extends U> U replaceNull(U original, V replacement) {
-
-        // Check if the replacement object is null.
-        if (replacement == null) {
-            throw new IllegalArgumentException(
-                    "The replacement object cannot be null.");
-        }
-
-        return (original == null) ? replacement : original;
-    }
-    
     /**
      * Check if a restriction criterion exists.
      *

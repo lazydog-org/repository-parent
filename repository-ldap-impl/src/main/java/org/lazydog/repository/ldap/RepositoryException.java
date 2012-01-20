@@ -18,7 +18,7 @@ public final class RepositoryException extends RuntimeException implements Seria
      * 
      * @param  entityClass  the entity class.
      */
-    public RepositoryException(Class<?> entityClass) {
+    public RepositoryException(final Class<?> entityClass) {
         super();
         this.entityClass = entityClass;
     }
@@ -29,7 +29,7 @@ public final class RepositoryException extends RuntimeException implements Seria
      * @param  message          the message.
      * @param  entityClassName  the entity class.
      */
-    public RepositoryException(String message, Class<?> entityClass) {
+    public RepositoryException(final String message, final Class<?> entityClass) {
         super(message);
         this.entityClass = entityClass;
     }
@@ -41,7 +41,7 @@ public final class RepositoryException extends RuntimeException implements Seria
      * @param  cause            the cause.
      * @param  entityClassName  the entity class.
      */
-    public RepositoryException(String message, Throwable cause, Class<?> entityClass) {
+    public RepositoryException(final String message, final Throwable cause, final Class<?> entityClass) {
         super(message, cause);
         this.entityClass = entityClass;
     }
@@ -52,7 +52,7 @@ public final class RepositoryException extends RuntimeException implements Seria
      * @param  cause            the cause.
      * @param  entityClassName  the entity class name.
      */
-    public RepositoryException(Throwable cause, Class<?> entityClass) {
+    public RepositoryException(final Throwable cause, final Class<?> entityClass) {
         super(cause);
         this.entityClass = entityClass;
     }

@@ -58,7 +58,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @throws  EntityFactoryException  if unable to convert the attribute name-attribute value map to a property name-property value map.
      */
-    private Map<String,Object> convertAttributeMapToPropertyMap(Class<?> entityClass, Map<String,Set<String>> attributeMap) throws EntityFactoryException {
+    private Map<String,Object> convertAttributeMapToPropertyMap(final Class<?> entityClass, final Map<String,Set<String>> attributeMap) throws EntityFactoryException {
 
         // Initialize.
         Map<String, Object> propertyMap = new HashMap<String, Object>();
@@ -95,7 +95,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @throws  EntityFactoryException  if unable to convert the property name-property value map to an attribute name-attribute value map.
      */
-    private Map<String,Set<String>> convertPropertyMapToAttributeMap(Class<?> entityClass, Map<String,Object> propertyMap) throws EntityFactoryException {
+    private Map<String,Set<String>> convertPropertyMapToAttributeMap(final Class<?> entityClass, final Map<String,Object> propertyMap) throws EntityFactoryException {
 
         // Initialize.
         Map<String,Set<String>> attributeMap = new HashMap<String,Set<String>>();
@@ -133,7 +133,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @throws  EntityFactoryException  if unable to create the entity.
      */
-    private <T,U> T createEntity(Class<T> entityClass, U id, Map<String,Set<String>> attributeMap) throws EntityFactoryException {
+    private <T,U> T createEntity(final Class<T> entityClass, final U id, final Map<String,Set<String>> attributeMap) throws EntityFactoryException {
 
         // Convert the attribute name-attribute value map to the property name-property value map.
         Map<String,Object> propertyMap = this.convertAttributeMapToPropertyMap(entityClass, attributeMap);
@@ -154,7 +154,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @throws  EntityFactoryException  if unable to create the entity.
      */
-    private <T,U> T createEntity(Class<T> entityClass, U id, FetchType fetchType) throws EntityFactoryException {
+    private <T,U> T createEntity(final Class<T> entityClass, final U id, final FetchType fetchType) throws EntityFactoryException {
         return (fetchType == FetchType.EAGER) ? this.find(entityClass, id) : this.createLazyEntity(entityClass, id);
     }
 	
@@ -168,7 +168,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @throws  EntityFactoryException  if unable to create the entity.
      */
-    private <T,U> T createLazyEntity(Class<T> entityClass, U id) throws EntityFactoryException {
+    private <T,U> T createLazyEntity(final Class<T> entityClass, final U id) throws EntityFactoryException {
 
         // Only add the ID property to the entity.
         Map<String,Object> propertyValues = new HashMap<String,Object>();
@@ -189,7 +189,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to find the entity.
      */
     @Override
-    public <T,U> T find(Class<T> entityClass, U id) {
+    public <T,U> T find(final Class<T> entityClass, final U id) {
 		
         validEntityClass(entityClass, this.configuration.getEntityClasses());
         validId(id);
@@ -235,7 +235,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to find the entity.
      */
     @Override
-    public <T> T find(Class<T> entityClass, Criteria<T> criteria) {
+    public <T> T find(final Class<T> entityClass, final Criteria<T> criteria) {
 		
         // Find the list of entities.
         List<T> entities = this.findList(entityClass, criteria);
@@ -261,7 +261,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to find the list of entities.
      */
     @Override
-    public <T> List<T> findList(Class<T> entityClass) {
+    public <T> List<T> findList(final Class<T> entityClass) {
         return this.findList(entityClass, this.getCriteria(entityClass));
     }
 
@@ -277,7 +277,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to find the list of entities.
      */
     @Override
-    public <T> List<T> findList(Class<T> entityClass, Criteria<T> criteria) {
+    public <T> List<T> findList(final Class<T> entityClass, final Criteria<T> criteria) {
 		
         validEntityClass(entityClass, this.configuration.getEntityClasses());
         validCriteria(criteria);
@@ -340,7 +340,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  EntityFactoryException  if unable to get the attribute values.
      */
     @SuppressWarnings("unchecked")
-    private Set<String> getAttributeValues(Class<?> entityClass, Object propertyValue, String propertyName) throws EntityFactoryException {
+    private Set<String> getAttributeValues(final Class<?> entityClass, final Object propertyValue, final String propertyName) throws EntityFactoryException {
 
         // Initialize the attribute values.
         Set<String> attributeValues = new HashSet<String>();
@@ -404,7 +404,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  IllegalArgumentException  if the entity class is null or invalid.
      */
     @Override
-    public <T> Criteria<T> getCriteria(Class<T> entityClass) {
+    public <T> Criteria<T> getCriteria(final Class<T> entityClass) {
 		
         validEntityClass(entityClass, this.configuration.getEntityClasses());
         return new CriteriaImpl<T>(
@@ -426,7 +426,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  EntityFactoryException  if unable to get the property value.
      */
     @SuppressWarnings("unchecked")
-    private Object getPropertyValue(Class<?> entityClass, Set<String> attributeValues, String propertyName) throws EntityFactoryException {
+    private Object getPropertyValue(final Class<?> entityClass, final Set<String> attributeValues, final String propertyName) throws EntityFactoryException {
 		
         // Initialize the property value.
         Object propertyValue = null;
@@ -517,7 +517,7 @@ public abstract class AbstractRepository implements Repository {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T persist(T entity) {
+    public <T> T persist(final T entity) {
 		
         validEntity(entity, this.configuration.getEntityClasses());
 		
@@ -577,7 +577,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to persist the list of entities.
      */
     @Override
-    public <T> List<T> persistList(List<T> entities) {
+    public <T> List<T> persistList(final List<T> entities) {
 
         validList(entities);
 		
@@ -607,7 +607,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to remove the entity.
      */
     @Override
-    public <T,U> void remove(Class<T> entityClass, U id) {
+    public <T,U> void remove(final Class<T> entityClass, final U id) {
 		
         validEntityClass(entityClass, this.configuration.getEntityClasses());
         validId(id);
@@ -634,7 +634,7 @@ public abstract class AbstractRepository implements Repository {
      * @throws  RepositoryException       if unable to remove the entities.
      */
     @Override
-    public <T,U> void removeList(Class<T> entityClass, List<U> ids) {
+    public <T,U> void removeList(final Class<T> entityClass, final List<U> ids) {
 
         validList(ids);
 

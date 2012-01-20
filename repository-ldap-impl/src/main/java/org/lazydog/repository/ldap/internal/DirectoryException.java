@@ -21,7 +21,7 @@ public final class DirectoryException extends LoggableException implements Seria
      * 
      * @param  dn  the distinguished name.
      */
-    public DirectoryException(String dn) {
+    public DirectoryException(final String dn) {
         super();
         this.dn = dn;
         
@@ -36,7 +36,7 @@ public final class DirectoryException extends LoggableException implements Seria
      * @param  message  the message.
      * @param  dn       the distinguished name.
      */
-    public DirectoryException(String message, String dn) {
+    public DirectoryException(final String message, final String dn) {
         super(message);
         this.dn = dn;
         
@@ -52,7 +52,7 @@ public final class DirectoryException extends LoggableException implements Seria
      * @param  cause    the cause.
      * @param  dn       the distinguished name.
      */
-    public DirectoryException(String message, Throwable cause, String dn) {
+    public DirectoryException(final String message, final Throwable cause, final String dn) {
         super(message, cause);
         this.dn = dn;
         
@@ -67,7 +67,7 @@ public final class DirectoryException extends LoggableException implements Seria
      * @param  cause  the cause.
      * @param  dn     the distinguished name.
      */
-    public DirectoryException(Throwable cause, String dn) {
+    public DirectoryException(final Throwable cause, final String dn) {
         super(cause);
         this.dn = dn;
         

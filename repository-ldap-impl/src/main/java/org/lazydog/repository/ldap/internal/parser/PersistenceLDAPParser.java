@@ -49,11 +49,11 @@ public final class PersistenceLDAPParser extends XMLConfigurationFileParser {
      * Private constructor.
      * 
      * @param  configurationPathname  the pathname for the XML configuration file.
-     * @param  schemaPathname		  the pathname for the XSD schema file.
+     * @param  schemaPathname         the pathname for the XSD schema file.
      * 
      * @throws  ParsingException  if unable to validate and parse the XML configuration file.
      */
-    private PersistenceLDAPParser(String configurationPathname, String schemaPathname) throws ParsingException {
+    private PersistenceLDAPParser(final String configurationPathname, final String schemaPathname) throws ParsingException {
     	super(configurationPathname, schemaPathname);
     }
 
@@ -158,7 +158,7 @@ public final class PersistenceLDAPParser extends XMLConfigurationFileParser {
      * 
      * @throws  ParsingException  if unable to validate and parse the pathname.
      */
-    public static PersistenceLDAPParser newInstance(String configurationPathname) throws ParsingException {
+    public static PersistenceLDAPParser newInstance(final String configurationPathname) throws ParsingException {
         return new PersistenceLDAPParser(configurationPathname, SCHEMA_PATHNAME);
     }
 
@@ -170,7 +170,7 @@ public final class PersistenceLDAPParser extends XMLConfigurationFileParser {
      * @throws  XMLStreamException  if unable to parse the input stream.
      */
     @Override
-    protected void parse(InputStream inputStream) throws XMLStreamException {
+    protected void parse(final InputStream inputStream) throws XMLStreamException {
 
         // Declare.
         XMLEventReader reader = null;

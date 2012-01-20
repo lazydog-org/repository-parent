@@ -10,7 +10,7 @@ public enum FetchType {
     EAGER,
     LAZY;
 
-    public static FetchType getFetchType(String value) {
+    public static FetchType getFetchType(final String value) {
         return FetchType.valueOf(value.toUpperCase());
     }
 }

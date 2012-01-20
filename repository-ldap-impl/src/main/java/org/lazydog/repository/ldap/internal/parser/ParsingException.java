@@ -20,7 +20,7 @@ public final class ParsingException extends Exception implements Serializable {
      * @param  configurationPathname  the configuration pathname.
      * @param  schemaPathname         the schema pathname.
      */
-    public ParsingException(String configurationPathname, String schemaPathname) {
+    public ParsingException(final String configurationPathname, final String schemaPathname) {
         super();
         this.configurationPathname = configurationPathname;
         this.schemaPathname = schemaPathname;
@@ -33,7 +33,7 @@ public final class ParsingException extends Exception implements Serializable {
      * @param  configurationPathname  the configuration pathname.
      * @param  schemaPathname         the schema pathname.
      */
-    public ParsingException(String message, String configurationPathname, String schemaPathname) {
+    public ParsingException(final String message, final String configurationPathname, final String schemaPathname) {
         super(message);
         this.configurationPathname = configurationPathname;
         this.schemaPathname = schemaPathname;
@@ -47,7 +47,7 @@ public final class ParsingException extends Exception implements Serializable {
      * @param  configurationPathname  the configuration pathname.
      * @param  schemaPathname         the schema pathname.
      */
-    public ParsingException(String message, Throwable cause, String configurationPathname, String schemaPathname) {
+    public ParsingException(final String message, final Throwable cause, final String configurationPathname, final String schemaPathname) {
         super(message, cause);
         this.configurationPathname = configurationPathname;
         this.schemaPathname = schemaPathname;
@@ -60,7 +60,7 @@ public final class ParsingException extends Exception implements Serializable {
      * @param  configurationPathname  the configuration pathname.
      * @param  schemaPathname         the schema pathname.
      */
-    public ParsingException(Throwable cause, String configurationPathname, String schemaPathname) {
+    public ParsingException(final Throwable cause, final String configurationPathname, final String schemaPathname) {
         super(cause);
         this.configurationPathname = configurationPathname;
         this.schemaPathname = schemaPathname;

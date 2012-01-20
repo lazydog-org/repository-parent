@@ -25,7 +25,7 @@ public abstract class LoggableException extends Exception implements Serializabl
      *
      * @param  message  the message.
      */
-    public LoggableException(String message) {
+    public LoggableException(final String message) {
         super(message);
     }
 
@@ -35,7 +35,7 @@ public abstract class LoggableException extends Exception implements Serializabl
      * @param  message  the message.
      * @param  cause    the cause.
      */
-    public LoggableException(String message, Throwable cause) {
+    public LoggableException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -44,7 +44,7 @@ public abstract class LoggableException extends Exception implements Serializabl
      *
      * @param  cause  the cause.
      */
-    public LoggableException(Throwable cause) {
+    public LoggableException(final Throwable cause) {
         super(cause);
     }
     
@@ -62,7 +62,7 @@ public abstract class LoggableException extends Exception implements Serializabl
      * 
      * @param  logState  true to enable logging, otherwise false.
      */
-    public static void setLogState(boolean logState) {
+    public static void setLogState(final boolean logState) {
         LoggableException.logState = logState;
     }
 }
