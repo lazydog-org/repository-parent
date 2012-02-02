@@ -40,7 +40,7 @@ public class ConfigurationTest {
 	
     @Test
     public void testGetAttributeName() throws Exception {
-    	String expected = "member";
+    	String expected = "uniqueMember";
     	Configuration configuration = Configuration.newInstance();
     	String actual = configuration.getAttributeName(Group.class, "accounts");
     	assertEquals(expected, actual);
@@ -49,7 +49,7 @@ public class ConfigurationTest {
     @Test
     public void testGetAttributeNames() throws Exception {
     	Set<String> expected = new HashSet<String>();
-    	expected.add("member");
+    	expected.add("uniqueMember");
     	expected.add("description");
     	expected.add("cn");
     	Configuration configuration = Configuration.newInstance();
@@ -78,7 +78,7 @@ public class ConfigurationTest {
     @Test
     public void testGetObjectClassValues() throws Exception {
     	Set<String> expected = new HashSet<String>();
-    	expected.add("groupOfNames");
+    	expected.add("groupOfUniqueNames");
     	expected.add("top");
     	Configuration configuration = Configuration.newInstance();
     	Set<String> actual = configuration.getObjectClassValues(Group.class);
@@ -88,7 +88,7 @@ public class ConfigurationTest {
     @Test
     public void testGetPropertyAttributeMap() throws Exception {
     	Map<String,String> expected = new HashMap<String,String>();
-    	expected.put("accounts", "member");
+    	expected.put("accounts", "uniqueMember");
     	expected.put("description", "description");
     	expected.put("name", "cn");
     	Configuration configuration = Configuration.newInstance();
@@ -100,7 +100,7 @@ public class ConfigurationTest {
     public void testGetPropertyName() throws Exception {
     	String expected = "accounts";
     	Configuration configuration = Configuration.newInstance();
-    	String actual = configuration.getPropertyName(Group.class, "member");
+    	String actual = configuration.getPropertyName(Group.class, "uniqueMember");
     	assertEquals(expected, actual);
     }
     
@@ -117,16 +117,16 @@ public class ConfigurationTest {
 
     @Test
     public void testGetReferentialIntegrityAttribute() throws Exception {
-    	String expected = "mail";
+    	String expected = "description";
     	Configuration configuration = Configuration.newInstance();
-    	String actual = configuration.getReferentialIntegrityAttribute(Group.class, "member");
+    	String actual = configuration.getReferentialIntegrityAttribute(Group.class, "uniqueMember");
     	assertEquals(expected, actual);
     }
     
     @Test
     public void testGetReferentialIntegrityMap() throws Exception {
     	Map<String,String> expected = new HashMap<String,String>();
-    	expected.put("member", "mail");
+    	expected.put("uniqueMember", "description");
     	Configuration configuration = Configuration.newInstance();
     	Map<String,String> actual = configuration.getReferentialIntegrityMap(Group.class);
     	assertEquals(expected, actual);
@@ -134,12 +134,20 @@ public class ConfigurationTest {
     
     @Test
     public void testGetSearchBase() throws Exception {
-    	String expected = "ou=system";
+    	String expected = "o=test,ou=system";
     	Configuration configuration = Configuration.newInstance();
     	String actual = configuration.getSearchBase(Group.class);
     	assertEquals(expected, actual);
     }
 
+    @Test
+    public void testGetSearchScope() throws Exception {
+    	SearchScope expected = SearchScope.SUBTREE;
+    	Configuration configuration = Configuration.newInstance();
+    	SearchScope actual = configuration.getSearchScope(Group.class);
+    	assertEquals(expected, actual);
+    }
+            
     @Test
     public void testGetTargetEntityClass() throws Exception {
     	Class<?> expected = Account.class;
@@ -149,7 +157,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void isEntityType() throws Exception {
+    public void testIsEntityType() throws Exception {
     	boolean expected = true;
     	Configuration configuration = Configuration.newInstance();
         boolean actual = configuration.isEntityType(Group.class, "accounts");

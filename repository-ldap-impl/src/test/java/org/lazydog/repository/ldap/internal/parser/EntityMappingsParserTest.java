@@ -23,7 +23,7 @@ public class EntityMappingsParserTest {
     @Test
     public void testGetAttributeReferentialIntegrity() throws Exception {
     	Map<String,String> expected = new HashMap<String,String>();
-    	expected.put("member", "mail");
+    	expected.put("uniqueMember", "description");
     	EntityMappingsParser parser = EntityMappingsParser.newInstance(PATHNAME);
     	Map<String,String> actual = parser.getAttributeReferentialIntegrityMap();
     	assertEquals(expected, actual);
@@ -40,7 +40,7 @@ public class EntityMappingsParserTest {
     @Test
     public void testGetObjectClassValues() throws Exception {
     	Set<String> expected = new HashSet<String>();
-    	expected.add("groupOfNames");
+    	expected.add("groupOfUniqueNames");
     	expected.add("top");
     	EntityMappingsParser parser = EntityMappingsParser.newInstance(PATHNAME);
     	Set<String> actual = parser.getObjectClassValues();
@@ -50,7 +50,7 @@ public class EntityMappingsParserTest {
     @Test
     public void testGetPropertyAttributeMap() throws Exception {
     	Map<String,String> expected = new HashMap<String,String>();
-    	expected.put("accounts", "member");
+    	expected.put("accounts", "uniqueMember");
     	expected.put("description", "description");
     	expected.put("name", "cn");
     	EntityMappingsParser parser = EntityMappingsParser.newInstance(PATHNAME);
@@ -78,7 +78,7 @@ public class EntityMappingsParserTest {
     
     @Test
     public void testGetSearchBase() throws Exception {
-    	String expected = "ou=system";
+    	String expected = "o=test,ou=system";
     	EntityMappingsParser parser = EntityMappingsParser.newInstance(PATHNAME);
     	String actual = parser.getSearchBase();
     	assertEquals(expected, actual);

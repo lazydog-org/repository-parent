@@ -8,7 +8,7 @@
     <entity class-name="org.lazydog.test.model.Group">
         <mapping>
             <property name="accounts" target-entity="org.lazydog.test.model.Account" fetch-type="EAGER"/>
-            <attribute name="member" referential-integrity="mail"/>
+            <attribute name="uniqueMember" referential-integrity="description"/>
         </mapping>
         <mapping>
             <property name="description"/>
@@ -19,10 +19,10 @@
             <attribute name="cn"/>
         </mapping>
         <object-class>
-            <value>groupOfNames</value>
+            <value>groupOfUniqueNames</value>
             <value>top</value>
         </object-class>
-        <search-base value="ou=system"/>
+        <search-base value="o=test,ou=system"/>
         <search-scope value="SUBTREE"/>
     </entity>
 </entity-mappings>

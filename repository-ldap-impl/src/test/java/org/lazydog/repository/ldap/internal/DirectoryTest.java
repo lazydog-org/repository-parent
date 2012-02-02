@@ -35,32 +35,22 @@ import static org.junit.Assert.*;
 
     "dn: ou=groups,o=test,ou=system\n" +
     "ou: groups\n" +
-    "objectClass: top\n" +
-    "objectClass: organizationalunit\n\n" +
+    "objectClass: organizationalunit\n" +
+    "objectClass: top\n\n" +
 
     "dn: ou=accounts,o=test,ou=system\n" +
     "ou: accounts\n" +
-    "objectClass: top\n" + 
-    "objectClass: organizationalunit\n\n" +
+    "objectClass: organizationalunit\n" + 
+    "objectClass: top\n\n" +
 	
     "dn: uid=testaccount1,ou=accounts,o=test,ou=system\n" +
     "uid: testaccount1\n" +
-    "displayName: Test Account1\n" +
-    "sn: Account1\n" +
-    "cn: testaccount1\n" +
-    "objectClass: inetOrgPerson\n" +
-    "objectClass: organizationalPerson\n" +
-    "objectClass: person\n" +
+    "objectClass: account\n" +
     "objectClass: top\n\n" +
 	
     "dn: uid=testaccount2,ou=accounts,o=test,ou=system\n" +
     "uid: testaccount2\n" +
-    "displayName: Test Account2\n" +
-    "sn: Account2\n" +
-    "cn: testaccount2\n" +
-    "objectClass: inetOrgPerson\n" +
-    "objectClass: organizationalPerson\n" +
-    "objectClass: person\n" +
+    "objectClass: account\n" +
     "objectClass: top\n\n"
 } ) 
 public class DirectoryTest {
@@ -97,7 +87,7 @@ public class DirectoryTest {
             {
                 add("cn");
                 add("description");
-                add("member");
+                add("uniqueMember");
                 add("objectClass");
             }
         };
@@ -116,7 +106,7 @@ public class DirectoryTest {
                 add("Test Group1");
             }
         });
-        groupMap1.put("member", new HashSet<String>() {
+        groupMap1.put("uniqueMember", new HashSet<String>() {
             private static final long serialVersionUID = 1L;
             {
                 add("uid=testaccount1,ou=accounts,o=test,ou=system");
@@ -126,7 +116,7 @@ public class DirectoryTest {
         groupMap1.put("objectClass", new HashSet<String>() {
             private static final long serialVersionUID = 1L;
             {
-                add("groupOfNames");
+                add("groupOfUniqueNames");
                 add("top");
             }
         });
@@ -145,7 +135,7 @@ public class DirectoryTest {
                 add("Test Group2");
             }
         });
-        groupMap2.put("member", new HashSet<String>() {
+        groupMap2.put("uniqueMember", new HashSet<String>() {
             private static final long serialVersionUID = 1L;
             {
                 add("uid=testaccount1,ou=accounts,o=test,ou=system");
@@ -155,7 +145,7 @@ public class DirectoryTest {
         groupMap2.put("objectClass", new HashSet<String>() {
             private static final long serialVersionUID = 1L;
             {
-                add("groupOfNames");
+                add("groupOfUniqueNames");
                 add("top");
             }
         });
@@ -194,7 +184,7 @@ public class DirectoryTest {
     	Directory directory = Directory.newInstance(environment);
     	directory.addEntry(groupDn1, groupMap1);
     	directory.addEntry(groupDn2, groupMap2);
-    	Map<String,Map<String,Set<String>>> actual = directory.getAttributeMaps("(&(objectClass=groupOfNames)(objectClass=top))", "ou=system", SearchScope.SUBTREE, attributeNames);
+    	Map<String,Map<String,Set<String>>> actual = directory.getAttributeMaps("(&(objectClass=groupOfUniqueNames)(objectClass=top))", "o=test,ou=system", SearchScope.SUBTREE, attributeNames);
     	assertEquals(groupMaps, actual);
     }
 

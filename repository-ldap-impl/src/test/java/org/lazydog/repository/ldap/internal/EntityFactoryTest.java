@@ -45,17 +45,11 @@ public class EntityFactoryTest {
         logger.setLevel(Level.ALL);
 
         Account account1 = new Account();
-        account1.setCanonicalName("testaccount1");
-        account1.setDisplayName("Test Account1");
         account1.setId("uid=testaccount1,ou=accounts,o=test,ou=system");
-        account1.setLastName("Account1");
         account1.setName("testaccount1");
 
         Account account2 = new Account();
-        account2.setCanonicalName("testaccount2");
-        account2.setDisplayName("Test Account2");
         account2.setId("uid=testaccount2,ou=accounts,o=test,ou=system");
-        account2.setLastName("Account2");
         account2.setName("testaccount2");
 
         accounts = new HashSet<Account>();

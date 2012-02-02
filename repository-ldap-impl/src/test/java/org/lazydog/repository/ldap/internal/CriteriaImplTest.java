@@ -34,15 +34,15 @@ public class CriteriaImplTest {
     @BeforeClass
     public static void initialize() throws Exception {
         objectClassValues = new HashSet<String>();
-        objectClassValues.add("groupOfNames");
         objectClassValues.add("top");
+        objectClassValues.add("groupOfUniqueNames");
 
         propertyAttributeMap = new HashMap<String,String>();
-        propertyAttributeMap.put("accounts", "member");
+        propertyAttributeMap.put("accounts", "uniqueMember");
     	propertyAttributeMap.put("description", "description");
     	propertyAttributeMap.put("name", "cn");
     	
-    	searchBase = "ou=system";
+    	searchBase = "o=test,ou=system";
         searchScope = SearchScope.SUBTREE;
     }
 	
@@ -55,7 +55,7 @@ public class CriteriaImplTest {
     public void testAddComparisonEquals() throws Exception {
         criteria.add(ComparisonOperation.eq("name", "testgroup*"));
         String fetchedFilter = criteria.getFilter();
-        assertEquals("(&(&(objectclass=groupOfNames)(objectclass=top))(cn=testgroup*))", fetchedFilter);
+        assertEquals("(&(&(objectclass=groupOfUniqueNames)(objectclass=top))(cn=testgroup*))", fetchedFilter);
     }
 	
     @Test
@@ -63,34 +63,32 @@ public class CriteriaImplTest {
         criteria.add(ComparisonOperation.eq("name", "testgroup*"));
         criteria.add(LogicalOperation.and(ComparisonOperation.eq("accounts", "uid=testaccount1,ou=accounts,o=test,ou=system")));
         String fetchedFilter = criteria.getFilter();
-        assertEquals("(&(&(&(objectclass=groupOfNames)(objectclass=top))(cn=testgroup*))(member=uid=testaccount1,ou=accounts,o=test,ou=system))", fetchedFilter);
+        assertEquals("(&(&(&(objectclass=groupOfUniqueNames)(objectclass=top))(cn=testgroup*))(uniqueMember=uid=testaccount1,ou=accounts,o=test,ou=system))", fetchedFilter);
     }
 	
     @Test(expected=UnsupportedOperationException.class)
     public void testAddOrder() throws Exception {
-        criteria.addOrder(Order.asc("cn"));
-        fail();
+        criteria.addOrder(Order.asc("name"));
     }
 	
     @Test(expected=UnsupportedOperationException.class)
     public void testAddOrders() throws Exception {
         List<Criterion> orders = new ArrayList<Criterion>();
-        orders.add(Order.asc("cn"));
-        orders.add(Order.asc("member"));
+        orders.add(Order.asc("name"));
+        orders.add(Order.asc("accounts"));
         criteria.addOrders(orders);
-        fail();
     }
 	
     @Test
     public void testGetFilter() throws Exception {
     	String fetchedFilter = criteria.getFilter();
-    	assertEquals("(&(objectclass=groupOfNames)(objectclass=top))", fetchedFilter);
+    	assertEquals("(&(objectclass=groupOfUniqueNames)(objectclass=top))", fetchedFilter);
     }
 	
     @Test
     public void testGetSearchBase() throws Exception {
     	String fetchedSearchBase = criteria.getSearchBase();
-    	assertEquals("ou=system", fetchedSearchBase);
+    	assertEquals("o=test,ou=system", fetchedSearchBase);
     }
 	
     @Test

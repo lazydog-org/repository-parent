@@ -43,14 +43,14 @@ import static org.junit.Assert.*;
     "dn: ou=groups,o=test,ou=system\n" +
     "changeType: add\n" +
     "ou: groups\n" +
-    "objectClass: top\n" +
-    "objectClass: organizationalunit\n\n",
+    "objectClass: organizationalunit\n" +
+    "objectClass: top\n\n",
 
     "dn: ou=accounts,o=test,ou=system\n" +
     "changeType: add\n" +
     "ou: accounts\n" +
-    "objectClass: top\n" + 
-    "objectClass: organizationalunit\n\n"
+    "objectClass: organizationalunit\n" + 
+    "objectClass: top\n\n"
 } ) 
 public class AbstractRepositoryTest {
 
@@ -78,17 +78,11 @@ public class AbstractRepositoryTest {
         logger.setLevel(Level.ALL);
 
         account1 = new Account();
-        account1.setCanonicalName("testaccount1");
-        account1.setDisplayName("Test Account1");
         account1.setId("uid=testaccount1,ou=accounts,o=test,ou=system");
-        account1.setLastName("Account1");
         account1.setName("testaccount1");
 
         account2 = new Account();
-        account2.setCanonicalName("testaccount2");
-        account2.setDisplayName("Test Account2");
         account2.setId("uid=testaccount2,ou=accounts,o=test,ou=system");
-        account2.setLastName("Account2");
         account2.setName("testaccount2");
 
         accounts = new ArrayList<Account>();
