@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.SingularAttribute;
+import org.eclipse.persistence.annotations.BatchFetchType;
 import org.eclipse.persistence.config.QueryHints;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Criterion;
-import org.lazydog.repository.criterion.JoinOperation;
+import org.lazydog.repository.criterion.EnclosureOperator;
 
 
 /**
@@ -27,8 +31,6 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     private Class<T> entityClass;
     private EntityManager entityManager;
     private Map<Object, String> hints;
-    private List<Criterion> joins;
-    private StringBuffer joinsStringBuffer;
     private List<Criterion> orders;
     private StringBuffer ordersStringBuffer;
     private Map<String, Object> parameters;
@@ -55,6 +57,9 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             throw new IllegalArgumentException("The entity manager is invalid.");
         }
 
+        // Check if the entity class and entity manager are valid.
+        entityManager.getMetamodel().entity(entityClass);
+        
         // Set the entity class and entity manager.
         this.entityClass = entityClass;
         this.entityManager = entityManager;
@@ -68,18 +73,16 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Initialize the parameters.
         this.parameters = new LinkedHashMap<String, Object>();
 
-        // Initialize the joins, orders, and restrictions string buffers.
-        this.joinsStringBuffer = new StringBuffer();
+        // Initialize the orders and restrictions string buffers.
         this.ordersStringBuffer = new StringBuffer();
         this.restrictionsStringBuffer = new StringBuffer();
 
-        // Initialize the joins, orders, and restrictions.
-        this.joins = new ArrayList<Criterion>();
+        // Initialize the orders and restrictions.
         this.orders = new ArrayList<Criterion>();
         this.restrictions = new ArrayList<Criterion>();
 
         // Optimize the query.
-        this.optimizeQuery();
+        //this.optimizeQuery(this.entityClass, this.entityAlias, new HashSet<Class<?>>());
     }
 
     /**
@@ -114,6 +117,11 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 }
             }
 
+            // Check if the begin enclosure operator needs to be added.
+            if (criterion.getEnclosureOperator() == EnclosureOperator.BEGIN) {
+                this.restrictionsStringBuffer.append("(");
+            }
+ 
             // Add the operand, comparison operator, and parameter if
             // necessary to the restrictions string buffer.
             switch (criterion.getComparisonOperator()) {
@@ -238,6 +246,11 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                     break;
             }
 
+            // Check if the end enclosure operator needs to be added.
+            if (criterion.getEnclosureOperator() == EnclosureOperator.END) {
+                this.restrictionsStringBuffer.append(")");
+            }
+ 
             // Check if there is a value.
             if (criterion.getValue() != null) {
 
@@ -278,92 +291,26 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
-     * Add a join criterion.
-     *
-     * @param  criterion  the join criterion.
-     *
-     * @return  the criteria.
+     * Add a batch fetch (exists) hint.
+     * 
+     * @param  pathExpression  the path expression.
      */
-    public Criteria<T> addJoin(final Criterion criterion) {
-
-        try {
-
-            // Add the join operator to the joins string buffer.
-            switch (criterion.getJoinOperator()) {
-
-                case JOIN:
-                    joinsStringBuffer
-                            .append(" join ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
-                    break;
-                case JOIN_FETCH:
-                    joinsStringBuffer
-                            .append(" join fetch ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
-                    break;
-                case LEFT_JOIN:
-                    joinsStringBuffer
-                            .append(" left join ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
-                    break;
-                case LEFT_JOIN_FETCH:
-                    joinsStringBuffer
-                            .append(" left join fetch ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
-                    break;
-            }
-
-            // Add the criterion to the joins.
-            this.joins.add(criterion);
-/*
-            // Get the metamodel entity type.
-            EntityType<T> entityType = this.entityManager.getMetamodel().entity(this.entityClass);
-
-            // Loop through the attributes.
-            for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {
-
-                // Check if the attribute is the operand and it can be optimized.
-                if (attribute.getName().equals(criterion.getOperand()) &&
-                    optimize(attribute)) {
-
-                    // Optimize the join.
-                    this.optimizeJoin(attribute.getJavaType(), getPathExpression(this.entityAlias, attribute.getName()));
-                }
-            }
- */
-        }
-        catch(Exception e) {
-            // TODO: handle this.
-        }
-
-        return this;
+    private void addBatchFetchExistsHint(String pathExpression) {
+        
+        // Add a batch fetch exists hint.
+        this.hints.put(BatchFetchType.EXISTS, QueryHints.BATCH_TYPE);
+        this.hints.put(pathExpression, QueryHints.BATCH);
     }
-
+    
     /**
-     * Add join criterions.
-     *
-     * @param  criterions  the join criterions.
-     *
-     * @return  the criteria.
+     * Add a left join fetch hint.
+     * 
+     * @param  pathExpression  the path expression.
      */
-    public Criteria<T> addJoins(final List<Criterion> criterions) {
+    private void addLeftJoinFetchHint(String pathExpression) {
 
-        // Loop through the join criterions.
-        for (Criterion criterion : criterions) {
-
-            // Add the join criterion.
-            this.addJoin(criterion);
-        }
-
-        return this;
+        // Add a left join fetch hint.
+        this.hints.put(pathExpression, QueryHints.LEFT_FETCH);
     }
 
     /**
@@ -438,20 +385,15 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
-     * Get the new path expression created by appending the path to the
-     * path expression.
-     *
-     * @param  pathExpression  the path expression.
-     * @param  path            the path.
-     *
-     * @return  the new path expression.
+     * Check if the attribute has a collection-valued association.
+     * 
+     * @param  attribute  the attribute.
+     * 
+     * @return  true if the attribute has a collection-valued association, otherwise false.
      */
-    private static String getPathExpression(final String pathExpression, final String path) {
-        return new StringBuffer()
-                .append(pathExpression)
-                .append(".")
-                .append(path)
-                .toString();
+    private static boolean collectionValuedAssociation(final Attribute attribute) {
+        return (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
+                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY);
     }
 
     /**
@@ -473,6 +415,23 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
+     * Get the new path expression created by appending the path to the
+     * path expression.
+     *
+     * @param  pathExpression  the path expression.
+     * @param  path            the path.
+     *
+     * @return  the new path expression.
+     */
+    private static String getPathExpression(final String pathExpression, final String path) {
+        return new StringBuffer()
+                .append(pathExpression)
+                .append(".")
+                .append(path)
+                .toString();
+    }
+
+    /**
      * Get the query language string.
      * 
      * @return  the query language string.
@@ -480,91 +439,66 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     public String getQlString() {
         return new StringBuffer()
                 .append("select ")
-                .append((!this.joins.isEmpty()) ? "distinct " : "")
                 .append(this.entityAlias)
                 .append(" from ")
                 .append(this.entityClass.getSimpleName())
                 .append(" ")
                 .append(this.entityAlias)
-                .append(this.joinsStringBuffer)
                 .append(this.restrictionsStringBuffer)
                 .append(this.ordersStringBuffer)
                 .toString();
     }
 
     /**
-     * Check if a join criterion exists.
-     *
-     * @return  true if a join criterion exists, otherwise false.
-     */
-    public boolean joinExists() {
-        return !this.joins.isEmpty();
-    }
-
-    /**
-     * Check if the attribute can be optimized.
-     * 
-     * @param  attribute  the attribute.
-     * 
-     * @return  true if the attribute can be optimized, otherwise false.
-     */
-    private static boolean optimize(final Attribute attribute) {
-        return (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE);
-    }
-
-    /**
-     * Optimize the join.
-     *
-     * @param  entityClass     the entity class.
-     * @param  pathExpression  the path expression.
-     */
-    private <U> void optimizeJoin(final Class<U> entityClass, final String pathExpression) {
-
-        // Get the metamodel entity type.
-        EntityType<U> entityType = this.entityManager.getMetamodel().entity(entityClass);
-
-        // Loop through the attributes.
-        for (Attribute<? super U, ?> attribute : entityType.getAttributes()) {
-
-            // Check if the attribute can be optimized.
-            if (//attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
-                //attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY ||
-                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE) {
-
-                // Set the new path expression.
-                String newPathExpression = getPathExpression(pathExpression, attribute.getName());
-
-                // Add a hint.
-                // TODO: Try QueryHints.BATCH or combination of QueryHints.LEFT_FETCH
-                // and QueryHints.BATCH when eclipse 2.1.2 is released.
-                this.hints.put(newPathExpression, QueryHints.LEFT_FETCH);
-
-                // Optimize the join.
-                this.optimizeJoin(attribute.getJavaType(), newPathExpression);
-            }
-        }
-    }
-
-    /**
      * Optimize the query.
+     * 
+     * @param  entityClass           the entity class.
+     * @param  pathExpression        the path expression.
+     * @param  visitedEntityClasses  the visited entity classes.
      */
-    private void optimizeQuery() {
+    private <U> void optimizeQuery(final Class<U> entityClass, final String pathExpression, final Set<Class<?>> visitedEntityClasses) {
 
-        // Get the metamodel entity type.
-        EntityType<T> entityType = this.entityManager.getMetamodel().entity(this.entityClass);
+        // Check if the entity class is not a visited entity classes.
+        if (!visitedEntityClasses.contains(entityClass)) {
 
-        // Loop through the attributes.
-        for (Attribute<? super T, ?> attribute : entityType.getAttributes()) {
+            // Add the entity class to the visited entity classes.
+            visitedEntityClasses.add(entityClass);
+            
+            // Get the metamodel entity type.
+            EntityType<U> entityType = this.entityManager.getMetamodel().entity(entityClass);
 
-            // Check if the attribute can be optimized.
-            if (optimize(attribute)) {
+            // Loop through the attributes with multiple values.
+            for (PluralAttribute<? super U, ?, ?> attribute : entityType.getPluralAttributes()) {
 
-                // Add the join operation.
-                this.addJoin(JoinOperation.leftJoinFetch(attribute.getName()));
+                // Check if the attribute can be optimized.
+                if (collectionValuedAssociation(attribute)) {
+
+                    // Get the new path expression for the attribute.
+                    String newPathExpression = getPathExpression(pathExpression, attribute.getName());
+
+                    // Add the batch fetch (exists) hint.
+                    this.addBatchFetchExistsHint(newPathExpression);    
+
+                    // Optimize the query.
+                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, visitedEntityClasses);
+                }
+            }
+
+            // Loop through the attributes with single values.
+            for (SingularAttribute<? super U, ?> attribute : entityType.getSingularAttributes()) {
+
+                // Check if the attribute can be optimized.
+                if (singleValuedAssociation(attribute)) {
+
+                    // Get the new path expression for the attribute.
+                    String newPathExpression = getPathExpression(pathExpression, attribute.getName());
+
+                    // Add the left join fetch hint.
+                    this.addLeftJoinFetchHint(newPathExpression);
+
+                    // Optimize the query.
+                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, visitedEntityClasses);
+                }
             }
         }
     }
@@ -587,5 +521,17 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     @Override
     public boolean restrictionExists() {
         return !this.restrictions.isEmpty();
+    }
+    
+    /**
+     * Check if the attribute has a single-valued association.
+     * 
+     * @param  attribute  the attribute.
+     * 
+     * @return  true if the attribute has a single-valued association, otherwise false.
+     */
+    private static boolean singleValuedAssociation(final Attribute attribute) {
+        return (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE ||
+                attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE);
     }
 }

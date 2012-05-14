@@ -43,10 +43,10 @@ public abstract class AbstractRepository implements Repository {
 
         // Create the query from the criteria query language string.
         TypedQuery<T> query = this.entityManager.createQuery(((CriteriaImpl<T>)criteria).getQlString(), entityClass);
-
+System.out.println("qlString = " + ((CriteriaImpl<T>)criteria).getQlString());
         // Loop through the hints.
         for(Object key : ((CriteriaImpl<T>)criteria).getHints().keySet()) {
-
+System.out.println("queryHint = " + ((CriteriaImpl<T>)criteria).getHints().get(key) + "," + key);
             // Set the query hints.
             query.setHint(((CriteriaImpl<T>)criteria).getHints().get(key), key);
         }
@@ -186,6 +186,9 @@ public abstract class AbstractRepository implements Repository {
             persistedEntities.add(persistedEntity);
         }
 
+        // Clear the entity manager.
+        this.entityManager.clear();
+        
         return persistedEntities;
     }
 

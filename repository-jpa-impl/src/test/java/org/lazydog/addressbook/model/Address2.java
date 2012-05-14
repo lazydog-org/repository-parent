@@ -1,11 +1,6 @@
 package org.lazydog.addressbook.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 
 /**
@@ -13,89 +8,40 @@ import javax.persistence.Id;
  *
  * @author  Ron Rickard
  */
-@Entity
-public class Address2 implements Comparable<Address2>, Serializable {
+public class Address2 implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Column(nullable=false)
     private String city;
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="STATE", nullable=false)
     private String state;
-    @Column(name="STREET_ADDRESS", nullable=false)
     private String streetAddress;
-    @Column(nullable=false)
     private String zipcode;
 
     /**
-     * Compare this object to the specified object.
-     *
-     * @param  that  the object to compare this object against.
-     *
-     * @return  the value 0 if this object is equal to the object;
-     *          a value less than 0 if this object is less than the object;
-     *          and a value greater than 0 if this object is greater than the
-     *          object.
+     * Indicates whether some other object is "equal to" this one.
+     * 
+     * @param  object  the reference object with which to compare.
+     * 
+     * @return  true if this object is the same as the object argument; false otherwise.
      */
     @Override
-    public int compareTo(final Address2 that) {
-
-        // Declare.
-        int lastCompare;
-        String thatCity;
-        String thatState;
-        String thatStreetAddress;
-        String thatZipcode;
-        String thisCity;
-        String thisState;
-        String thisStreetAddress;
-        String thisZipcode;
-
-        // Initialize.
-        lastCompare = 0;
-        thatCity = replaceNull(that.getCity(), "");
-        thatState = replaceNull(that.getState(), "");
-        thatStreetAddress = replaceNull(that.getStreetAddress(), "");
-        thatZipcode = replaceNull(that.getZipcode(), "");
-        thisCity = replaceNull(this.getCity(), "");
-        thisState = replaceNull(this.getState(), "");
-        thisStreetAddress = replaceNull(this.getStreetAddress(), "");
-        thisZipcode = replaceNull(this.getZipcode(), "");
-
-        // Compare this object to the object.
-        lastCompare = thisState.compareTo(thatState);
-        lastCompare = (lastCompare != 0) ? lastCompare : thisCity.compareTo(thatCity);
-        lastCompare = (lastCompare != 0) ? lastCompare : thisZipcode.compareTo(thatZipcode);
-        lastCompare = (lastCompare != 0) ? lastCompare : thisStreetAddress.compareTo(thatStreetAddress);
-
-        return lastCompare;
-    }
-
-    /**
-     * Compare this object to the specified object.
-     *
-     * @param  object  the object to compare this object against.
-     *
-     * @return  true if the objects are equal; false otherwise.
-     */
-    @Override
-    public boolean equals(final Object object) {
-
-        // Declare.
-        boolean equals;
-
-        // Initialize.
-        equals = false;
-
-        // Check if the object is an instance of this class
-        // and is equal to this object.
-        if (object instanceof Address2 &&
-            this.compareTo((Address2)object) == 0) {
-            equals = true;
+    public boolean equals(Object object) {
+ 
+        // Assume the reference object is not equal to this object.
+        boolean equals = false;
+        
+        // Check if the object is an instance of this class.
+        if (object instanceof Address2) {
+            Address2 that = (Address2)object;
+            
+            // Check if the IDs are both null or they are both equal.
+            if ((this.id == null && that.id == null) || (this.id != null && this.id.equals(that.id))) {
+               
+                // The reference object is the same as this object.
+                equals = true;
+            }
         }
-
+        
         return equals;
     }
 
@@ -143,54 +89,15 @@ public class Address2 implements Comparable<Address2>, Serializable {
     public String getZipcode() {
         return this.zipcode;
     }
-
+    
     /**
-     * Returns a hash code for this object.
-     *
-     * @return  a hash code for this object.
+     * Returns a hash code value for this object.
+     * 
+     * @return  a hash code value for this object.
      */
     @Override
     public int hashCode() {
-
-        // Declare.
-        String thisCity;
-        String thisState;
-        String thisStreetAddress;
-        String thisZipcode;
-
-        // Initialize.
-        thisCity = replaceNull(this.getCity(), "");
-        thisState = replaceNull(this.getState(), "");
-        thisStreetAddress = replaceNull(this.getStreetAddress(), "");
-        thisZipcode = replaceNull(this.getZipcode(), "");
-
-        return thisState.hashCode()*7^3
-             + thisCity.hashCode()*7^2
-             + thisZipcode.hashCode()*7
-             + thisStreetAddress.hashCode();
-    }
-
-    /**
-     * Replace the original object with the replacement object
-     * if the original object is null.
-     *
-     * @param  original     the original object.
-     * @param  replacement  the replacement object.
-     *
-     * @return  the original object if it is not null, otherwise the replacement
-     *          object.
-     *
-     * @throws  IllegalArgumentException  if the replacement object is null.
-     */
-    private static <U, V extends U> U replaceNull(final U original, final V replacement) {
-
-        // Check if the replacement object is null.
-        if (replacement == null) {
-            throw new IllegalArgumentException(
-                    "The replacement object cannot be null.");
-        }
-
-        return (original == null) ? replacement : original;
+        return (id != null ? id.hashCode() : 0);
     }
 
     /**
@@ -238,7 +145,6 @@ public class Address2 implements Comparable<Address2>, Serializable {
         this.zipcode = zipcode;
     }
 
-
     /**
      * Get this object as a string.
      *
@@ -247,17 +153,16 @@ public class Address2 implements Comparable<Address2>, Serializable {
     @Override
     public String toString() {
 
-        StringBuffer buffer;
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        stringBuilder.append("Address2 = [");
+        stringBuilder.append("city = ").append(this.city);
+        stringBuilder.append(", id = ").append(this.id);
+        stringBuilder.append(", state = ").append(this.state);
+        stringBuilder.append(", streetAddress = ").append(this.streetAddress);
+        stringBuilder.append(", zipcode = ").append(this.zipcode);
+        stringBuilder.append("]");
 
-        buffer = new StringBuffer();
-        buffer.append("Address2 = [");
-        buffer.append("city = ").append(this.getCity());
-        buffer.append(", id = ").append(this.getId());
-        buffer.append(", state = ").append(this.getState());
-        buffer.append(", streetAddress = ").append(this.getStreetAddress());
-        buffer.append(", zipcode = ").append(this.getZipcode());
-        buffer.append("]");
-
-        return buffer.toString();
+        return stringBuilder.toString();
     }
 }

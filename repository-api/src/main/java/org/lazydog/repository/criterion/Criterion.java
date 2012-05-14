@@ -13,7 +13,7 @@ public final class Criterion implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private ComparisonOperator comparisonOperator;
-    private JoinOperator joinOperator;
+    private EnclosureOperator enclosureOperator;
     private LogicalOperator logicalOperator;
     private String operand;
     private OrderDirection orderDirection;
@@ -29,12 +29,12 @@ public final class Criterion implements Serializable {
     }
 
     /**
-     * Get the join operator.
+     * Get the enclosure operator.
      * 
-     * @return  the join operator.
+     * @return  the enclosure operator.
      */
-    public JoinOperator getJoinOperator() {
-        return this.joinOperator;
+    public EnclosureOperator getEnclosureOperator() {
+        return this.enclosureOperator;
     }
 
     /**
@@ -83,12 +83,12 @@ public final class Criterion implements Serializable {
     }
 
     /**
-     * Set the join operator.
+     * Set the enclosure operator.
      * 
-     * @param  joinOperator  the join operator.
+     * @param  enclosureOperator  the enclosure operator.
      */
-    public void setJoinOperator(final JoinOperator joinOperator) {
-        this.joinOperator = joinOperator;
+    public void setEnclosureOperator(final EnclosureOperator enclosureOperator) {
+        this.enclosureOperator = enclosureOperator;
     }
 
     /**
