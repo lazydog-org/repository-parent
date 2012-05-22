@@ -16,8 +16,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lazydog.repository.Criteria;
-import org.lazydog.repository.criterion.ComparisonOperation;
-import org.lazydog.repository.criterion.LogicalOperation;
+import org.lazydog.repository.criterion.Comparison;
+import org.lazydog.repository.criterion.Logical;
 import org.lazydog.test.GroupRepository;
 import org.lazydog.test.model.Account;
 import org.lazydog.test.model.Group;
@@ -169,7 +169,7 @@ public class AbstractRepositoryTest {
     @Test
     public void testFindByCriteria() {
     	Criteria<Group> criteria = repository.getCriteria(Group.class);
-    	criteria.add(ComparisonOperation.eq("name", "testgroup1"));
+    	criteria.add(Comparison.eq("name", "testgroup1"));
     	Group fetchedGroup = repository.find(Group.class, criteria);
     	assertEquals(group1, fetchedGroup);
     }
@@ -187,8 +187,8 @@ public class AbstractRepositoryTest {
     @Test
     public void testFindListByCriteria() {
     	Criteria<Group> criteria = repository.getCriteria(Group.class);
-    	criteria.add(ComparisonOperation.eq("name", "testgroup*"));
-    	criteria.add(LogicalOperation.and(ComparisonOperation.eq("accounts", "uid=testaccount1,ou=accounts,o=test,ou=system")));
+    	criteria.add(Comparison.eq("name", "testgroup*"));
+    	criteria.add(Logical.and(Comparison.eq("accounts", "uid=testaccount1,ou=accounts,o=test,ou=system")));
     	Group persistedGroup = repository.persist(group2);
     	assertEquals(group2, persistedGroup);
     	List<Group> fetchedGroups = repository.findList(Group.class, criteria);

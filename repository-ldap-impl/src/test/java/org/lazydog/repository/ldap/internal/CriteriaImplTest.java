@@ -9,9 +9,9 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.lazydog.repository.criterion.ComparisonOperation;
+import org.lazydog.repository.criterion.Comparison;
 import org.lazydog.repository.criterion.Criterion;
-import org.lazydog.repository.criterion.LogicalOperation;
+import org.lazydog.repository.criterion.Logical;
 import org.lazydog.repository.criterion.Order;
 import org.lazydog.test.model.Group;
 
@@ -53,15 +53,15 @@ public class CriteriaImplTest {
 	
     @Test
     public void testAddComparisonEquals() throws Exception {
-        criteria.add(ComparisonOperation.eq("name", "testgroup*"));
+        criteria.add(Comparison.eq("name", "testgroup*"));
         String fetchedFilter = criteria.getFilter();
         assertEquals("(&(&(objectclass=groupOfUniqueNames)(objectclass=top))(cn=testgroup*))", fetchedFilter);
     }
 	
     @Test
     public void testAddLogicalAnd() throws Exception {
-        criteria.add(ComparisonOperation.eq("name", "testgroup*"));
-        criteria.add(LogicalOperation.and(ComparisonOperation.eq("accounts", "uid=testaccount1,ou=accounts,o=test,ou=system")));
+        criteria.add(Comparison.eq("name", "testgroup*"));
+        criteria.add(Logical.and(Comparison.eq("accounts", "uid=testaccount1,ou=accounts,o=test,ou=system")));
         String fetchedFilter = criteria.getFilter();
         assertEquals("(&(&(&(objectclass=groupOfUniqueNames)(objectclass=top))(cn=testgroup*))(uniqueMember=uid=testaccount1,ou=accounts,o=test,ou=system))", fetchedFilter);
     }

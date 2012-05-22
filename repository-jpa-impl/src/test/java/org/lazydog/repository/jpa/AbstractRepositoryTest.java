@@ -18,7 +18,7 @@ import org.lazydog.addressbook.AddressBookRepository;
 import org.lazydog.addressbook.model.Address;
 import org.lazydog.addressbook.model.Address2;
 import org.lazydog.repository.Criteria;
-import org.lazydog.repository.criterion.ComparisonOperation;
+import org.lazydog.repository.criterion.Comparison;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 
@@ -126,21 +126,21 @@ public class AbstractRepositoryTest {
     @Test
     public void testFindByCritera() {
         Criteria<Address> criteria = repository.getCriteria(Address.class);
-        criteria.add(ComparisonOperation.eq("id", expectedAddress1.getId()));
+        criteria.add(Comparison.eq("id", expectedAddress1.getId()));
         assertReflectionEquals(expectedAddress1, repository.find(Address.class, criteria));
     }
 
     @Test
     public void testFindByCriteriaNot() {
         Criteria<Address> criteria = repository.getCriteria(Address.class);
-        criteria.add(ComparisonOperation.eq("id", new Integer(2)));
+        criteria.add(Comparison.eq("id", new Integer(2)));
         assertNull(repository.find(Address.class, criteria));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testFindByCriteriaNullClass() {
         Criteria<Address> criteria = repository.getCriteria(Address.class);
-        criteria.add(ComparisonOperation.eq("id", expectedAddress1.getId()));
+        criteria.add(Comparison.eq("id", expectedAddress1.getId()));
         repository.find(null, criteria);
     }
 

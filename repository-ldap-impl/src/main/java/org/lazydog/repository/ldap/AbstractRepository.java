@@ -16,7 +16,6 @@ import org.lazydog.repository.ldap.internal.Directory;
 import org.lazydog.repository.ldap.internal.DirectoryException;
 import org.lazydog.repository.ldap.internal.EntityFactoryException;
 import org.lazydog.repository.ldap.internal.FetchType;
-
 import static org.lazydog.repository.ldap.internal.Validator.*;
 
 

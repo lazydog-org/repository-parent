@@ -15,7 +15,7 @@ import org.eclipse.persistence.annotations.BatchFetchType;
 import org.eclipse.persistence.config.QueryHints;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Criterion;
-import org.lazydog.repository.criterion.EnclosureOperator;
+import org.lazydog.repository.criterion.Enclosure;
 
 
 /**
@@ -118,7 +118,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             }
 
             // Check if the begin enclosure operator needs to be added.
-            if (criterion.getEnclosureOperator() == EnclosureOperator.BEGIN) {
+            if (criterion.getEnclosureOperator() == Enclosure.Operator.BEGIN) {
                 this.restrictionsStringBuffer.append("(");
             }
  
@@ -247,7 +247,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             }
 
             // Check if the end enclosure operator needs to be added.
-            if (criterion.getEnclosureOperator() == EnclosureOperator.END) {
+            if (criterion.getEnclosureOperator() == Enclosure.Operator.END) {
                 this.restrictionsStringBuffer.append(")");
             }
  
