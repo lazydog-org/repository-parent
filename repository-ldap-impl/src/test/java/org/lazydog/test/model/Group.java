@@ -179,7 +179,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      */
     @Override
     public String toString() {
-        return new StringBuffer()
+        return new StringBuilder()
         	.append("Group [")
         	.append("accounts = ").append(this.getAccounts())
         	.append(", description = ").append(this.getDescription())

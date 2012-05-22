@@ -17,7 +17,7 @@ import org.lazydog.repository.criterion.Criterion;
 public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
     private static final long serialVersionUID = 1L;
-    private StringBuffer filterStringBuffer;
+    private StringBuilder filterStringBuilder;
     private Map<String,String> propertyAttributeMap;
     private List<Criterion> restrictions;
     private String searchBase;
@@ -56,16 +56,16 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
             throw new IllegalArgumentException("The search scope is invalid.");
         }
         
-        // Initialize the filter string buffer.
-        this.filterStringBuffer = new StringBuffer();
-        this.filterStringBuffer.append((objectClassValues.size() == 1) ? "" : "(&");
+        // Initialize the filter string builder.
+        this.filterStringBuilder = new StringBuilder();
+        this.filterStringBuilder.append((objectClassValues.size() == 1) ? "" : "(&");
         for (String objectClassValue : objectClassValues) {
-            this.filterStringBuffer
+            this.filterStringBuilder
                     .append("(objectclass=")
                     .append(objectClassValue)
                     .append(")");
         }
-        this.filterStringBuffer.append((objectClassValues.size() == 1) ? "" : ")");
+        this.filterStringBuilder.append((objectClassValues.size() == 1) ? "" : ")");
         
         // Set the property name-attribute name map.
         this.propertyAttributeMap = propertyAttributeMap;
@@ -91,19 +91,19 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Check if a restriction has not already been processed.
         if (!this.restrictionExists()) {
 
-            // Add the AND logical operator to the filter string buffer.
-            this.filterStringBuffer.insert(0, "(&");
+            // Add the AND logical operator to the filter string builder.
+            this.filterStringBuilder.insert(0, "(&");
         }
         else {
 
-            // Add the logical operator to the restrictions string buffer.
+            // Add the logical operator to the restrictions string builder.
             switch (criterion.getLogicalOperator()) {
 
                 case AND:
-                    this.filterStringBuffer.insert(0, "(&");
+                    this.filterStringBuilder.insert(0, "(&");
                     break;
                 case OR:
-                    this.filterStringBuffer.insert(0, "(|");
+                    this.filterStringBuilder.insert(0, "(|");
                     break;
             }
         }
@@ -111,11 +111,11 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
         String attributeName = propertyAttributeMap.get(criterion.getOperand());
         
         // Add the operand, comparison operator, and parameter if
-        // necessary to the restrictions string buffer.
+        // necessary to the restrictions string builder.
         switch (criterion.getComparisonOperator()) {
 
             case EQUAL:
-                this.filterStringBuffer
+                this.filterStringBuilder
                         .append("(")
                         .append(attributeName)
                         .append("=")
@@ -125,7 +125,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
             case GREATER_THAN:
             	throw new UnsupportedOperationException("Comparison greaterThan is not applicable to this repository implementation.");
             case GREATER_THAN_OR_EQUAL:
-            	this.filterStringBuffer
+            	this.filterStringBuilder
                         .append("(")
                         .append(attributeName)
                         .append(">=")
@@ -143,7 +143,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
             case LESS_THAN:
             	throw new UnsupportedOperationException("Comparison lessThan is not applicable to this repository implementation.");
             case LESS_THAN_OR_EQUAL:
-            	this.filterStringBuffer
+            	this.filterStringBuilder
                         .append("(")
                         .append(attributeName)
                         .append(">=")
@@ -155,7 +155,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
             case MEMBER_OF:
             	throw new UnsupportedOperationException("Comparison memberOf is not applicable to this repository implementation.");
             case NOT_EQUAL:
-            	this.filterStringBuffer
+            	this.filterStringBuilder
                         .append("(!")
                         .append(attributeName)
                         .append("=")
@@ -224,7 +224,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the filter.
      */
     public String getFilter() {
-        return this.filterStringBuffer.toString();
+        return this.filterStringBuilder.toString();
     }
 
     /**
@@ -272,7 +272,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
      */
     @Override
     public String toString() {
-        return new StringBuffer()
+        return new StringBuilder()
                 .append("CriteriaImpl [")
                 .append("filter = ").append(this.getFilter())
                 .append(", searchBase = ").append(this.getSearchBase())

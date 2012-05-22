@@ -32,10 +32,10 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     private EntityManager entityManager;
     private Map<Object, String> hints;
     private List<Criterion> orders;
-    private StringBuffer ordersStringBuffer;
+    private StringBuilder ordersStringBuilder;
     private Map<String, Object> parameters;
     private List<Criterion> restrictions;
-    private StringBuffer restrictionsStringBuffer;
+    private StringBuilder restrictionsStringBuilder;
 
     /**
      * Constructor.
@@ -73,9 +73,9 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Initialize the parameters.
         this.parameters = new LinkedHashMap<String, Object>();
 
-        // Initialize the orders and restrictions string buffers.
-        this.ordersStringBuffer = new StringBuffer();
-        this.restrictionsStringBuffer = new StringBuffer();
+        // Initialize the orders and restrictions string builders.
+        this.ordersStringBuilder = new StringBuilder();
+        this.restrictionsStringBuilder = new StringBuilder();
 
         // Initialize the orders and restrictions.
         this.orders = new ArrayList<Criterion>();
@@ -100,155 +100,117 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             // Check if a restriction has not already been processed.
             if (this.restrictions.isEmpty()) {
 
-                // Add the WHERE-clause to the restrictions string buffer.
-                this.restrictionsStringBuffer.append(" where ");
+                // Add the WHERE-clause to the restrictions string builder.
+                this.restrictionsStringBuilder.append(" where ");
             }
             else {
 
-                // Add the logical operator to the restrictions string buffer.
+                // Add the logical operator to the restrictions string builder.
                 switch (criterion.getLogicalOperator()) {
 
                     case AND:
-                        this.restrictionsStringBuffer.append(" and ");
+                        this.restrictionsStringBuilder.append(" and ");
                         break;
                     case OR:
-                        this.restrictionsStringBuffer.append(" or ");
+                        this.restrictionsStringBuilder.append(" or ");
                         break;
                 }
             }
 
             // Check if the begin enclosure operator needs to be added.
             if (criterion.getEnclosureOperator() == Enclosure.Operator.BEGIN) {
-                this.restrictionsStringBuffer.append("(");
+                this.restrictionsStringBuilder.append("(");
             }
  
             // Add the operand, comparison operator, and parameter if
-            // necessary to the restrictions string buffer.
+            // necessary to the restrictions string builder.
             switch (criterion.getComparisonOperator()) {
 
                 case EQUAL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" = ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case GREATER_THAN:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" > ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case GREATER_THAN_OR_EQUAL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" >= ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case IS_EMPTY:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" is empty");
                     break;
                 case IS_NOT_EMPTY:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" is not empty");
                     break;
                 case IS_NULL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" is null");
                     break;
                 case IS_NOT_NULL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" is not null");
                     break;
                 case LESS_THAN:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" < ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case LESS_THAN_OR_EQUAL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" <= ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case LIKE:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" like ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case MEMBER_OF:
-                    this.restrictionsStringBuffer
-                            .append(":param")
-                            .append(this.parameters.size() + 1)
+                    this.restrictionsStringBuilder
+                            .append(this.boundNextParameterName())
                             .append(" member of ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
+                            .append(this.qualifyOperand(criterion.getOperand()));
                     break;
                 case NOT_EQUAL:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" <> ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case NOT_LIKE:
-                    this.restrictionsStringBuffer
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand())
+                    this.restrictionsStringBuilder
+                            .append(this.qualifyOperand(criterion.getOperand()))
                             .append(" not like ")
-                            .append(":param")
-                            .append(this.parameters.size() + 1);
+                            .append(this.boundNextParameterName());
                     break;
                 case NOT_MEMBER_OF:
-                    this.restrictionsStringBuffer
-                            .append(":param")
-                            .append(this.parameters.size() + 1)
+                    this.restrictionsStringBuilder
+                            .append(this.boundNextParameterName())
                             .append(" not member of ")
-                            .append(this.entityAlias)
-                            .append(".")
-                            .append(criterion.getOperand());
+                            .append(this.qualifyOperand(criterion.getOperand()));
                     break;
             }
 
             // Check if the end enclosure operator needs to be added.
             if (criterion.getEnclosureOperator() == Enclosure.Operator.END) {
-                this.restrictionsStringBuffer.append(")");
+                this.restrictionsStringBuilder.append(")");
             }
  
             // Check if there is a value.
@@ -256,7 +218,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
                 // Add the parameter.
                 this.parameters.put(
-                    "param" + (this.parameters.size() + 1),
+                    this.nextParameterName(),
                     criterion.getValue());
             }
 
@@ -328,29 +290,27 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             // Check if an order has not already been processed.
             if (this.orders.isEmpty()) {
 
-                // Add the ORDER BY-clause to the orders string buffer.
-                this.ordersStringBuffer.append(" order by ");
+                // Add the ORDER BY-clause to the orders string builder.
+                this.ordersStringBuilder.append(" order by ");
             }
             else {
 
-                // Add a comma to the orders string buffer.
-                this.ordersStringBuffer.append(", ");
+                // Add a comma to the orders string builder.
+                this.ordersStringBuilder.append(", ");
             }
 
-            // Add the operand to the orders string buffer.
-            this.ordersStringBuffer
-                    .append(this.entityAlias)
-                    .append(".")
-                    .append(criterion.getOperand());
+            // Add the operand to the orders string builder.
+            this.ordersStringBuilder
+                    .append(this.qualifyOperand(criterion.getOperand()));
 
-            // Add the order direction to the orders string buffer.
+            // Add the order direction to the orders string builder.
             switch (criterion.getOrderDirection()) {
 
                 case ASC:
-                    this.ordersStringBuffer.append(" asc");
+                    this.ordersStringBuilder.append(" asc");
                     break;
                 case DESC:
-                    this.ordersStringBuffer.append(" desc");
+                    this.ordersStringBuilder.append(" desc");
                     break;
             }
 
@@ -415,8 +375,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
-     * Get the new path expression created by appending the path to the
-     * path expression.
+     * Get the new path expression created by appending the path to the path expression.
      *
      * @param  pathExpression  the path expression.
      * @param  path            the path.
@@ -424,11 +383,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the new path expression.
      */
     private static String getPathExpression(final String pathExpression, final String path) {
-        return new StringBuffer()
-                .append(pathExpression)
-                .append(".")
-                .append(path)
-                .toString();
+        return new StringBuilder().append(pathExpression).append(".").append(path).toString();
     }
 
     /**
@@ -437,18 +392,36 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * @return  the query language string.
      */
     public String getQlString() {
-        return new StringBuffer()
+        return new StringBuilder()
                 .append("select ")
                 .append(this.entityAlias)
                 .append(" from ")
                 .append(this.entityClass.getSimpleName())
                 .append(" ")
                 .append(this.entityAlias)
-                .append(this.restrictionsStringBuffer)
-                .append(this.ordersStringBuffer)
+                .append(this.restrictionsStringBuilder)
+                .append(this.ordersStringBuilder)
                 .toString();
     }
 
+    /**
+     * Get the bound next parameter name.
+     * 
+     * @return  the bound next parameter name.
+     */
+    private String boundNextParameterName() {
+        return new StringBuilder().append(":").append(this.nextParameterName()).toString();
+    }
+    
+    /**
+     * Get the next parameter name.
+     * 
+     * @return  the next parameter name.
+     */
+    private String nextParameterName() {
+        return new StringBuilder().append("param").append(this.parameters.size() + 1).toString();
+    }
+    
     /**
      * Optimize the query.
      * 
@@ -513,6 +486,29 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         return !this.orders.isEmpty();
     }
 
+    /**
+     * Qualify the operand.
+     * 
+     * @param  operand  the operand.
+     * 
+     * @return  the operand qualified by the entity alias.
+     */
+    private String qualifyOperand(String operand) {
+        return qualifyOperand(operand, this.entityAlias);
+    }
+    
+    /**
+     * Qualify the operand.
+     * 
+     * @param  operand    the operand.
+     * @param  qualifier  the qualifier.
+     * 
+     * @return  the operand qualified by the qualifier.
+     */
+    private static String qualifyOperand(String operand, String qualifier) {
+        return new StringBuilder().append(qualifier).append(".").append(operand).toString();
+    }
+    
     /**
      * Check if a restriction criterion exists.
      *

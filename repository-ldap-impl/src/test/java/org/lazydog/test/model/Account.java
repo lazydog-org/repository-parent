@@ -129,7 +129,7 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      */
     @Override
     public String toString() {
-        return new StringBuffer()
+        return new StringBuilder()
         	.append("Account [")
         	.append(", id = ").append(this.getId())
         	.append(", name = ").append(this.getName())
