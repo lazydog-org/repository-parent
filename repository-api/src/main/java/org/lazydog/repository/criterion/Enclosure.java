@@ -1,16 +1,26 @@
 package org.lazydog.repository.criterion;
 
+
 /**
- * Logical operation.
+ * Enclosure.
  * 
  * @author rrickard
  */
-public final class EnclosureOperation {
+public final class Enclosure {
 
     /**
-     * Private constructor.
+     * Enclosure operator.
      */
-    private EnclosureOperation() {    
+    public enum Operator {
+        BEGIN,
+        END,
+        UNDEFINED;
+    };
+    
+    /**
+     * Hide the constructor.
+     */
+    private Enclosure() {    
     }
     
     /**
@@ -21,7 +31,7 @@ public final class EnclosureOperation {
      * @return  the resulting criterion.
      */
     public static Criterion begin(final Criterion criterion) {
-        return EnclosureOperation.op(EnclosureOperator.BEGIN, criterion);
+        return Enclosure.operation(Enclosure.Operator.BEGIN, criterion);
     }
         
     /**
@@ -32,7 +42,7 @@ public final class EnclosureOperation {
      * @return  the resulting criterion.
      */
     public static Criterion end(final Criterion criterion) {
-        return EnclosureOperation.op(EnclosureOperator.END, criterion);
+        return Enclosure.operation(Enclosure.Operator.END, criterion);
     }
     
     /**
@@ -43,7 +53,7 @@ public final class EnclosureOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(final EnclosureOperator enclosureOperator,
+    private static Criterion operation(final Enclosure.Operator enclosureOperator,
                                 final Criterion criterion) {
         
         // Set the criterion enclosure operator.

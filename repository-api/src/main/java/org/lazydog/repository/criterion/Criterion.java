@@ -1,6 +1,8 @@
 package org.lazydog.repository.criterion;
 
 import java.io.Serializable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -12,19 +14,31 @@ public final class Criterion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    private ComparisonOperator comparisonOperator;
-    private EnclosureOperator enclosureOperator;
-    private LogicalOperator logicalOperator;
+    private Comparison.Operator comparisonOperator = Comparison.Operator.UNDEFINED;
+    private Enclosure.Operator enclosureOperator = Enclosure.Operator.UNDEFINED;
+    private Logical.Operator logicalOperator = Logical.Operator.UNDEFINED;
     private String operand;
-    private OrderDirection orderDirection;
+    private Order.Direction orderDirection = Order.Direction.UNDEFINED;
     private Object value;
-        
+    
+     /**
+     * Compare this object to the specified object.
+     *
+     * @param  object  the object to compare this object against.
+     *
+     * @return  true if the objects are equal; false otherwise.
+     */
+    @Override
+    public boolean equals(Object object) {
+        return EqualsBuilder.reflectionEquals(this, object);
+    }
+    
     /**
      * Get the comparison operator.
      * 
      * @return  the comparison operator.
      */
-    public ComparisonOperator getComparisonOperator() {
+    public Comparison.Operator getComparisonOperator() {
         return this.comparisonOperator;
     }
 
@@ -33,7 +47,7 @@ public final class Criterion implements Serializable {
      * 
      * @return  the enclosure operator.
      */
-    public EnclosureOperator getEnclosureOperator() {
+    public Enclosure.Operator getEnclosureOperator() {
         return this.enclosureOperator;
     }
 
@@ -42,7 +56,7 @@ public final class Criterion implements Serializable {
      * 
      * @return  the the logical operator.
      */
-    public LogicalOperator getLogicalOperator() {
+    public Logical.Operator getLogicalOperator() {
         return this.logicalOperator;
     }
     
@@ -60,7 +74,7 @@ public final class Criterion implements Serializable {
      * 
      * @return  the order direction.
      */
-    public OrderDirection getOrderDirection() {
+    public Order.Direction getOrderDirection() {
         return this.orderDirection;
     }
     
@@ -72,14 +86,45 @@ public final class Criterion implements Serializable {
     public Object getValue() {
         return this.value;
     }
-              
+
+    /**
+     * Returns a hash code for this object.
+     * 
+     * @return  a hash code for this object.
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+    
+    /**
+     * Replace the original object with the replacement object if the original object is null.
+     *
+     * @param  original     the original object.
+     * @param  replacement  the replacement object.
+     *
+     * @return  the original object if it is not null, otherwise the replacement object.
+     *
+     * @throws  IllegalArgumentException  if the replacement object is null.
+     */
+    private static <U, V extends U> U replaceNull(U original, V replacement) {
+
+        // Check if the replacement object is null.
+        if (replacement == null) {
+            throw new IllegalArgumentException(
+                    "The replacement object cannot be null.");
+        }
+
+        return (original == null) ? replacement : original;
+    }
+
     /**
      * Set the comparison operator.
      * 
      * @param  comparisonOperator  the comparison operator.
      */
-    public void setComparisonOperator(final ComparisonOperator comparisonOperator) {
-        this.comparisonOperator = comparisonOperator;
+    void setComparisonOperator(final Comparison.Operator comparisonOperator) {
+        this.comparisonOperator = replaceNull(comparisonOperator, Comparison.Operator.UNDEFINED);
     }
 
     /**
@@ -87,8 +132,8 @@ public final class Criterion implements Serializable {
      * 
      * @param  enclosureOperator  the enclosure operator.
      */
-    public void setEnclosureOperator(final EnclosureOperator enclosureOperator) {
-        this.enclosureOperator = enclosureOperator;
+    void setEnclosureOperator(final Enclosure.Operator enclosureOperator) {
+        this.enclosureOperator = replaceNull(enclosureOperator, Enclosure.Operator.UNDEFINED);
     }
 
     /**
@@ -96,8 +141,8 @@ public final class Criterion implements Serializable {
      * 
      * @param  logicalOperator  the logical operator.
      */
-    public void setLogicalOperator(final LogicalOperator logicalOperator) {
-        this.logicalOperator = logicalOperator;
+    void setLogicalOperator(final Logical.Operator logicalOperator) {
+        this.logicalOperator = replaceNull(logicalOperator, Logical.Operator.UNDEFINED);
     }
       
     /**
@@ -105,7 +150,7 @@ public final class Criterion implements Serializable {
      * 
      * @param  operand  the operand.
      */
-    public void setOperand(final String operand) {
+    void setOperand(final String operand) {
         this.operand = operand;
     }
           
@@ -114,8 +159,8 @@ public final class Criterion implements Serializable {
      * 
      * @param  orderDirection  the order direction.
      */
-    public void setOrderDirection(final OrderDirection orderDirection) {
-        this.orderDirection = orderDirection;
+    void setOrderDirection(final Order.Direction orderDirection) {
+        this.orderDirection = replaceNull(orderDirection, Order.Direction.UNDEFINED);
     }
     
     /**
@@ -123,7 +168,33 @@ public final class Criterion implements Serializable {
      * 
      * @param  value  the value.
      */
-    public void setValue(final Object value) {
+    void setValue(final Object value) {
         this.value = value;
+    }
+
+    /**
+     * Get this object as a String.
+     *
+     * @return  this object as a String.
+     */
+    @Override
+    public String toString() {
+            
+        // Declare.
+        StringBuilder toString;
+        
+        // Initialize.
+        toString = new StringBuilder();
+        
+        toString.append("Criterion [");
+        toString.append("operand = ").append(this.operand);
+        toString.append(", value = ").append(this.value);
+        toString.append(", comparisonOperator = ").append(this.comparisonOperator);
+        toString.append(", enclosureOperator = ").append(this.enclosureOperator);
+        toString.append(", logicalOperator = ").append(this.logicalOperator);
+        toString.append(", orderDirection = ").append(this.orderDirection);
+        toString.append("]");
+        
+        return toString.toString();
     }
 }

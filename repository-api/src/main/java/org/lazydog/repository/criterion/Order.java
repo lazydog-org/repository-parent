@@ -9,7 +9,16 @@ package org.lazydog.repository.criterion;
 public final class Order {
 
     /**
-     * Private constructor.
+    * Order direction.
+    */
+    public enum Direction {
+        ASC,
+        DESC,
+        UNDEFINED;
+    };
+
+    /**
+     * Hide the constructor.
      */
     private Order() {    
     }
@@ -22,7 +31,7 @@ public final class Order {
      * @return  the resulting criterion.
      */
     public static Criterion asc(final String operand) {
-        return Order.order(OrderDirection.ASC, operand);
+        return Order.order(Order.Direction.ASC, operand);
     }
     
     /**
@@ -33,7 +42,7 @@ public final class Order {
      * @return  the resulting criterion.
      */
     public static Criterion desc(final String operand) {
-        return Order.order(OrderDirection.DESC, operand);
+        return Order.order(Order.Direction.DESC, operand);
     }
            
     /**
@@ -44,7 +53,7 @@ public final class Order {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion order(final OrderDirection orderDirection, final String operand) {
+    private static Criterion order(final Order.Direction orderDirection, final String operand) {
 
         // Set the criterion.
         Criterion criterion = new Criterion();

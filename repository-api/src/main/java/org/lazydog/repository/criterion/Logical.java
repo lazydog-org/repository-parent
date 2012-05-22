@@ -2,16 +2,25 @@ package org.lazydog.repository.criterion;
 
 
 /**
- * Logical operation.
+ * Logical.
  * 
  * @author  Ron Rickard
  */
-public final class LogicalOperation {
+public final class Logical {
 
     /**
-     * Private constructor.
+     * Logical operator.
      */
-    private LogicalOperation() {    
+    public enum Operator {
+        AND,
+        OR,
+        UNDEFINED;
+    };
+
+    /**
+     * Hide the constructor.
+     */
+    private Logical() {    
     }
     
     /**
@@ -22,7 +31,7 @@ public final class LogicalOperation {
      * @return  the resulting criterion.
      */
     public static Criterion and(final Criterion criterion) {
-        return LogicalOperation.op(LogicalOperator.AND, criterion);
+        return Logical.operation(Logical.Operator.AND, criterion);
     }
     
     /**
@@ -33,7 +42,7 @@ public final class LogicalOperation {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion op(final LogicalOperator logicalOperator,
+    private static Criterion operation(final Logical.Operator logicalOperator,
                                 final Criterion criterion) {
         
         // Set the criterion logical operator.
@@ -50,6 +59,6 @@ public final class LogicalOperation {
      * @return  the resulting criterion.
      */
     public static Criterion or(final Criterion criterion) {
-        return LogicalOperation.op(LogicalOperator.OR, criterion);
+        return Logical.operation(Logical.Operator.OR, criterion);
     }
 }
