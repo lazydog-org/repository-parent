@@ -1,9 +1,6 @@
 package org.lazydog.repository.jpa.internal;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lazydog.addressbook.model.Company;
 import org.lazydog.repository.criterion.Comparison;
