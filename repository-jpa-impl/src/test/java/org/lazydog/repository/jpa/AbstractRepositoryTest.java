@@ -154,11 +154,6 @@ public class AbstractRepositoryTest {
         repository.getCriteria(null);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testGetCriteriaNonEntity() {
-        repository.getCriteria(Address2.class);
-    }
-
     @Test
     public void testPersist() {
         beginTransaction();

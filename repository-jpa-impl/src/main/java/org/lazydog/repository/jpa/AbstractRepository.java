@@ -43,20 +43,20 @@ public abstract class AbstractRepository implements Repository {
         if (queryLanguageString == null) {
             throw new IllegalArgumentException("The query language string is invalid.");
         }
-System.out.println("====> queryLanguageString: " + queryLanguageString);
+
         // Create the query using the query language string.
         TypedQuery<T> query = this.entityManager.createQuery(queryLanguageString, entityClass);
 
         // Loop through the hints.
         for(Object key : queryHints.keySet()) {
-System.out.println("====> queryHint: " + key + "," + queryHints.get(key));
+
             // Set the query hints.
             query.setHint(queryHints.get(key), key);
         }
 
         // Loop through the parameters.
         for(String key : queryParameters.keySet()) {
-System.out.println("====> queryParameter: " + key + "," + queryParameters.get(key));
+
             // Set the query parameters.
             query.setParameter(key, queryParameters.get(key));
         }
@@ -167,7 +167,7 @@ System.out.println("====> queryParameter: " + key + "," + queryParameters.get(ke
      */
     @Override
     public <T> Criteria<T> getCriteria(final Class<T> entityClass) {
-        return new CriteriaImpl<T>(entityClass, this.entityManager);
+        return new CriteriaImpl<T>(entityClass);
     }
 
     /**

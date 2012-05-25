@@ -77,7 +77,7 @@ public class PerformanceTest {
         }
     }
 
-   //@Test
+   @Test
     public void findListAddress() {
         Date startDate = new Date();
         List<Address> addresses = repository.findList(Address.class);
@@ -85,7 +85,7 @@ public class PerformanceTest {
         System.out.println("fetched " + addresses.size() + " addresses in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
      
-    //@Test
+    @Test
     public void findListCompany() {
         Date startDate = new Date();
         List<Company> companies = repository.findList(Company.class);
@@ -93,7 +93,7 @@ public class PerformanceTest {
         System.out.println("fetched " + companies.size() + " companies in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
               
-    //@Test
+    @Test
     public void findListDepartment() {
         Date startDate = new Date();
         List<Department> departments = repository.findList(Department.class);
@@ -101,7 +101,7 @@ public class PerformanceTest {
         System.out.println("fetched " + departments.size() + " departments in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
      
-    //@Test
+    @Test
     public void findListEmployee() {
         Date startDate = new Date();
         List<Employee> employees = repository.findList(Employee.class);
@@ -109,7 +109,7 @@ public class PerformanceTest {
         System.out.println("fetched " + employees.size() + " employees in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
           
-    //@Test
+    @Test
     public void findListPhone() {
         Date startDate = new Date();
         List<Phone> phones = repository.findList(Phone.class);
