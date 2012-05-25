@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLNonTransientConnectionException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +22,8 @@ import org.lazydog.addressbook.model.Company;
 import org.lazydog.addressbook.model.Department;
 import org.lazydog.addressbook.model.Employee;
 import org.lazydog.addressbook.model.Phone;
+import org.lazydog.repository.Criteria;
+import org.lazydog.repository.criterion.Comparison;
 
 
 /**
@@ -73,7 +77,7 @@ public class PerformanceTest {
         }
     }
 
-    @Test
+   //@Test
     public void findListAddress() {
         Date startDate = new Date();
         List<Address> addresses = repository.findList(Address.class);
@@ -81,7 +85,7 @@ public class PerformanceTest {
         System.out.println("fetched " + addresses.size() + " addresses in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
      
-    @Test
+    //@Test
     public void findListCompany() {
         Date startDate = new Date();
         List<Company> companies = repository.findList(Company.class);
@@ -89,7 +93,7 @@ public class PerformanceTest {
         System.out.println("fetched " + companies.size() + " companies in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
               
-    @Test
+    //@Test
     public void findListDepartment() {
         Date startDate = new Date();
         List<Department> departments = repository.findList(Department.class);
@@ -97,7 +101,7 @@ public class PerformanceTest {
         System.out.println("fetched " + departments.size() + " departments in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
      
-    @Test
+    //@Test
     public void findListEmployee() {
         Date startDate = new Date();
         List<Employee> employees = repository.findList(Employee.class);
@@ -105,14 +109,35 @@ public class PerformanceTest {
         System.out.println("fetched " + employees.size() + " employees in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
           
-    @Test
+    //@Test
     public void findListPhone() {
         Date startDate = new Date();
         List<Phone> phones = repository.findList(Phone.class);
         Date endDate = new Date();
         System.out.println("fetched " + phones.size() + " phones in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
-     
+         
+    @Test
+    public void findCompanyCriteria() {
+        Date startDate = new Date();
+        Criteria<Company> criteria = repository.getCriteria(Company.class);
+        criteria.add(Comparison.like("departments.employees.phones.number", "%Number 10%"));
+        List<Company> companies = repository.findList(Company.class, criteria);
+        Date endDate = new Date();
+        System.out.println("fetched " + companies.size() + " companies in " + (endDate.getTime() - startDate.getTime()) + "ms");
+    }
+    
+    @Test
+    public void findCompanyQuery() {
+        Date startDate = new Date();
+        String queryLanguageString = "SELECT DISTINCT company FROM Company company JOIN company.departments departments JOIN departments.employees employees JOIN employees.phones phones WHERE phones.number LIKE :param1";
+        Map<String,Object> queryParameters = new HashMap<String,Object>();
+        queryParameters.put("param1", "%Number 10%");
+        List<Company> companies = ((AbstractRepository)repository).findList(Company.class, queryLanguageString, queryParameters, new HashMap<Object,String>());
+        Date endDate = new Date();
+        System.out.println("fetched " + companies.size() + " companies in " + (endDate.getTime() - startDate.getTime()) + "ms");
+    }
+
     private static void beginTransaction() {
         repository.getEntityManager().getTransaction().begin();
     }

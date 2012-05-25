@@ -2,6 +2,7 @@ package org.lazydog.repository.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -20,42 +21,44 @@ public abstract class AbstractRepository implements Repository {
     private EntityManager entityManager;
 
     /**
-     * Create the query from the criteria.
+     * Create the query.
      *
-     * @param  entityClass  the entity class.
-     * @param  criteria     the criteria.
+     * @param  entityClass          the entity class.
+     * @param  queryLanguageString  the query language string.
+     * @param  queryParameters      the query parameter map.
+     * @param  queryHints           the query hint map.
      * 
      * @return  the query.
      *
-     * @throws  IllegalArgumentException  if the entity class or criteria are invalid.
+     * @throws  IllegalArgumentException  if the entity class or query language string are invalid.
      */
-    private <T> TypedQuery<T> createQuery(final Class<T> entityClass, final Criteria<T> criteria) {
+    private <T> TypedQuery<T> createQuery(final Class<T> entityClass, final String queryLanguageString, final Map<String, Object> queryParameters, final Map<Object, String> queryHints) {
 
         // Check if the entity class is null.
         if (entityClass == null) {
             throw new IllegalArgumentException("The entity class is invalid.");
         }
 
-        // Check if the criteria is null.
-        if (criteria == null) {
-            throw new IllegalArgumentException("The criteria is invalid.");
+        // Check if the query language string is null.
+        if (queryLanguageString == null) {
+            throw new IllegalArgumentException("The query language string is invalid.");
         }
+System.out.println("====> queryLanguageString: " + queryLanguageString);
+        // Create the query using the query language string.
+        TypedQuery<T> query = this.entityManager.createQuery(queryLanguageString, entityClass);
 
-        // Create the query from the criteria query language string.
-        TypedQuery<T> query = this.entityManager.createQuery(((CriteriaImpl<T>)criteria).getQlString(), entityClass);
-System.out.println("qlString = " + ((CriteriaImpl<T>)criteria).getQlString());
         // Loop through the hints.
-        for(Object key : ((CriteriaImpl<T>)criteria).getHints().keySet()) {
-System.out.println("queryHint = " + ((CriteriaImpl<T>)criteria).getHints().get(key) + "," + key);
+        for(Object key : queryHints.keySet()) {
+System.out.println("====> queryHint: " + key + "," + queryHints.get(key));
             // Set the query hints.
-            query.setHint(((CriteriaImpl<T>)criteria).getHints().get(key), key);
+            query.setHint(queryHints.get(key), key);
         }
 
         // Loop through the parameters.
-        for(String key : ((CriteriaImpl<T>)criteria).getParameters().keySet()) {
-
+        for(String key : queryParameters.keySet()) {
+System.out.println("====> queryParameter: " + key + "," + queryParameters.get(key));
             // Set the query parameters.
-            query.setParameter(key, ((CriteriaImpl<T>)criteria).getParameters().get(key));
+            query.setParameter(key, queryParameters.get(key));
         }
 
         return query;
@@ -84,14 +87,29 @@ System.out.println("queryHint = " + ((CriteriaImpl<T>)criteria).getHints().get(k
      */
     @Override
     public <T> T find(final Class<T> entityClass, final Criteria<T> criteria) {
+        return this.find(entityClass, ((CriteriaImpl<T>)criteria).getQueryLanguageString(), 
+                ((CriteriaImpl<T>)criteria).getQueryParameters(), ((CriteriaImpl<T>)criteria).getQueryHints());
+    }
 
+    /**
+     * Find the entity.
+     * 
+     * @param  entityClass          the entity class.
+     * @param  queryLanguageString  the query language string.
+     * @param  queryParameters      the query parameter map.
+     * @param  queryHints           the query hint map.
+     * 
+     * @return  the entity.
+     */
+    protected <T> T find(final Class<T> entityClass, final String queryLanguageString, final Map<String, Object> queryParameters, final Map<Object, String> queryHints) {
+        
         // Initialize.
         T entity = null;
         
         try {
 
             // Get the entity.
-            entity = this.createQuery(entityClass, criteria).getSingleResult();
+            entity = this.createQuery(entityClass, queryLanguageString, queryParameters, queryHints).getSingleResult();
         }
         catch(NoResultException e) {
             // Ignore.
@@ -99,7 +117,7 @@ System.out.println("queryHint = " + ((CriteriaImpl<T>)criteria).getHints().get(k
 
         return entity;
     }
-
+    
     /**
      * Find the list of entities.
      *
@@ -122,9 +140,24 @@ System.out.println("queryHint = " + ((CriteriaImpl<T>)criteria).getHints().get(k
      */
     @Override
     public <T> List<T> findList(final Class<T> entityClass, final Criteria<T> criteria) {
-        return this.createQuery(entityClass, criteria).getResultList();
+        return this.findList(entityClass, ((CriteriaImpl<T>)criteria).getQueryLanguageString(), 
+                ((CriteriaImpl<T>)criteria).getQueryParameters(), ((CriteriaImpl<T>)criteria).getQueryHints());
     }
 
+    /**
+     * Find the list of entities.
+     * 
+     * @param  entityClass          the entity class.
+     * @param  queryLanguageString  the query language string.
+     * @param  queryParameters      the query parameter map.
+     * @param  queryHints           the query hint map.
+     * 
+     * @return  the list of entities.
+     */
+    protected <T> List<T> findList(final Class<T> entityClass, final String queryLanguageString, final Map<String, Object> queryParameters, final Map<Object, String> queryHints) {
+        return this.createQuery(entityClass, queryLanguageString, queryParameters, queryHints).getResultList();
+    }
+    
     /**
      * Get the criteria.
      *

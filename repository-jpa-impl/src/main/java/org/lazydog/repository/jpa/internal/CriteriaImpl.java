@@ -1,7 +1,10 @@
 package org.lazydog.repository.jpa.internal;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,7 @@ import org.eclipse.persistence.config.QueryHints;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Criterion;
 import org.lazydog.repository.criterion.Enclosure;
+import org.lazydog.repository.criterion.Join;
 
 
 /**
@@ -30,10 +34,12 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     private String entityAlias;
     private Class<T> entityClass;
     private EntityManager entityManager;
-    private Map<Object, String> hints;
+    private List<Criterion> joins;
+    private StringBuilder joinsStringBuilder;
     private List<Criterion> orders;
     private StringBuilder ordersStringBuilder;
-    private Map<String, Object> parameters;
+    private Map<Object, String> queryHints;
+    private Map<String, Object> queryParameters;
     private List<Criterion> restrictions;
     private StringBuilder restrictionsStringBuilder;
 
@@ -61,23 +67,26 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         entityManager.getMetamodel().entity(entityClass);
         
         // Set the entity class and entity manager.
+        // TODO: remove reliance on entity manager by parsing XML ourselves.
         this.entityClass = entityClass;
         this.entityManager = entityManager;
 
         // Set the entity alias.
         this.entityAlias = this.entityClass.getSimpleName().toLowerCase();
 
-        // Initialize the hints.
-        this.hints = new LinkedHashMap<Object, String>();
+        // Initialize the query hints.
+        this.queryHints = new LinkedHashMap<Object, String>();
         
-        // Initialize the parameters.
-        this.parameters = new LinkedHashMap<String, Object>();
+        // Initialize the query parameters.
+        this.queryParameters = new LinkedHashMap<String, Object>();
 
-        // Initialize the orders and restrictions string builders.
+        // Initialize the joins, orders, and restrictions string builders.
+        this.joinsStringBuilder = new StringBuilder();
         this.ordersStringBuilder = new StringBuilder();
         this.restrictionsStringBuilder = new StringBuilder();
 
         // Initialize the orders and restrictions.
+        this.joins = new ArrayList<Criterion>();
         this.orders = new ArrayList<Criterion>();
         this.restrictions = new ArrayList<Criterion>();
 
@@ -101,7 +110,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             if (this.restrictions.isEmpty()) {
 
                 // Add the WHERE-clause to the restrictions string builder.
-                this.restrictionsStringBuilder.append(" where ");
+                this.restrictionsStringBuilder.append(" WHERE ");
             }
             else {
 
@@ -109,10 +118,10 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 switch (criterion.getLogicalOperator()) {
 
                     case AND:
-                        this.restrictionsStringBuilder.append(" and ");
+                        this.restrictionsStringBuilder.append(" AND ");
                         break;
                     case OR:
-                        this.restrictionsStringBuilder.append(" or ");
+                        this.restrictionsStringBuilder.append(" OR ");
                         break;
                 }
             }
@@ -122,89 +131,106 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 this.restrictionsStringBuilder.append("(");
             }
  
-            // Add the operand, comparison operator, and parameter if
-            // necessary to the restrictions string builder.
+            // Get the qualified operand.
+            String qualifiedOperand = this.qualifyOperand(criterion.getOperand());
+            
+            // Get the join criterions.
+            List<Criterion> joinCriterions = getJoinCriterions(this.entityClass, qualifiedOperand);
+            
+            // Check if there are join criterions.
+            if (!joinCriterions.isEmpty()) {
+                
+                // Add the joins.
+                this.addJoins(joinCriterions);
+                
+                // Determine the qualified operand.
+                String lastJoinOperand = joinCriterions.get(joinCriterions.size() - 1).getOperand();
+                String qualifier = lastJoinOperand.substring(lastJoinOperand.indexOf(".") + 1);
+                qualifiedOperand = qualifiedOperand.substring(qualifiedOperand.indexOf(qualifier));
+            }
+            
+            // Add the comparison operator to the restrictions string builder.
             switch (criterion.getComparisonOperator()) {
 
                 case EQUAL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" = ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case GREATER_THAN:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" > ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case GREATER_THAN_OR_EQUAL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" >= ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case IS_EMPTY:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" is empty");
+                            .append(qualifiedOperand)
+                            .append(" IS EMPTY");
                     break;
                 case IS_NOT_EMPTY:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" is not empty");
+                            .append(qualifiedOperand)
+                            .append(" IS NOT EMPTY");
                     break;
                 case IS_NULL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" is null");
+                            .append(qualifiedOperand)
+                            .append(" IS NULL");
                     break;
                 case IS_NOT_NULL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" is not null");
+                            .append(qualifiedOperand)
+                            .append(" IS NOT NULL");
                     break;
                 case LESS_THAN:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" < ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case LESS_THAN_OR_EQUAL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" <= ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case LIKE:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" like ")
-                            .append(this.boundNextParameterName());
+                            .append(qualifiedOperand)
+                            .append(" LIKE ")
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case MEMBER_OF:
                     this.restrictionsStringBuilder
-                            .append(this.boundNextParameterName())
-                            .append(" member of ")
-                            .append(this.qualifyOperand(criterion.getOperand()));
+                            .append(this.boundNextQueryParameterName())
+                            .append(" MEMBER OF ")
+                            .append(qualifiedOperand);
                     break;
                 case NOT_EQUAL:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
+                            .append(qualifiedOperand)
                             .append(" <> ")
-                            .append(this.boundNextParameterName());
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case NOT_LIKE:
                     this.restrictionsStringBuilder
-                            .append(this.qualifyOperand(criterion.getOperand()))
-                            .append(" not like ")
-                            .append(this.boundNextParameterName());
+                            .append(qualifiedOperand)
+                            .append(" NOT LIKE ")
+                            .append(this.boundNextQueryParameterName());
                     break;
                 case NOT_MEMBER_OF:
                     this.restrictionsStringBuilder
-                            .append(this.boundNextParameterName())
-                            .append(" not member of ")
-                            .append(this.qualifyOperand(criterion.getOperand()));
+                            .append(this.boundNextQueryParameterName())
+                            .append(" NOT MEMBER OF ")
+                            .append(qualifiedOperand);
                     break;
             }
 
@@ -216,16 +242,16 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             // Check if there is a value.
             if (criterion.getValue() != null) {
 
-                // Add the parameter.
-                this.parameters.put(
-                    this.nextParameterName(),
+                // Add the query parameter.
+                this.queryParameters.put(
+                    this.nextQueryParameterName(),
                     criterion.getValue());
             }
 
             // Add the criterion to the restrictions.
             this.restrictions.add(criterion);
         }
-        catch(Exception e) {
+        catch (Exception e) {
             // TODO: handle this.
         }
 
@@ -257,22 +283,97 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * 
      * @param  pathExpression  the path expression.
      */
-    private void addBatchFetchExistsHint(String pathExpression) {
+    private void addBatchFetchExistsHint(final String pathExpression) {
         
         // Add a batch fetch exists hint.
-        this.hints.put(BatchFetchType.EXISTS, QueryHints.BATCH_TYPE);
-        this.hints.put(pathExpression, QueryHints.BATCH);
+        this.queryHints.put(BatchFetchType.EXISTS, QueryHints.BATCH_TYPE);
+        this.queryHints.put(pathExpression, QueryHints.BATCH);
     }
     
+    /**
+     * Add a batch fetch (join) hint.
+     * 
+     * @param  pathExpression  the path expression.
+     */
+    private void addBatchFetchJoinHint(final String pathExpression) {
+        
+        // Add a batch fetch join hint.
+        this.queryHints.put(BatchFetchType.JOIN, QueryHints.BATCH_TYPE);
+        this.queryHints.put(pathExpression, QueryHints.BATCH);
+    }
+    
+    /**
+     * Add a join criterion.
+     * 
+     * @param  criterion  the join criterion.
+     * 
+     * @return  the criteria.
+     */
+    public Criteria<T> addJoin(final Criterion criterion) {
+        
+        try {
+
+            // Add the join operator to the joins string builder.
+            switch (criterion.getJoinOperator()) {
+                
+                case JOIN:
+                    joinsStringBuilder.append(" JOIN ");
+                    break;
+                case JOIN_FETCH:
+                    joinsStringBuilder.append(" JOIN FETCH ");
+                    break;
+                case LEFT_JOIN:
+                    joinsStringBuilder.append(" LEFT JOIN ");
+                    break;
+                case LEFT_JOIN_FETCH:
+                    joinsStringBuilder.append(" LEFT JOIN FETCH ");
+                    break;
+            }
+
+            // Add the operand and alias to the orders string builder.
+            this.joinsStringBuilder
+                    .append(criterion.getOperand())
+                    .append(" ")
+                    .append(criterion.getOperand().substring(criterion.getOperand().indexOf(".") + 1));
+            
+            // Add the criterion to the joins.
+            this.joins.add(criterion);
+        }
+        catch (Exception e) {
+            // TODO: handle this.
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Add join criterions.
+     *
+     * @param  criterions  the join criterions.
+     *
+     * @return  the criteria.
+     */
+    public Criteria<T> addJoins(final List<Criterion> criterions) {
+
+        // Loop through the join criterions.
+        for (Criterion criterion : criterions) {
+
+            // Add the join criterion.
+            this.addJoin(criterion);
+        }
+
+        return this;
+    }
+
     /**
      * Add a left join fetch hint.
      * 
      * @param  pathExpression  the path expression.
      */
-    private void addLeftJoinFetchHint(String pathExpression) {
+    private void addLeftJoinFetchHint(final String pathExpression) {
 
         // Add a left join fetch hint.
-        this.hints.put(pathExpression, QueryHints.LEFT_FETCH);
+        this.queryHints.put(pathExpression, QueryHints.LEFT_FETCH);
     }
 
     /**
@@ -291,7 +392,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             if (this.orders.isEmpty()) {
 
                 // Add the ORDER BY-clause to the orders string builder.
-                this.ordersStringBuilder.append(" order by ");
+                this.ordersStringBuilder.append(" ORDER BY ");
             }
             else {
 
@@ -307,17 +408,17 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
             switch (criterion.getOrderDirection()) {
 
                 case ASC:
-                    this.ordersStringBuilder.append(" asc");
+                    this.ordersStringBuilder.append(" ASC");
                     break;
                 case DESC:
-                    this.ordersStringBuilder.append(" desc");
+                    this.ordersStringBuilder.append(" DESC");
                     break;
             }
 
             // Add the criterion to the orders.
             this.orders.add(criterion);
         }
-        catch(Exception e) {
+        catch (Exception e) {
             // TODO: handle this.
         }
 
@@ -345,6 +446,15 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
+     * Get the bound next query parameter name.
+     * 
+     * @return  the bound next query parameter name.
+     */
+    private String boundNextQueryParameterName() {
+        return new StringBuilder().append(":").append(this.nextQueryParameterName()).toString();
+    }
+    
+    /**
      * Check if the attribute has a collection-valued association.
      * 
      * @param  attribute  the attribute.
@@ -356,24 +466,54 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY);
     }
 
-    /**
-     * Get the hints.
-     *
-     * @return  the hints.
-     */
-    public Map<Object, String> getHints() {
-        return this.hints;
-    }
+    private static <U> List<Criterion> getJoinCriterions(final Class<U> entityClass, final String operand) throws Exception {
 
-    /**
-     * Get the parameters.
-     * 
-     * @return  the parameters.
-     */
-    public Map<String, Object> getParameters() {
-        return this.parameters;
-    }
+        // Initialize the join criterions.
+        List<Criterion> joinCriterions = new ArrayList<Criterion>();
+        
+        try {
+            
+            // Get the property, previous property, and new operand.
+            String previousProperty = operand.substring(0, operand.indexOf("."));
+            String newOperand = operand.substring(operand.indexOf(".") + 1);
+            String property = newOperand.substring(0, newOperand.indexOf("."));
 
+            // Get the field.
+            Field field = entityClass.getDeclaredField(property);
+            
+            // Set the new entity class to the field type.
+            Class<?> newEntityClass = field.getType();
+            
+            // The join condition was not found.
+            boolean joinConditionFound = false;
+            
+            // Check if the new entity class is a List class.
+            if (newEntityClass == List.class) {
+                
+                // Set the new entity class to the type of List class.
+                newEntityClass = (Class<?>)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
+                
+                // The join condition was found.
+                joinConditionFound = true;
+            }
+            
+            // Get the join criterions for the new entity class and new operand.
+            joinCriterions = getJoinCriterions(newEntityClass, newOperand);
+            
+            // Check if the join condition was found or there are join criterions.
+            if (joinConditionFound || !joinCriterions.isEmpty()) {
+                
+                // Add a join criterion to the join criterions.
+                joinCriterions.add(0, Join.join(qualifyOperand(property, previousProperty)));
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            // Reached the end of the operand.
+        }
+         
+        return joinCriterions;
+    }
+    
     /**
      * Get the new path expression created by appending the path to the path expression.
      *
@@ -387,39 +527,59 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
     }
 
     /**
+     * Get the query hints.
+     *
+     * @return  the query hints.
+     */
+    public Map<Object, String> getQueryHints() {
+        return this.queryHints;
+    }
+
+    /**
      * Get the query language string.
      * 
      * @return  the query language string.
      */
-    public String getQlString() {
+    public String getQueryLanguageString() {
         return new StringBuilder()
-                .append("select ")
+                .append("SELECT ")
+                .append((this.joinExists()) ? "DISTINCT " : "")
                 .append(this.entityAlias)
-                .append(" from ")
+                .append(" FROM ")
                 .append(this.entityClass.getSimpleName())
                 .append(" ")
                 .append(this.entityAlias)
+                .append(this.joinsStringBuilder)
                 .append(this.restrictionsStringBuilder)
                 .append(this.ordersStringBuilder)
                 .toString();
     }
 
     /**
-     * Get the bound next parameter name.
+     * Get the query parameters.
      * 
-     * @return  the bound next parameter name.
+     * @return  the query parameters.
      */
-    private String boundNextParameterName() {
-        return new StringBuilder().append(":").append(this.nextParameterName()).toString();
+    public Map<String, Object> getQueryParameters() {
+        return this.queryParameters;
     }
-    
+
     /**
-     * Get the next parameter name.
-     * 
-     * @return  the next parameter name.
+     * Check if a join criterion exists.
+     *
+     * @return  true if a join criterion exists, otherwise false.
      */
-    private String nextParameterName() {
-        return new StringBuilder().append("param").append(this.parameters.size() + 1).toString();
+    public boolean joinExists() {
+        return !this.joins.isEmpty();
+    }
+
+    /**
+     * Get the next query parameter name.
+     * 
+     * @return  the next query parameter name.
+     */
+    private String nextQueryParameterName() {
+        return new StringBuilder().append("param").append(this.queryParameters.size() + 1).toString();
     }
     
     /**
@@ -434,8 +594,11 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         // Check if the entity class is not a visited entity classes.
         if (!visitedEntityClasses.contains(entityClass)) {
 
+            Set<Class<?>> newVisitedEntityClasses = new HashSet<Class<?>>();
+            newVisitedEntityClasses.addAll(visitedEntityClasses);
+            
             // Add the entity class to the visited entity classes.
-            visitedEntityClasses.add(entityClass);
+            newVisitedEntityClasses.add(entityClass);
             
             // Get the metamodel entity type.
             EntityType<U> entityType = this.entityManager.getMetamodel().entity(entityClass);
@@ -449,11 +612,11 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                     // Get the new path expression for the attribute.
                     String newPathExpression = getPathExpression(pathExpression, attribute.getName());
 
-                    // Add the batch fetch (exists) hint.
-                    this.addBatchFetchExistsHint(newPathExpression);    
+                    // Add the batch fetch (join) hint.
+                    this.addBatchFetchJoinHint(newPathExpression);    
 
                     // Optimize the query.
-                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, visitedEntityClasses);
+                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, newVisitedEntityClasses);
                 }
             }
 
@@ -470,16 +633,16 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                     this.addLeftJoinFetchHint(newPathExpression);
 
                     // Optimize the query.
-                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, visitedEntityClasses);
+                    this.optimizeQuery(attribute.getBindableJavaType(), newPathExpression, newVisitedEntityClasses);
                 }
             }
         }
     }
 
     /**
-     * Check if an order criterion exists.
+     * Check if a order criterion exists.
      *
-     * @return  true if an order criterion exists, otherwise false.
+     * @return  true if a order criterion exists, otherwise false.
      */
     @Override
     public boolean orderExists() {
@@ -493,7 +656,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * 
      * @return  the operand qualified by the entity alias.
      */
-    private String qualifyOperand(String operand) {
+    private String qualifyOperand(final String operand) {
         return qualifyOperand(operand, this.entityAlias);
     }
     
@@ -505,7 +668,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
      * 
      * @return  the operand qualified by the qualifier.
      */
-    private static String qualifyOperand(String operand, String qualifier) {
+    private static String qualifyOperand(final String operand, final String qualifier) {
         return new StringBuilder().append(qualifier).append(".").append(operand).toString();
     }
     
