@@ -16,6 +16,7 @@ public final class Criterion implements Serializable {
     
     private Comparison.Operator comparisonOperator = Comparison.Operator.UNDEFINED;
     private Enclosure.Operator enclosureOperator = Enclosure.Operator.UNDEFINED;
+    private Join.Operator joinOperator = Join.Operator.UNDEFINED;
     private Logical.Operator logicalOperator = Logical.Operator.UNDEFINED;
     private String operand;
     private Order.Direction orderDirection = Order.Direction.UNDEFINED;
@@ -49,6 +50,15 @@ public final class Criterion implements Serializable {
      */
     public Enclosure.Operator getEnclosureOperator() {
         return this.enclosureOperator;
+    }
+
+    /**
+     * Get the join operator.
+     * 
+     * @return  the join operator.
+     */
+    public Join.Operator getJoinOperator() {
+        return this.joinOperator;
     }
 
     /**
@@ -137,6 +147,15 @@ public final class Criterion implements Serializable {
     }
 
     /**
+     * Set the join operator.
+     * 
+     * @param  joinOperator  the join operator.
+     */
+    void setJoinOperator(final Join.Operator joinOperator) {
+        this.joinOperator = replaceNull(joinOperator, Join.Operator.UNDEFINED);
+    }
+
+    /**
      * Set the logical operator.
      * 
      * @param  logicalOperator  the logical operator.
@@ -191,6 +210,7 @@ public final class Criterion implements Serializable {
         toString.append(", value = ").append(this.value);
         toString.append(", comparisonOperator = ").append(this.comparisonOperator);
         toString.append(", enclosureOperator = ").append(this.enclosureOperator);
+        toString.append(", joinOperator = ").append(this.joinOperator);
         toString.append(", logicalOperator = ").append(this.logicalOperator);
         toString.append(", orderDirection = ").append(this.orderDirection);
         toString.append("]");

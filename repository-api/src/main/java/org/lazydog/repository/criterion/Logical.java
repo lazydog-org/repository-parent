@@ -42,8 +42,7 @@ public final class Logical {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion operation(final Logical.Operator logicalOperator,
-                                final Criterion criterion) {
+    private static Criterion operation(final Logical.Operator logicalOperator, final Criterion criterion) {
         
         // Set the criterion logical operator.
         criterion.setLogicalOperator(logicalOperator);

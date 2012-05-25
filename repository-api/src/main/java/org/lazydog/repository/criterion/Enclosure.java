@@ -53,8 +53,7 @@ public final class Enclosure {
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion operation(final Enclosure.Operator enclosureOperator,
-                                final Criterion criterion) {
+    private static Criterion operation(final Enclosure.Operator enclosureOperator, final Criterion criterion) {
         
         // Set the criterion enclosure operator.
         criterion.setEnclosureOperator(enclosureOperator);
