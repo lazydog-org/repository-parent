@@ -265,31 +265,35 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
         
         try {
 
-            // Add the join operator to the joins string builder.
-            switch (criterion.getJoinOperator()) {
+            // Check if the join criterion is not already added.
+            if (!this.joins.contains(criterion)) {
                 
-                case JOIN:
-                    joinsStringBuilder.append(" JOIN ");
-                    break;
-                case JOIN_FETCH:
-                    joinsStringBuilder.append(" JOIN FETCH ");
-                    break;
-                case LEFT_JOIN:
-                    joinsStringBuilder.append(" LEFT JOIN ");
-                    break;
-                case LEFT_JOIN_FETCH:
-                    joinsStringBuilder.append(" LEFT JOIN FETCH ");
-                    break;
-            }
+                // Add the join operator to the joins string builder.
+                switch (criterion.getJoinOperator()) {
 
-            // Add the operand and alias to the orders string builder.
-            this.joinsStringBuilder
-                    .append(criterion.getOperand())
-                    .append(" ")
-                    .append(criterion.getOperand().substring(criterion.getOperand().indexOf(".") + 1));
-            
-            // Add the criterion to the joins.
-            this.joins.add(criterion);
+                    case JOIN:
+                        joinsStringBuilder.append(" JOIN ");
+                        break;
+                    case JOIN_FETCH:
+                        joinsStringBuilder.append(" JOIN FETCH ");
+                        break;
+                    case LEFT_JOIN:
+                        joinsStringBuilder.append(" LEFT JOIN ");
+                        break;
+                    case LEFT_JOIN_FETCH:
+                        joinsStringBuilder.append(" LEFT JOIN FETCH ");
+                        break;
+                }
+
+                // Add the operand and alias to the orders string builder.
+                this.joinsStringBuilder
+                        .append(criterion.getOperand())
+                        .append(" ")
+                        .append(criterion.getOperand().substring(criterion.getOperand().indexOf(".") + 1));
+
+                // Add the criterion to the joins.
+                this.joins.add(criterion);
+            }
         }
         catch (Exception e) {
             // TODO: handle this.
