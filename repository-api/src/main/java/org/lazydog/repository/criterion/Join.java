@@ -80,7 +80,7 @@ public final class Join {
     private static Criterion operation(final Join.Operator joinOperator, final String operand) {
         
         // Set the criterion.
-        Criterion criterion = new Criterion();
+        Criterion criterion = Criterion.newInstance();
         criterion.setJoinOperator(joinOperator);
         criterion.setOperand(operand);
         

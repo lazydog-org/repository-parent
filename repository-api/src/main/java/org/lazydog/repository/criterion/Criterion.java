@@ -22,7 +22,13 @@ public final class Criterion implements Serializable {
     private Order.Direction orderDirection = Order.Direction.UNDEFINED;
     private Object value;
     
-     /**
+    /**
+     * Hide the constructor.
+     */
+    private Criterion() {     
+    }
+     
+    /**
      * Compare this object to the specified object.
      *
      * @param  object  the object to compare this object against.
@@ -105,6 +111,15 @@ public final class Criterion implements Serializable {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+    
+    /**
+     * Create a new instance of the Criterion class.
+     * 
+     * @return  a new instance of the Criterion class.
+     */
+    public static Criterion newInstance() {
+        return new Criterion();
     }
     
     /**

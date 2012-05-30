@@ -13,7 +13,7 @@ public class LogicalTest {
     
     @Test
     public void testAnd() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setComparisonOperator(Comparison.Operator.EQUAL);
         expectedCriterion.setLogicalOperator(Logical.Operator.AND);
         expectedCriterion.setOperand("operand");
@@ -23,7 +23,7 @@ public class LogicalTest {
     
     @Test
     public void testOr() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setComparisonOperator(Comparison.Operator.EQUAL);
         expectedCriterion.setLogicalOperator(Logical.Operator.OR);
         expectedCriterion.setOperand("operand");

@@ -56,7 +56,7 @@ public final class Order {
     private static Criterion order(final Order.Direction orderDirection, final String operand) {
 
         // Set the criterion.
-        Criterion criterion = new Criterion();
+        Criterion criterion = Criterion.newInstance();
         criterion.setOrderDirection(orderDirection);
         criterion.setOperand(operand);
         

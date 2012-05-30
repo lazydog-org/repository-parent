@@ -26,36 +26,32 @@ public final class Enclosure {
     /**
      * Begin enclosure operation.
      * 
-     * @param  criterion  the criterion.
-     * 
      * @return  the resulting criterion.
      */
-    public static Criterion begin(final Criterion criterion) {
-        return Enclosure.operation(Enclosure.Operator.BEGIN, criterion);
+    public static Criterion begin() {
+        return Enclosure.operation(Enclosure.Operator.BEGIN);
     }
         
     /**
      * End enclosure operation.
      * 
-     * @param  criterion  the criterion.
-     * 
      * @return  the resulting criterion.
      */
-    public static Criterion end(final Criterion criterion) {
-        return Enclosure.operation(Enclosure.Operator.END, criterion);
+    public static Criterion end() {
+        return Enclosure.operation(Enclosure.Operator.END);
     }
     
     /**
      * Enclosure operation.
      * 
      * @param  enclosureOperator  the enclosure operator.
-     * @param  criterion        the criterion.
      * 
      * @return  the resulting criterion.
      */
-    private static Criterion operation(final Enclosure.Operator enclosureOperator, final Criterion criterion) {
+    private static Criterion operation(final Enclosure.Operator enclosureOperator) {
         
-        // Set the criterion enclosure operator.
+        // Set the criterion.
+        Criterion criterion = Criterion.newInstance();
         criterion.setEnclosureOperator(enclosureOperator);
 
         return criterion;

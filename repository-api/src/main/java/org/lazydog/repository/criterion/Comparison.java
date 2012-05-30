@@ -162,22 +162,23 @@ public final class Comparison {
         // Check if there is more than one value.
         if (values.length > 1) {
             
+            criterions.add(Enclosure.begin());
+            boolean firstValue = true;
+            
             // Loop through the values.
             for (Object value : values) {
                 
-                // Check if the criterions is empty.
-                if (criterions.isEmpty()) {
-                    criterions.add(Enclosure.begin(Comparison.eq(operand, value)));
-                }
-                
-                // Check if this is the last criterions.
-                else if (criterions.size() == values.length - 1) {
-                    criterions.add(Enclosure.end(Logical.or(Comparison.eq(operand, value))));
+                // Check if this is the first value.
+                if (firstValue) {
+                    criterions.add(Comparison.eq(operand, value));
+                    firstValue = false;
                 }
                 else {
                     criterions.add(Logical.or(Comparison.eq(operand, value)));
                 }
             }
+            
+            criterions.add(Enclosure.end());
         }
         
         return criterions;
@@ -285,22 +286,23 @@ public final class Comparison {
         // Check if there is more than one value.
         if (values.length > 1) {
             
+            criterions.add(Enclosure.begin());
+            boolean firstValue = true;
+            
             // Loop through the values.
             for (Object value : values) {
                 
-                // Check if the criterions is empty.
-                if (criterions.isEmpty()) {
-                    criterions.add(Enclosure.begin(Comparison.ne(operand, value)));
-                }
-                
-                // Check if this is the last criterions.
-                else if (criterions.size() == values.length - 1) {
-                    criterions.add(Enclosure.end(Logical.and(Comparison.ne(operand, value))));
+                // Check if this is the first value.
+                if (firstValue) {
+                    criterions.add(Comparison.ne(operand, value));
+                    firstValue = false;
                 }
                 else {
                     criterions.add(Logical.and(Comparison.ne(operand, value)));
                 }
             }
+            
+            criterions.add(Enclosure.end());
         }
         
         return criterions;
@@ -339,13 +341,7 @@ public final class Comparison {
      * @return  the resulting criterion.
      */
     private static Criterion operation(final Comparison.Operator comparisonOperator, final String operand) {
-
-        // Set the criterion.
-        Criterion criterion = new Criterion();
-        criterion.setComparisonOperator(comparisonOperator);
-        criterion.setOperand(operand);
-        
-        return criterion;
+        return Comparison.operation(comparisonOperator, operand, null);
     }
     
     /**
@@ -360,7 +356,7 @@ public final class Comparison {
     private static Criterion operation(final Comparison.Operator comparisonOperator, final String operand, final Object value) {
  
         // Set the criterion.
-        Criterion criterion = new Criterion();
+        Criterion criterion = Criterion.newInstance();
         criterion.setComparisonOperator(comparisonOperator);
         criterion.setOperand(operand);
         criterion.setValue(value);

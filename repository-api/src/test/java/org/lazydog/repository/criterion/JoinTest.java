@@ -13,7 +13,7 @@ public class JoinTest {
     
     @Test
     public void testJoin() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setJoinOperator(Join.Operator.JOIN);
         expectedCriterion.setOperand("operand");
         assertEquals(expectedCriterion, Join.join(expectedCriterion.getOperand()));
@@ -21,7 +21,7 @@ public class JoinTest {
     
     @Test
     public void testJoinFetch() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setJoinOperator(Join.Operator.JOIN_FETCH);
         expectedCriterion.setOperand("operand");
         assertEquals(expectedCriterion, Join.joinFetch(expectedCriterion.getOperand()));
@@ -29,7 +29,7 @@ public class JoinTest {
     
     @Test
     public void testLeftJoin() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setJoinOperator(Join.Operator.LEFT_JOIN);
         expectedCriterion.setOperand("operand");
         assertEquals(expectedCriterion, Join.leftJoin(expectedCriterion.getOperand()));
@@ -37,7 +37,7 @@ public class JoinTest {
         
     @Test
     public void testLeftJoinFetch() {
-        Criterion expectedCriterion = new Criterion();
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setJoinOperator(Join.Operator.LEFT_JOIN_FETCH);
         expectedCriterion.setOperand("operand");
         assertEquals(expectedCriterion, Join.leftJoinFetch(expectedCriterion.getOperand()));

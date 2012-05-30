@@ -13,22 +13,16 @@ public class EnclosureTest {
     
     @Test
     public void testBegin() {
-        Criterion expectedCriterion = new Criterion();
-        expectedCriterion.setComparisonOperator(Comparison.Operator.EQUAL);
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setEnclosureOperator(Enclosure.Operator.BEGIN);
-        expectedCriterion.setOperand("operand");
-        expectedCriterion.setValue("value");
-        assertEquals(expectedCriterion, Enclosure.begin(Comparison.eq(expectedCriterion.getOperand(), expectedCriterion.getValue())));
+        assertEquals(expectedCriterion, Enclosure.begin());
     }
     
     @Test
     public void testEnd() {
-        Criterion expectedCriterion = new Criterion();
-        expectedCriterion.setComparisonOperator(Comparison.Operator.EQUAL);
+        Criterion expectedCriterion = Criterion.newInstance();
         expectedCriterion.setEnclosureOperator(Enclosure.Operator.END);
-        expectedCriterion.setOperand("operand");
-        expectedCriterion.setValue("value");
-        assertEquals(expectedCriterion, Enclosure.end(Comparison.eq(expectedCriterion.getOperand(), expectedCriterion.getValue())));
+        assertEquals(expectedCriterion, Enclosure.end());
     }
 }
 
