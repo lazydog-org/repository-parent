@@ -1,5 +1,7 @@
 package org.lazydog.repository.criterion;
 
+import java.util.List;
+
 
 /**
  * Logical.
@@ -35,6 +37,17 @@ public final class Logical {
     }
     
     /**
+     * And logical operation.
+     * 
+     * @param  criterions  the criterions.
+     * 
+     * @return  the resulting criterions.
+     */
+    public static List<Criterion> and(final List<Criterion> criterions) {
+        return Logical.operation(Logical.Operator.AND, criterions);
+    }
+    
+    /**
      * Logical operation.
      * 
      * @param  logicalOperator  the logical operator.
@@ -49,6 +62,22 @@ public final class Logical {
 
         return criterion;
     }
+        
+    /**
+     * Logical operation.
+     * 
+     * @param  logicalOperator  the logical operator.
+     * @param  criterions       the criterions.
+     * 
+     * @return  the resulting criterion.
+     */
+    private static List<Criterion> operation(final Logical.Operator logicalOperator, final List<Criterion> criterions) {
+        
+        // Set the criterion logical operator.
+        criterions.get(0).setLogicalOperator(logicalOperator);
+
+        return criterions;
+    }
     
     /**
      * Or logical operation.
@@ -59,5 +88,16 @@ public final class Logical {
      */
     public static Criterion or(final Criterion criterion) {
         return Logical.operation(Logical.Operator.OR, criterion);
+    }
+    
+    /**
+     * Or logical operation.
+     * 
+     * @param  criterions  the criterions.
+     * 
+     * @return  the resulting criterion.
+     */
+    public static List<Criterion> or(final List<Criterion> criterions) {
+        return Logical.operation(Logical.Operator.OR, criterions);
     }
 }
