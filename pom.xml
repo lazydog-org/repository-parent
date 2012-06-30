@@ -4,7 +4,7 @@
     <groupId>org.lazydog.repository</groupId>
     <artifactId>repository-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <name>Repository Parent</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,8 +12,8 @@
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
     <scm>
-        <connection>scm:svn:https://svn.home/svn/lazydog/trunk/repository-parent</connection>
-        <developerConnection>scm:svn:https://svn.home/svn/lazydog/trunk/repository-parent</developerConnection>
+        <connection>scm:svn:https://svn.home/svn/lazydog/tags/repository-parent-1.6</connection>
+        <developerConnection>scm:svn:https://svn.home/svn/lazydog/tags/repository-parent-1.6</developerConnection>
     </scm>
     <build>
         <pluginManagement>
