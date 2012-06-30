@@ -48,14 +48,14 @@ public abstract class AbstractRepository implements Repository {
         TypedQuery<T> query = this.entityManager.createQuery(queryLanguageString, entityClass);
 
         // Loop through the hints.
-        for(Object key : queryHints.keySet()) {
+        for (Object key : queryHints.keySet()) {
 
             // Set the query hints.
             query.setHint(queryHints.get(key), key);
         }
 
         // Loop through the parameters.
-        for(String key : queryParameters.keySet()) {
+        for (String key : queryParameters.keySet()) {
 
             // Set the query parameters.
             query.setParameter(key, queryParameters.get(key));
