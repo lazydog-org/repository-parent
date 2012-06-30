@@ -4,7 +4,7 @@
     <groupId>org.lazydog.repository</groupId>
     <artifactId>repository-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <name>Repository Parent</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,7 +55,7 @@
         <repository>
             <id>releases</id>
             <name>Internal Releases</name>
-            <url>http://svn.home:8081/nexus/content/repositories/releases</url>
+            <url>http://maven.home/content/repositories/releases</url>
         </repository>
     </distributionManagement>
     <modules>
