@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.lazydog.repository</groupId>
         <artifactId>repository-parent</artifactId>
-        <version>1.6</version>
+        <version>1.7-SNAPSHOT</version>
     </parent>
     <artifactId>repository-api</artifactId>
     <packaging>jar</packaging>
