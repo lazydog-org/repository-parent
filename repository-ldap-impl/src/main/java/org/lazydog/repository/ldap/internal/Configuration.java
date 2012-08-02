@@ -233,7 +233,7 @@ public final class Configuration {
      * @return  the entity factory.
      */
     @SuppressWarnings("unchecked")
-	public <T> EntityFactory<T> getEntityFactory(final Class<T> entityClass) {
+    public <T> EntityFactory<T> getEntityFactory(final Class<T> entityClass) {
     	return (EntityFactory<T>)this.entityFactoryMap.get(entityClass);
     }
 
