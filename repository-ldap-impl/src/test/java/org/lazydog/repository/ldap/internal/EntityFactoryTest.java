@@ -41,8 +41,8 @@ public class EntityFactoryTest {
     @BeforeClass
     public static void initialize() {
 
-        Logger logger = (Logger)LoggerFactory.getLogger(EntityFactory.class);
-        logger.setLevel(Level.ALL);
+        Logger logger = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        logger.setLevel(Level.ERROR);
 
         Account account1 = new Account();
         account1.setId("uid=testaccount1,ou=accounts,o=test,ou=system");

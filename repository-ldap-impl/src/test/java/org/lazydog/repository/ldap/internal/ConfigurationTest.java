@@ -34,8 +34,6 @@ public class ConfigurationTest {
     public static void initialize() {
         Logger logger = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
         logger.setLevel(Level.ERROR);
-        logger = (Logger)LoggerFactory.getLogger(Configuration.class);
-        logger.setLevel(Level.ALL);
     }
 	
     @Test

@@ -74,8 +74,6 @@ public class AbstractRepositoryTest {
 
     	Logger logger = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
         logger.setLevel(Level.ERROR);
-        logger = (Logger)LoggerFactory.getLogger(AbstractRepository.class);
-        logger.setLevel(Level.ALL);
 
         account1 = new Account();
         account1.setId("uid=testaccount1,ou=accounts,o=test,ou=system");

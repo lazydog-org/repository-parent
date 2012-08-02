@@ -35,7 +35,7 @@ public class PersistenceLDAPParserTest {
     
     @Test
     public void testGetLoggingLevel() throws Exception {
-    	LoggingLevel expected = LoggingLevel.ALL;
+    	LoggingLevel expected = LoggingLevel.WARN;
     	PersistenceLDAPParser parser = PersistenceLDAPParser.newInstance();
         LoggingLevel actual = parser.getLoggingLevel();
         assertEquals(expected, actual);

@@ -10,7 +10,7 @@
           security-authentication="simple" 
           security-principal="uid=admin,ou=system" 
           security-credentials="secret"/>
-    <logging level="ALL"/>
+    <logging level="WARN"/>
     <mapping-file>org/lazydog/test/em/account-em.xml</mapping-file>
     <mapping-file>org/lazydog/test/em/group-em.xml</mapping-file>
 </persistence-ldap>

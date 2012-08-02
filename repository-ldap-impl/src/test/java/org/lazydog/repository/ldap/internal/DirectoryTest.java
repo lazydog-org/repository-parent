@@ -69,8 +69,6 @@ public class DirectoryTest {
 
     	Logger logger = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
         logger.setLevel(Level.ERROR);
-        logger = (Logger)LoggerFactory.getLogger(Directory.class);
-        logger.setLevel(Level.ALL);
 
         environment = new Properties();
     	environment.setProperty(Directory.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
