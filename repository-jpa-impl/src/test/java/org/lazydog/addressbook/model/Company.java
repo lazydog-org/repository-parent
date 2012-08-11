@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -28,35 +31,19 @@ public class Company implements Serializable {
     @OneToMany(fetch=FetchType.EAGER)
     @JoinTable(name="COMPANY_PHONE", joinColumns=@JoinColumn(name="COMPANY_ID"), inverseJoinColumns=@JoinColumn(name="PHONE_ID"))
     private List<Phone> phones = new ArrayList<Phone>();
-
+    
     /**
-     * Indicates whether some other object is "equal to" this one.
-     * 
-     * @param  object  the reference object with which to compare.
-     * 
-     * @return  true if this object is the same as the object argument; false otherwise.
+     * Compare this object to the specified object.
+     *
+     * @param  object  the object to compare this object against.
+     *
+     * @return  true if the objects are equal; false otherwise.
      */
     @Override
     public boolean equals(Object object) {
- 
-        // Assume the reference object is not equal to this object.
-        boolean equals = false;
-        
-        // Check if the object is an instance of this class.
-        if (object instanceof Company) {
-            Company that = (Company)object;
-            
-            // Check if the IDs are both null or they are both equal.
-            if ((this.id == null && that.id == null) || (this.id != null && this.id.equals(that.id))) {
-               
-                // The reference object is the same as this object.
-                equals = true;
-            }
-        }
-        
-        return equals;
+        return EqualsBuilder.reflectionEquals(this, object);
     }
-
+    
     /**
      * Get the addresses.
      *
@@ -101,17 +88,17 @@ public class Company implements Serializable {
     public List<Phone> getPhones() {
         return this.phones;
     }
-    
+
     /**
-     * Returns a hash code value for this object.
+     * Returns a hash code for this object.
      * 
-     * @return  a hash code value for this object.
+     * @return  a hash code for this object.
      */
     @Override
     public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
+        return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    
     /**
      * Replace the original object with the replacement object if the original object is null.
      * 
@@ -176,7 +163,7 @@ public class Company implements Serializable {
     public void setPhones(final List<Phone> phones) {
         this.phones = replaceNull(phones, new ArrayList<Phone>());
     }
-    
+
     /**
      * Get this object as a string.
      *
@@ -184,17 +171,6 @@ public class Company implements Serializable {
      */
     @Override
     public String toString() {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        
-        stringBuilder.append("Company = [");
-        stringBuilder.append("addresses = ").append(this.addresses);
-        stringBuilder.append(", departments = ").append(this.departments);
-        stringBuilder.append(", id = ").append(this.id);
-        stringBuilder.append(", name = ").append(this.name);
-        stringBuilder.append(", phones = ").append(this.phones);
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

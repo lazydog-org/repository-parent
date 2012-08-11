@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -22,35 +25,19 @@ public class Phone implements Serializable {
     private Integer id;
     @Column(nullable=false)
     private String number;
-
+    
     /**
-     * Indicates whether some other object is "equal to" this one.
-     * 
-     * @param  object  the reference object with which to compare.
-     * 
-     * @return  true if this object is the same as the object argument; false otherwise.
+     * Compare this object to the specified object.
+     *
+     * @param  object  the object to compare this object against.
+     *
+     * @return  true if the objects are equal; false otherwise.
      */
     @Override
     public boolean equals(Object object) {
- 
-        // Assume the reference object is not equal to this object.
-        boolean equals = false;
-        
-        // Check if the object is an instance of this class.
-        if (object instanceof Phone) {
-            Phone that = (Phone)object;
-            
-            // Check if the IDs are both null or they are both equal.
-            if ((this.id == null && that.id == null) || (this.id != null && this.id.equals(that.id))) {
-               
-                // The reference object is the same as this object.
-                equals = true;
-            }
-        }
-        
-        return equals;
+        return EqualsBuilder.reflectionEquals(this, object);
     }
-
+    
     /**
      * Get the ID.
      *
@@ -70,15 +57,15 @@ public class Phone implements Serializable {
     }
 
     /**
-     * Returns a hash code value for this object.
+     * Returns a hash code for this object.
      * 
-     * @return  a hash code value for this object.
+     * @return  a hash code for this object.
      */
     @Override
     public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
+        return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    
     /**
      * Set the ID.
      *
@@ -104,14 +91,6 @@ public class Phone implements Serializable {
      */
     @Override
     public String toString() {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        
-        stringBuilder.append("Address = [");
-        stringBuilder.append("id = ").append(this.id);
-        stringBuilder.append(", number = ").append(this.number);
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

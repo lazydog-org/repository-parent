@@ -18,7 +18,6 @@ public class CriteriaImplTest {
         String expectedQueryLanguageString = "SELECT DISTINCT company FROM Company company JOIN company.departments departments WHERE departments.name LIKE :param1";
         CriteriaImpl<Company> criteriaImpl = new CriteriaImpl<Company>(Company.class);
         criteriaImpl.add(Comparison.like("departments.name", "%Name 10%"));
-        
         assertEquals(expectedQueryLanguageString, criteriaImpl.getQueryLanguageString());
     }
    

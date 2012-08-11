@@ -3,6 +3,9 @@ package org.lazydog.test.model;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.lazydog.repository.Entity;
 
 
@@ -11,32 +14,13 @@ import org.lazydog.repository.Entity;
  * 
  * @author  Ron Rickard
  */
-public class Group extends Entity<Group,String> implements Comparable<Group>,Serializable {
+public class Group extends Entity<Group,String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Set<Account> accounts = new HashSet<Account>();
     private String description;
     private String name;
 
-    /**
-     * Compare this object to the specified object.
-     * 
-     * @param  that  the object to compare this object against.
-     * 
-     * @return  the value 0 if this object is equal to the object;
-     * 		a value less than 0 if this object is less than the object;
-     * 		and a value greater than 0 if this object is greater than the object.
-     */
-    @Override
-    public int compareTo(final Group that) {
-
-        // Initialize.
-        String thatName = replaceNull(that.getName(), "");
-        String thisName = replaceNull(this.getName(), "");
-
-        return thisName.compareTo(thatName);
-    }
-	
     /**
      * Compare this object to the specified object.
      *
@@ -46,33 +30,7 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
      */
     @Override
     public boolean equals(final Object object) {
-
-        // Initialize.
-        boolean equals = false;
-        
-        // Check if the object is an instance of this class.
-        if (object instanceof Group) {
-
-            // Get the property values in this and that object, giving them a value if the
-            // value is null.
-            Group that = (Group)object;
-            Set<Account> thatAccounts = that.getAccounts();
-            String thatDescription = replaceNull(that.getDescription(), "");
-            String thatId = replaceNull(that.getId(), "");
-            String thatName = replaceNull(that.getName(), "");
-            Set<Account> thisAccounts = this.getAccounts();
-            String thisDescription = replaceNull(this.getDescription(), "");
-            String thisId = replaceNull(this.getId(), "");
-            String thisName = replaceNull(this.getName(), "");
-            
-            // Compare this object to that object.
-            equals = thisId.equals(thatId);
-            equals = (equals == false) ? equals : thisName.equals(thatName);
-            equals = (equals == false) ? equals : thisDescription.equals(thatDescription);
-            equals = (equals == false) ? equals : thisAccounts.equals(thatAccounts);
-        }
-
-        return equals;
+        return EqualsBuilder.reflectionEquals(this, object);
     }
     
     /**
@@ -104,24 +62,14 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
 
     /**
      * Returns a hash code for this object.
-     *
+     * 
      * @return  a hash code for this object.
      */
     @Override
     public int hashCode() {
-
-        // Initialize.
-        Set<Account> thisAccounts = this.getAccounts();
-        String thisDescription = replaceNull(this.getDescription(), "");
-        String thisId = replaceNull(this.getId(), "");
-        String thisName = replaceNull(this.getName(), "");
-        
-        return thisId.hashCode()*7^3
-             + thisName.hashCode()*7^2
-             + thisDescription.hashCode()*7
-             + thisAccounts.hashCode();
+        return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    
     /**
      * Replace the original object with the replacement object
      * if the original object is null.
@@ -173,19 +121,12 @@ public class Group extends Entity<Group,String> implements Comparable<Group>,Ser
     }
 
     /**
-     * Get this object as a String.
+     * Get this object as a string.
      *
-     * @return  this object as a String.
+     * @return  this object as a string.
      */
     @Override
     public String toString() {
-        return new StringBuilder()
-        	.append("Group [")
-        	.append("accounts = ").append(this.getAccounts())
-        	.append(", description = ").append(this.getDescription())
-        	.append(", id = ").append(this.getId())
-        	.append(", name = ").append(this.getName())
-        	.append("]")
-        	.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

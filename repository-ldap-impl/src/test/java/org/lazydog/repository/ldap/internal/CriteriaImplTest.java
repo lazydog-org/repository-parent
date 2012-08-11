@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,8 +15,6 @@ import org.lazydog.repository.criterion.Criterion;
 import org.lazydog.repository.criterion.Logical;
 import org.lazydog.repository.criterion.Order;
 import org.lazydog.test.model.Group;
-
-import static org.junit.Assert.*;
 
 
 /**

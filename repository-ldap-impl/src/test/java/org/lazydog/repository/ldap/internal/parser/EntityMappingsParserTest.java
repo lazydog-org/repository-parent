@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.lazydog.repository.ldap.internal.FetchType;
 import org.lazydog.repository.ldap.internal.SearchScope;
-
-import static org.junit.Assert.*;
 
 
 /**
@@ -100,12 +99,10 @@ public class EntityMappingsParserTest {
     @Test(expected=ParsingException.class)
     public void testNewInstanceNullPathname() throws Exception {
     	EntityMappingsParser.newInstance(null);
-        fail();
     }
 
     @Test(expected=ParsingException.class)
     public void testNewInstanceEmptyPathname() throws Exception {
     	EntityMappingsParser.newInstance("");
-        fail();
     }
 }

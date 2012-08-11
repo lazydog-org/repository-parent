@@ -9,14 +9,13 @@ import java.util.Set;
 import org.apache.directory.server.core.integ.annotations.CleanupLevel;
 import org.apache.directory.server.integ.SiRunner;
 import org.apache.directory.server.ldap.LdapServer;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lazydog.test.model.Account;
 import org.lazydog.test.model.Group;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
 
 
 /**

@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;
+import static org.lazydog.repository.ldap.internal.Validator.validCriteria;
+import static org.lazydog.repository.ldap.internal.Validator.validEntity;
+import static org.lazydog.repository.ldap.internal.Validator.validEntityClass;
+import static org.lazydog.repository.ldap.internal.Validator.validId;
+import static org.lazydog.repository.ldap.internal.Validator.validList;
 import org.lazydog.test.model.Account;
 import org.lazydog.test.model.Group;
-
-import static org.lazydog.repository.ldap.internal.Validator.*;
 
 
 /**

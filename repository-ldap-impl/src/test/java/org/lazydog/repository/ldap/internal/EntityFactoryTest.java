@@ -8,14 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lazydog.repository.Entity;
 import org.lazydog.test.model.Account;
 import org.lazydog.test.model.Group;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
 
 
 /**

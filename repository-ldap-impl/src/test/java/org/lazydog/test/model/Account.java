@@ -1,6 +1,9 @@
 package org.lazydog.test.model;
 
 import java.io.Serializable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.lazydog.repository.Entity;
 
 
@@ -9,30 +12,11 @@ import org.lazydog.repository.Entity;
  * 
  * @author  Ron Rickard
  */
-public class Account extends Entity<Account,String> implements Comparable<Account>,Serializable {
+public class Account extends Entity<Account,String> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String name;
 
-    /**
-     * Compare this object to the specified object.
-     * 
-     * @param  that  the object to compare this object against.
-     * 
-     * @return  the value 0 if this object is equal to the object;
-     * 		a value less than 0 if this object is less than the object;
-     * 		and a value greater than 0 if this object is greater than the object.
-     */
-    @Override
-    public int compareTo(final Account that) {
-
-        // Initialize.
-        String thatName = replaceNull(that.getName(), "");
-        String thisName = replaceNull(this.getName(), "");
-
-        return thisName.compareTo(thatName);
-    }
-	
     /**
      * Compare this object to the specified object.
      *
@@ -42,29 +26,9 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
      */
     @Override
     public boolean equals(final Object object) {
-
-        // Initialize.
-        boolean equals = false;
-        
-        // Check if the object is an instance of this class.
-        if (object instanceof Account) {
-
-            // Get the property values in this and that object, giving them a value if the
-            // value is null.
-            Account that = (Account)object;
-            String thatId = replaceNull(that.getId(), "");
-            String thatName = replaceNull(that.getName(), "");
-            String thisId = replaceNull(this.getId(), "");
-            String thisName = replaceNull(this.getName(), "");
-            
-            // Compare this object to that object.
-            equals = thisId.equals(thatId);
-            equals = (equals == false) ? equals : thisName.equals(thatName);
-        }
-
-        return equals;
+        return EqualsBuilder.reflectionEquals(this, object);
     }
-
+    
     /**
      * Get the name.
      * 
@@ -76,20 +40,14 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
 
     /**
      * Returns a hash code for this object.
-     *
+     * 
      * @return  a hash code for this object.
      */
     @Override
     public int hashCode() {
-
-        // Initialize.
-        String thisId = replaceNull(this.getId(), "");
-        String thisName = replaceNull(this.getName(), "");
-        
-        return thisId.hashCode()*7
-             + thisName.hashCode();
+        return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    
     /**
      * Replace the original object with the replacement object
      * if the original object is null.
@@ -123,17 +81,12 @@ public class Account extends Entity<Account,String> implements Comparable<Accoun
     }
 
     /**
-     * Get this object as a String.
+     * Get this object as a string.
      *
-     * @return  this object as a String.
+     * @return  this object as a string.
      */
     @Override
     public String toString() {
-        return new StringBuilder()
-        	.append("Account [")
-        	.append(", id = ").append(this.getId())
-        	.append(", name = ").append(this.getName())
-        	.append("]")
-        	.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -24,35 +27,19 @@ public class Department implements Serializable {
     private Integer id;
     @Column(nullable=false)
     private String name;
-
+    
     /**
-     * Indicates whether some other object is "equal to" this one.
-     * 
-     * @param  object  the reference object with which to compare.
-     * 
-     * @return  true if this object is the same as the object argument; false otherwise.
+     * Compare this object to the specified object.
+     *
+     * @param  object  the object to compare this object against.
+     *
+     * @return  true if the objects are equal; false otherwise.
      */
     @Override
     public boolean equals(Object object) {
- 
-        // Assume the reference object is not equal to this object.
-        boolean equals = false;
-        
-        // Check if the object is an instance of this class.
-        if (object instanceof Department) {
-            Department that = (Department)object;
-            
-            // Check if the IDs are both null or they are both equal.
-            if ((this.id == null && that.id == null) || (this.id != null && this.id.equals(that.id))) {
-               
-                // The reference object is the same as this object.
-                equals = true;
-            }
-        }
-        
-        return equals;
+        return EqualsBuilder.reflectionEquals(this, object);
     }
-
+    
     /**
      * Get the company.
      * 
@@ -90,15 +77,15 @@ public class Department implements Serializable {
     }
 
     /**
-     * Returns a hash code value for this object.
+     * Returns a hash code for this object.
      * 
-     * @return  a hash code value for this object.
+     * @return  a hash code for this object.
      */
     @Override
     public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
+        return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    
     /**
      * Replace the original object with the replacement object if the original object is null.
      * 
@@ -162,16 +149,6 @@ public class Department implements Serializable {
      */
     @Override
     public String toString() {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        
-        stringBuilder.append("Department = [");
-        stringBuilder.append("company = ").append(this.company);
-        stringBuilder.append(", employees = ").append(this.employees);
-        stringBuilder.append(", id = ").append(this.id);
-        stringBuilder.append(", name = ").append(this.name);
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

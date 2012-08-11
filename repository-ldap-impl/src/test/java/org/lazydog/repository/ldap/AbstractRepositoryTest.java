@@ -3,7 +3,6 @@ package org.lazydog.repository.ldap;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import org.apache.directory.server.core.integ.annotations.ApplyLdifs;
@@ -11,6 +10,7 @@ import org.apache.directory.server.core.integ.annotations.CleanupLevel;
 import org.apache.directory.server.integ.SiRunner;
 import org.apache.directory.server.ldap.LdapServer;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,8 +22,8 @@ import org.lazydog.test.GroupRepository;
 import org.lazydog.test.model.Account;
 import org.lazydog.test.model.Group;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import org.unitils.reflectionassert.ReflectionComparatorMode;
 
 
 /**
@@ -177,9 +177,7 @@ public class AbstractRepositoryTest {
     	Group persistedGroup = repository.persist(group2);
     	assertEquals(group2, persistedGroup);
     	List<Group> fetchedGroups = repository.findList(Group.class);
-    	Collections.sort(groups);
-    	Collections.sort(fetchedGroups);
-    	assertEquals(groups, fetchedGroups);
+    	assertReflectionEquals(groups, fetchedGroups, ReflectionComparatorMode.LENIENT_ORDER);
     }
 
     @Test
@@ -190,9 +188,7 @@ public class AbstractRepositoryTest {
     	Group persistedGroup = repository.persist(group2);
     	assertEquals(group2, persistedGroup);
     	List<Group> fetchedGroups = repository.findList(Group.class, criteria);
-    	Collections.sort(groups);
-    	Collections.sort(fetchedGroups);
-    	assertEquals(groups, fetchedGroups);
+    	assertReflectionEquals(groups, fetchedGroups, ReflectionComparatorMode.LENIENT_ORDER);
     }
 
     @Test

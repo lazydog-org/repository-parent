@@ -202,7 +202,7 @@ public class AbstractRepositoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNonEntity() {
-        repository.remove(Address2.class, expectedAddress1.getId());    
+        repository.remove(Address2.class, expectedAddress1.getId());   
     }
       
     private static void beginTransaction() {

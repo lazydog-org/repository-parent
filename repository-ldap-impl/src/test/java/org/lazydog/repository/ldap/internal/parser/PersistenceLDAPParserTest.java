@@ -2,10 +2,9 @@ package org.lazydog.repository.ldap.internal.parser;
 
 import java.util.HashSet;
 import java.util.Set;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.lazydog.repository.ldap.internal.LoggingLevel;
-
-import static org.junit.Assert.*;
 
 
 /**
