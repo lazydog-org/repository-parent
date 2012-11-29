@@ -7,11 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
- * Address 2.
+ * Non-entity address.
  *
  * @author  Ron Rickard
  */
-public class Address2 implements Serializable {
+public class NonEntityAddress implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String city;

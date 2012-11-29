@@ -1,0 +1,3 @@
+/repository-api/target/
+/repository-jpa-impl/target/
+/repository-ldap-impl/target/

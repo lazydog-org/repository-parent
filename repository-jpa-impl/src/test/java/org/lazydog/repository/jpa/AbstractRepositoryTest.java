@@ -1,24 +1,27 @@
 package org.lazydog.repository.jpa;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLNonTransientConnectionException;
 import javax.persistence.EntityNotFoundException;
+import javax.sql.DataSource;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lazydog.addressbook.AddressBookRepository;
 import org.lazydog.addressbook.model.Address;
-import org.lazydog.addressbook.model.Address2;
+import org.lazydog.addressbook.model.NonEntityAddress;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Comparison;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 
@@ -27,38 +30,36 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
  * 
  * @author  Ron Rickard
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:/applicationContext.xml"})
+@Transactional(propagation = Propagation.REQUIRED)
 public class AbstractRepositoryTest {
 
     private static final String TEST_FILE = "dataset.xml";
-    private static IDatabaseConnection connection;
-    private static AddressBookRepository repository;
+    private static IDatabaseConnection databaseConnection;
     private static Address expectedAddress1;
     private static Address expectedAddress2;
     private static Address expectedAddress3;
-    private static Address2 expectedAddress4;
+    private static NonEntityAddress expectedAddress4;
+    @Autowired private AddressBookRepository repository;
+    @Autowired private DataSource dataSource;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
 
         // Ensure the derby.log file is in the target directory.
         System.setProperty("derby.system.home", "./target");
-        repository = new AddressBookRepository();
-        
-        // Get the database connection.
-        beginTransaction();
-        connection = new DatabaseConnection(repository.getEntityManager().unwrap(Connection.class));
-        commitTransaction();
- 
+
         expectedAddress1 = new Address();
         expectedAddress1.setCity("Los Angeles");
-        expectedAddress1.setId(3);
+        expectedAddress1.setId(1);
         expectedAddress1.setState("California");
         expectedAddress1.setStreetAddress("111 Street Avenue");
         expectedAddress1.setZipcode("11111");
 
         expectedAddress2 = new Address();
         expectedAddress2.setCity("Phoenix");
-        expectedAddress2.setId(4);
+        expectedAddress2.setId(2);
         expectedAddress2.setState("Arizona");
         expectedAddress2.setStreetAddress("222 Street Avenue");
         expectedAddress2.setZipcode("22222");
@@ -69,38 +70,23 @@ public class AbstractRepositoryTest {
         expectedAddress3.setStreetAddress("333 Street Avenue");
         expectedAddress3.setZipcode("33333");
         
-        expectedAddress4 = new Address2();
+        expectedAddress4 = new NonEntityAddress();
         expectedAddress4.setCity("Baltimore");
-        expectedAddress4.setId(5);
         expectedAddress4.setState("Maryland");
         expectedAddress4.setStreetAddress("444 Street Avenue");
         expectedAddress4.setZipcode("44444");
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-               
-        // Close the database connection.
-        connection.close();
-        
-        // Close the entity manager factory.
-        repository.getEntityManager().getEntityManagerFactory().close();
-        
-        try {
-            
-            // Drop the addressbook database.
-            DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;drop=true");
-        }
-        catch(SQLNonTransientConnectionException e) {
-            // Ignore.
-        }
-    }
-    
     @Before
     public void beforeTest() throws Exception {
-        
-        // Refresh the database with the dataset.
-        DatabaseOperation.CLEAN_INSERT.execute(connection, getDataSet());
+
+        // Since the database is being modified outside of the entity manager control, 
+        // clear the entities and the cache.
+        repository.getEntityManager().clear();
+        repository.getEntityManager().getEntityManagerFactory().getCache().evictAll();
+
+        // Refresh the dataset in the database.
+        DatabaseOperation.CLEAN_INSERT.execute(getDatabaseConnection(), getDataSet());
     }
 
     @Test
@@ -110,7 +96,7 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testFindNot() {
-        assertNull(repository.find(Address.class, new Integer(2)));
+        assertNull(repository.find(Address.class, new Integer(3)));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -120,7 +106,7 @@ public class AbstractRepositoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testFindNonEntity() {
-        repository.find(Address2.class, expectedAddress1.getId());
+        repository.find(NonEntityAddress.class, expectedAddress1.getId());
     }
 
     @Test
@@ -133,7 +119,7 @@ public class AbstractRepositoryTest {
     @Test
     public void testFindByCriteriaNot() {
         Criteria<Address> criteria = repository.getCriteria(Address.class);
-        criteria.add(Comparison.eq("id", new Integer(2)));
+        criteria.add(Comparison.eq("id", new Integer(3)));
         assertNull(repository.find(Address.class, criteria));
     }
 
@@ -156,10 +142,8 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testPersist() {
-        beginTransaction();
         Address actualAddress3 = repository.persist(expectedAddress3);
-        commitTransaction();
-        expectedAddress3.setId(1);
+        expectedAddress3.setId(actualAddress3.getId());
         assertReflectionEquals(expectedAddress3, actualAddress3);
     }
 
@@ -175,17 +159,13 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testRemove() {
-        beginTransaction();
         repository.remove(Address.class, expectedAddress1.getId());
-        commitTransaction();
         assertNull(repository.find(Address.class, expectedAddress1.getId()));
     }
 
     @Test(expected=EntityNotFoundException.class)
     public void testRemoveNot() {
-        beginTransaction();
         repository.remove(Address.class, expectedAddress1.getId());
-        commitTransaction();
         assertNull(repository.find(Address.class, expectedAddress1.getId()));
         repository.remove(Address.class, expectedAddress1.getId());
     }
@@ -202,15 +182,11 @@ public class AbstractRepositoryTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNonEntity() {
-        repository.remove(Address2.class, expectedAddress1.getId());   
+        repository.remove(NonEntityAddress.class, expectedAddress1.getId());   
     }
-      
-    private static void beginTransaction() {
-        repository.getEntityManager().getTransaction().begin();
-    }
-    
-    private static void commitTransaction() {
-        repository.getEntityManager().getTransaction().commit();
+
+    private IDatabaseConnection getDatabaseConnection() throws Exception {
+        return (databaseConnection == null) ? new DatabaseConnection(dataSource.getConnection()) : databaseConnection;
     }
     
     private static IDataSet getDataSet() throws Exception {

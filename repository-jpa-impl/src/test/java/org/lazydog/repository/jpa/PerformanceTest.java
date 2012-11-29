@@ -1,21 +1,19 @@
 package org.lazydog.repository.jpa;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLNonTransientConnectionException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.lazydog.addressbook.AddressBookRepository;
 import org.lazydog.addressbook.model.Address;
 import org.lazydog.addressbook.model.Company;
@@ -24,6 +22,11 @@ import org.lazydog.addressbook.model.Employee;
 import org.lazydog.addressbook.model.Phone;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Comparison;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -31,11 +34,15 @@ import org.lazydog.repository.criterion.Comparison;
  * 
  * @author  Ron Rickard
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:/applicationContext.xml"})
+@Transactional(propagation = Propagation.REQUIRED)
 public class PerformanceTest {
 
     private static final String TEST_FILE = "bigdataset.xml";
-    private static IDatabaseConnection connection;
-    private static AddressBookRepository repository;
+    private static IDatabaseConnection databaseConnection;
+    @Autowired private AddressBookRepository repository;
+    @Autowired private DataSource dataSource;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -47,37 +54,16 @@ public class PerformanceTest {
     @Before
     public void beforeTest() throws Exception {
 
-        repository = new AddressBookRepository();
+        // Since the database is being modified outside of the entity manager control, 
+        // clear the cache and the entities.
+        repository.getEntityManager().getEntityManagerFactory().getCache().evictAll();
+        repository.getEntityManager().clear();
         
-        // Get the database connection.
-        beginTransaction();
-        connection = new DatabaseConnection(repository.getEntityManager().unwrap(Connection.class));
-        commitTransaction();
-        
-        // Refresh the database with the dataset.
-        DatabaseOperation.CLEAN_INSERT.execute(connection, getDataSet());
-    }
-    
-    @After
-    public void afterTest() throws Exception {
-
-        // Close the database connection.
-        connection.close();
-        
-        // Close the entity manager factory.
-        repository.getEntityManager().getEntityManagerFactory().close();
-        
-        try {
-            
-            // Drop the addressbook database.
-            DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;drop=true");
-        }
-        catch(SQLNonTransientConnectionException e) {
-            // Ignore.
-        }
+        // Refresh the dataset in the database.
+        DatabaseOperation.CLEAN_INSERT.execute(getDatabaseConnection(), getDataSet());
     }
 
-   @Test
+    @Test
     public void findListAddress() {
         Date startDate = new Date();
         List<Address> addresses = repository.findList(Address.class);
@@ -138,12 +124,8 @@ public class PerformanceTest {
         System.out.println("fetched " + companies.size() + " companies in " + (endDate.getTime() - startDate.getTime()) + "ms");
     }
 
-    private static void beginTransaction() {
-        repository.getEntityManager().getTransaction().begin();
-    }
-    
-    private static void commitTransaction() {
-        repository.getEntityManager().getTransaction().commit();
+    private IDatabaseConnection getDatabaseConnection() throws Exception {
+        return (databaseConnection == null) ? new DatabaseConnection(dataSource.getConnection()) : databaseConnection;
     }
     
     private static IDataSet getDataSet() throws Exception {

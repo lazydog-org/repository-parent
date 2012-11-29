@@ -14,13 +14,10 @@
         <class>org.lazydog.addressbook.model.Employee</class>
         <class>org.lazydog.addressbook.model.Phone</class>
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:./target/addressbook;create=true"/>
-            <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
-            <property name="javax.persistence.jdbc.password" value="addressbookuser"/>
-            <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.logging.level.sql" value="WARNING"/>
-            <property name="eclipselink.logging.parameters" value="true"/> 
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="eclipselink.target-database" value="Derby"/>
+            <property name="eclipselink.weaving" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

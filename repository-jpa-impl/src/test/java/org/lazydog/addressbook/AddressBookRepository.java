@@ -1,7 +1,12 @@
 package org.lazydog.addressbook;
 
-import javax.persistence.Persistence;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.lazydog.repository.jpa.AbstractRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -9,9 +14,15 @@ import org.lazydog.repository.jpa.AbstractRepository;
  *
  * @author  Ron Rickard
  */
+@Repository
+@Transactional(propagation = Propagation.MANDATORY)
 public class AddressBookRepository extends AbstractRepository {
 
-    public AddressBookRepository () {
-        this.setEntityManager(Persistence.createEntityManagerFactory("AddressBookPU").createEntityManager());
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @PostConstruct
+    protected void initialize() {
+        this.setEntityManager(this.entityManager);
     }
 }
