@@ -4,7 +4,7 @@
     <groupId>org.lazydog.repository</groupId>
     <artifactId>repository-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.7</version>
+    <version>1.8-SNAPSHOT</version>
     <name>Repository Parent</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
     <scm>
         <connection>scm:git:gitolite@git.home:lazydog/repository-parent.git</connection>
         <developerConnection>scm:git:gitolite@git.home:lazydog/repository-parent.git</developerConnection>
-      <tag>v1.7</tag>
+      <tag>HEAD</tag>
   </scm>
     <build>
         <pluginManagement>
