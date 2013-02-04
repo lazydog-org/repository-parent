@@ -14,8 +14,8 @@
     <scm>
         <connection>scm:git:gitolite@git.home:lazydog/repository-parent.git</connection>
         <developerConnection>scm:git:gitolite@git.home:lazydog/repository-parent.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <build>
         <pluginManagement>
             <plugins>
