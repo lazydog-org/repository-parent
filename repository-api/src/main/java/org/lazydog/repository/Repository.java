@@ -85,7 +85,7 @@ public interface Repository {
     <T,U> void remove(Class<T> entityClass, U id);
 
     /**
-     * Remove the entities specified by the list of IDs.
+     * Remove the entities by the list of IDs.
      *
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.

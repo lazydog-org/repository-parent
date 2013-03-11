@@ -624,7 +624,7 @@ public abstract class AbstractRepository implements Repository {
     }
 
     /**
-     * Remove the entities specified by the list of IDs.
+     * Remove the entities by the list of IDs.
      *
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.
