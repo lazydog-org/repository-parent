@@ -1,0 +1,1 @@
+The repository code is intended to be used as a general purpose repository API and implementation for Java applications.
