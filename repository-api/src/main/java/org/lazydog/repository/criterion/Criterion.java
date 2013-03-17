@@ -21,6 +21,7 @@ package org.lazydog.repository.criterion;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * A criterion.
@@ -224,29 +225,12 @@ public final class Criterion implements Serializable {
     }
 
     /**
-     * Get this object as a String.
+     * Get this object as a string.
      *
-     * @return  this object as a String.
+     * @return  this object as a string.
      */
     @Override
     public String toString() {
-            
-        // Declare.
-        StringBuilder toString;
-        
-        // Initialize.
-        toString = new StringBuilder();
-        
-        toString.append("Criterion [");
-        toString.append("operand = ").append(this.operand);
-        toString.append(", value = ").append(this.value);
-        toString.append(", comparisonOperator = ").append(this.comparisonOperator);
-        toString.append(", enclosureOperator = ").append(this.enclosureOperator);
-        toString.append(", joinOperator = ").append(this.joinOperator);
-        toString.append(", logicalOperator = ").append(this.logicalOperator);
-        toString.append(", orderDirection = ").append(this.orderDirection);
-        toString.append("]");
-        
-        return toString.toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

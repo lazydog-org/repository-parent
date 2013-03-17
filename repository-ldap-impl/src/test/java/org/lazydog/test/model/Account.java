@@ -64,29 +64,6 @@ public class Account extends Entity<Account,String> implements Serializable {
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-    
-    /**
-     * Replace the original object with the replacement object
-     * if the original object is null.
-     *
-     * @param  original     the original object.
-     * @param  replacement  the replacement object.
-     *
-     * @return  the original object if it is not null, otherwise the replacement
-     *          object.
-     *
-     * @throws  IllegalArgumentException  if the replacement object is null.
-     */
-    private static <U, V extends U> U replaceNull(final U original, final V replacement) {
-
-        // Check if the replacement object is null.
-        if (replacement == null) {
-            throw new IllegalArgumentException(
-                    "The replacement object cannot be null.");
-        }
-
-        return (original == null) ? replacement : original;
-    }
 
     /**
      * Set the name.
