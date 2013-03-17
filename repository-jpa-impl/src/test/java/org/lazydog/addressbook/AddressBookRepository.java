@@ -43,22 +43,7 @@ public class AddressBookRepository extends AbstractRepository {
     public void beginTransaction() {
         this.getEntityManager().getTransaction().begin();
     }
-    
-    /**
-     * Clear the cache.
-     */
-    public void clearCache() {
-        this.getEntityManager().clear();
-        this.getEntityManager().getEntityManagerFactory().getCache().evictAll();
-    }
-    
-    /**
-     * Close the repository.
-     */
-    public void close() {
-        this.getEntityManager().getEntityManagerFactory().close();
-    }
-    
+
     /**
      * Commit the transaction.
      */

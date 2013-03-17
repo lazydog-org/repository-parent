@@ -18,7 +18,6 @@
  */
 package org.lazydog.repository.jpa;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLNonTransientConnectionException;
@@ -58,13 +57,12 @@ public class AbstractRepositoryTest {
     private static final String HIBERNATE = "Hibernate";
     private static final String OPEN_JPA = "OpenJPA";
     private static final String TEST_FILE = "dataset.xml";
-    private static IDatabaseConnection databaseConnection;
     private static Address expectedAddress1;
     private static Address expectedAddress2;
     private static Address expectedAddress3;
     private static NonEntityAddress expectedAddress4;
     private static String persistenceUnitName;
-    private static AddressBookRepository repository;
+    private static AddressBookRepository addressBookRepository;
     
     /**
      * Initialize the abstract repository test.
@@ -75,17 +73,10 @@ public class AbstractRepositoryTest {
 
         // Check if this is a new persistence unit name.
         if (persistenceUnitName == null || !persistenceUnitName.equals(newPersistenceUnitName)) {
-            
-                 
-            // Check if the repository exists.
-            if (repository != null) {
-                
-                // Close the database connection.
-                databaseConnection.close();
+    
+            // Check if the address book repository exists.
+            if (addressBookRepository != null) {
 
-                // Close the repository.
-                repository.close();
-                
                 // Drop the address book database.
                 try {
                     DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;drop=true");
@@ -97,22 +88,9 @@ public class AbstractRepositoryTest {
             // Create the address book database.
             DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;create=true");
         
-            // Open the repository.
-            repository = AddressBookRepository.newInstance(newPersistenceUnitName);
-            
-            // Check if the new persistence unit is for EclipseLink.
-            if (newPersistenceUnitName.contains(ECLIPSE_LINK)) {
-                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.ECLIPSE_LINK));
-                
-            // Check if the new persistence unit is for Hibernate.
-            } else if (newPersistenceUnitName.contains(HIBERNATE)) {
-                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.HIBERNATE));
-                
-            // Check if the new persistence unit is for OpenJPA.
-            } else if (newPersistenceUnitName.contains(OPEN_JPA)) {
-                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.OPEN_JPA));
-            }
-            
+            // Get the address book repository.
+            addressBookRepository = AddressBookRepository.newInstance(newPersistenceUnitName);
+
             // Save the persistence unit name.
             persistenceUnitName = newPersistenceUnitName;
         }
@@ -125,13 +103,7 @@ public class AbstractRepositoryTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-               
-        // Close the database connection.
-        databaseConnection.close();
-        
-        // Close the repository.
-        repository.close();
-        
+
         // Drop the address book database.
         try {
             DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;drop=true");
@@ -182,168 +154,192 @@ public class AbstractRepositoryTest {
         this.refreshDatabase();
         
         // Since the database was modified outside of the entity manager control, clear the cache.
-        repository.clearCache();
+        addressBookRepository.getEntityManager().clear();
+        addressBookRepository.getEntityManager().getEntityManagerFactory().getCache().evictAll();
     }
 
     @Test
     public void testFind() {
-        assertReflectionEquals(expectedAddress1, repository.find(Address.class, expectedAddress1.getId()));
+        assertReflectionEquals(expectedAddress1, addressBookRepository.find(Address.class, expectedAddress1.getId()));
     }
 
     @Test
     public void testFindNot() {
-        assertNull(repository.find(Address.class, new Integer(3)));
+        assertNull(addressBookRepository.find(Address.class, new Integer(3)));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testFindNullClass() {
-        repository.find(null, expectedAddress1.getId());
+        addressBookRepository.find(null, expectedAddress1.getId());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testFindNonEntity() {
-        repository.find(NonEntityAddress.class, expectedAddress1.getId());
+        addressBookRepository.find(NonEntityAddress.class, expectedAddress1.getId());
     }
 
     @Test
     public void testFindByCritera() {
-        Criteria<Address> criteria = repository.getCriteria(Address.class);
+        Criteria<Address> criteria = addressBookRepository.getCriteria(Address.class);
         criteria.add(Comparison.eq("id", expectedAddress1.getId()));
-        assertReflectionEquals(expectedAddress1, repository.find(Address.class, criteria));
+        assertReflectionEquals(expectedAddress1, addressBookRepository.find(Address.class, criteria));
     }
 
     @Test
     public void testFindByCriteriaNot() {
-        Criteria<Address> criteria = repository.getCriteria(Address.class);
+        Criteria<Address> criteria = addressBookRepository.getCriteria(Address.class);
         criteria.add(Comparison.eq("id", new Integer(3)));
-        assertNull(repository.find(Address.class, criteria));
+        assertNull(addressBookRepository.find(Address.class, criteria));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testFindByCriteriaNullClass() {
-        Criteria<Address> criteria = repository.getCriteria(Address.class);
+        Criteria<Address> criteria = addressBookRepository.getCriteria(Address.class);
         criteria.add(Comparison.eq("id", expectedAddress1.getId()));
-        repository.find(null, criteria);
+        addressBookRepository.find(null, criteria);
     }
 
     @Test
     public void testGetCriteria() {
-        repository.getCriteria(Address.class);
+        addressBookRepository.getCriteria(Address.class);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testGetCriteriaNull() {
-        repository.getCriteria(null);
+        addressBookRepository.getCriteria(null);
     }
 
     @Test
     public void testPersist() {
         try {
-            repository.beginTransaction();
+            addressBookRepository.beginTransaction();
             Integer id = null;
             if (persistenceUnitName.contains(OPEN_JPA)) {
                 id = expectedAddress3.getId();
                 expectedAddress3.setId(null);
             }
-            Address actualAddress3 = repository.persist(expectedAddress3);
+            Address actualAddress3 = addressBookRepository.persist(expectedAddress3);
             if (persistenceUnitName.contains(OPEN_JPA)) {
                 expectedAddress3.setId(id);
             }
             expectedAddress3.setId(actualAddress3.getId());
             assertReflectionEquals(expectedAddress3, actualAddress3);
-            repository.commitTransaction();
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testPersistNull() {
         try {
-            repository.beginTransaction();
-            repository.persist(null);
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.persist(null);
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testPersistNonEntity() {
         try {
-            repository.persist(expectedAddress4);
+            addressBookRepository.persist(expectedAddress4);
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test
     public void testRemove() {
         try {
-            repository.beginTransaction();
-            repository.remove(Address.class, expectedAddress1.getId());
-            assertNull(repository.find(Address.class, expectedAddress1.getId()));
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.remove(Address.class, expectedAddress1.getId());
+            assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test(expected=EntityNotFoundException.class)
     public void testRemoveNot() {
         try {
-            repository.beginTransaction();
-            repository.remove(Address.class, expectedAddress1.getId());
-            assertNull(repository.find(Address.class, expectedAddress1.getId()));
-            repository.remove(Address.class, expectedAddress1.getId());
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.remove(Address.class, expectedAddress1.getId());
+            assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
+            addressBookRepository.remove(Address.class, expectedAddress1.getId());
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNullClass() {
         try {
-            repository.beginTransaction();
-            repository.remove(null, expectedAddress1.getId());
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.remove(null, expectedAddress1.getId());
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNullId() {
         try {
-            repository.beginTransaction();
-            repository.remove(Address.class, null);
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.remove(Address.class, null);
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNonEntity() {
         try {
-            repository.beginTransaction();
-            repository.remove(NonEntityAddress.class, expectedAddress1.getId());
-            repository.commitTransaction();
+            addressBookRepository.beginTransaction();
+            addressBookRepository.remove(NonEntityAddress.class, expectedAddress1.getId());
+            addressBookRepository.commitTransaction();
         } finally {
-            repository.rollbackTransaction();
+            addressBookRepository.rollbackTransaction();
         }
     }
 
+    private IDatabaseConnection getDatabaseConnection() throws Exception {
+        
+        ConnectionFactory.Type type = null;
+        
+        // Check if the new persistence unit is for EclipseLink.
+        if (persistenceUnitName.contains(ECLIPSE_LINK)) {
+            type = ConnectionFactory.Type.ECLIPSE_LINK;
+
+        // Check if the new persistence unit is for Hibernate.
+        } else if (persistenceUnitName.contains(HIBERNATE)) {
+            type = ConnectionFactory.Type.HIBERNATE;
+
+        // Check if the new persistence unit is for OpenJPA.
+        } else if (persistenceUnitName.contains(OPEN_JPA)) {
+            type = ConnectionFactory.Type.OPEN_JPA;
+        }
+
+        return new DatabaseConnection(ConnectionFactory.newInstance(addressBookRepository.getEntityManager()).newConnection(type));
+    }
+    
     private static IDataSet getDataSet() throws Exception {
         return new FlatXmlDataSetBuilder().build(Thread.currentThread().getContextClassLoader().getResourceAsStream(TEST_FILE));
     }
     
     private void refreshDatabase() throws Exception {
         
+        // Get the database connection.
+        IDatabaseConnection databaseConnection = this.getDatabaseConnection();
+        
         // Refresh the dataset in the database.
         DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, getDataSet());
-        
+
         // Get the maximum ID from the address table.
         Statement statement = databaseConnection.getConnection().createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT MAX(id) as max_id FROM address");
@@ -356,5 +352,8 @@ public class AbstractRepositoryTest {
         statement =  databaseConnection.getConnection().createStatement();
         statement.executeUpdate("ALTER TABLE address ALTER COLUMN id RESTART WITH " + (max + 1));
         statement.close();
+        
+         // Close the database connection.
+        databaseConnection.close();
     }
 }
