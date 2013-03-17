@@ -26,14 +26,11 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
-import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.hibernate.ejb.HibernateEntityManager;
-import org.hibernate.internal.SessionImpl;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
@@ -105,17 +102,15 @@ public class AbstractRepositoryTest {
             
             // Check if the new persistence unit is for EclipseLink.
             if (newPersistenceUnitName.contains(ECLIPSE_LINK)) {
-                repository.beginTransaction();
-                databaseConnection = new DatabaseConnection(repository.getEntityManager().unwrap(Connection.class));
-                repository.commitTransaction();
+                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.ECLIPSE_LINK));
                 
-            // Check if the persistence unit is for Hibernate.
+            // Check if the new persistence unit is for Hibernate.
             } else if (newPersistenceUnitName.contains(HIBERNATE)) {
-                databaseConnection = new DatabaseConnection(((SessionImpl)((HibernateEntityManager)repository.getEntityManager()).getSession()).connection());
+                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.HIBERNATE));
+                
+            // Check if the new persistence unit is for OpenJPA.
             } else if (newPersistenceUnitName.contains(OPEN_JPA)) {
-                repository.beginTransaction();
-                databaseConnection = new DatabaseConnection((Connection)((OpenJPAEntityManager)repository.getEntityManager()).getConnection());
-                repository.commitTransaction();
+                databaseConnection = new DatabaseConnection(ConnectionFactory.newInstance(repository.getEntityManager()).newConnection(ConnectionFactory.Type.OPEN_JPA));
             }
             
             // Save the persistence unit name.

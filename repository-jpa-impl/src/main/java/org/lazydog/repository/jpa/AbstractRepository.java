@@ -18,6 +18,7 @@
  */
 package org.lazydog.repository.jpa;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -180,6 +181,15 @@ public abstract class AbstractRepository implements Repository {
      */
     protected <T> List<T> findList(final Class<T> entityClass, final String queryLanguageString, final Map<String, Object> queryParameters, final Map<Object, String> queryHints) {
         return this.createQuery(entityClass, queryLanguageString, queryParameters, queryHints).getResultList();
+    }
+    
+    /**
+     * Get the connection.
+     * 
+     * @return  the connection.
+     */
+    protected Connection getConnection() {
+        return ConnectionFactory.newInstance(entityManager).newConnection();
     }
     
     /**
