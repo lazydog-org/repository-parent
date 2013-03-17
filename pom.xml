@@ -22,7 +22,7 @@
     <groupId>org.lazydog.repository</groupId>
     <artifactId>repository-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
     <name>Repository Parent</name>
     <description>The repository code is intended to be used as a general purpose repository API and implementation for Java applications.</description>
     <url>http://www.lazydog.org</url>
@@ -58,7 +58,7 @@
     <scm>
         <connection>scm:git:git@github.com:lazydog-org/repository-parent.git</connection>
         <developerConnection>scm:git:git@github.com:lazydog-org/repository-parent.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.9</tag>
         <url>git@github.com:lazydog-org/repository-parent.git</url>
     </scm>
     <build>
