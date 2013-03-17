@@ -255,8 +255,7 @@ public final class PersistenceLDAPParser extends XMLConfigurationFileParser {
                     
                     // Close the reader.
                     reader.close();
-                }
-                catch (XMLStreamException e) {
+                } catch (XMLStreamException e) {
                     // Ignore.
                 }
             }

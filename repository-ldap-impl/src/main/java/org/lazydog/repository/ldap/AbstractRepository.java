@@ -58,8 +58,7 @@ public abstract class AbstractRepository implements Repository {
             // Initialize the configuration and get the directory.
             this.configuration = Configuration.newInstance();
             this.directory = this.configuration.getDirectory();
-        }
-        catch (ConfigurationException e) {
+        } catch (ConfigurationException e) {
             throw new RepositoryException("Unable to initialize the configuration.", e, null);
         }
     }
@@ -224,13 +223,11 @@ public abstract class AbstractRepository implements Repository {
                 // Create the entity.
                 entity = this.createEntity(entityClass, id, attributeMap);
             }
-        }
-        catch (DirectoryException e) {
+        } catch (DirectoryException e) {
             throw new RepositoryException(
                     "Unable to find the entity " + entityClass + " identified by id '" + id + "'.", 
                     e, entityClass);
-        }
-        catch (EntityFactoryException e) {
+        } catch (EntityFactoryException e) {
             throw new RepositoryException(
                     "Unable to find the entity " + entityClass + " identified by id '" + id + "'.", 
                     e, entityClass);
@@ -329,13 +326,11 @@ public abstract class AbstractRepository implements Repository {
                     entities.add(entity);
                 }
             }
-        }
-        catch (DirectoryException e) {
+        } catch (DirectoryException e) {
             throw new RepositoryException(
                     "Unable to find the entities " + entityClass + " with criteria '" + criteria + "'.", 
                     e, entityClass);
-        }
-        catch (EntityFactoryException e) {
+        } catch (EntityFactoryException e) {
             throw new RepositoryException(
                     "Unable to find the entities " + entityClass + " with criteria '" + criteria + "'.", 
                     e, entityClass);
@@ -372,33 +367,29 @@ public abstract class AbstractRepository implements Repository {
 
                 // Set the attribute value to the entity.
                 attributeValues.add((String)((Entity)propertyValue).getId());
-            }
-			
+	
             // Check if the property is an integer.
-            else if (propertyType == Integer.class && !this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Integer.class && !this.configuration.isEntityType(entityClass, propertyName)) {
 
                 // Set the attribute value to the integer.
                 attributeValues.add(((Integer)propertyValue).toString());
-            }
-			
+	
             // Check if the property is a string.
-            else if (propertyType == String.class && !this.configuration.isEntityType(entityClass, propertyName) && !propertyValue.equals("")) {
+            } else if (propertyType == String.class && !this.configuration.isEntityType(entityClass, propertyName) && !propertyValue.equals("")) {
 
                 // Set the attribute value to the string.
                 attributeValues.add((String)propertyValue);
-            }
-			
+	
             // Check if the property is a set of entities.
-            else if (propertyType == Set.class && this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Set.class && this.configuration.isEntityType(entityClass, propertyName)) {
 
                 // Set the attribute value to the set of entities.
                 for (Entity value : (Set<Entity>)propertyValue) {
                     attributeValues.add((String)value.getId());
                 }
-            }
-			
+	
             // Check if the property is a set of strings.
-            else if (propertyType == Set.class && !this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Set.class && !this.configuration.isEntityType(entityClass, propertyName)) {
 
                 // Set the attribute value to the set of strings.
                 for (String value : (Set<String>)propertyValue) {
@@ -467,24 +458,21 @@ public abstract class AbstractRepository implements Repository {
 
                 // Set the property value to the entity.
                 propertyValue = this.createEntity(targetEntityClass, attributeValueList.get(0), fetchType);
-            }
-			
+	
             // Check if the property is an integer.
-            else if (propertyType == Integer.class && !this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Integer.class && !this.configuration.isEntityType(entityClass, propertyName)) {
 
                 // Set the property value to the integer.
                 propertyValue = Integer.parseInt(attributeValueList.get(0));
-            }
-			
+	
             // Check if the property is a string.
-            else if (propertyType == String.class && !this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == String.class && !this.configuration.isEntityType(entityClass, propertyName)) {
 
                 // Set the property value to the string.
                 propertyValue = attributeValueList.get(0);
-            }
-			
+	
             // Check if the property is a set of entities.
-            else if (propertyType == Set.class && this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Set.class && this.configuration.isEntityType(entityClass, propertyName)) {
 				
                 // Get the class for the entity.
                 Class<?> targetEntityClass = this.configuration.getTargetEntityClass(entityClass, propertyName);
@@ -501,10 +489,9 @@ public abstract class AbstractRepository implements Repository {
                     // Add the entity to the set of entities.
                     ((HashSet)propertyValue).add(this.createEntity(targetEntityClass, attributeValue, fetchType));
                 }
-            }
-			
+	
             // Check if the property is a set of strings.
-            else if (propertyType == Set.class && !this.configuration.isEntityType(entityClass, propertyName)) {
+            } else if (propertyType == Set.class && !this.configuration.isEntityType(entityClass, propertyName)) {
 				
                 // Initialize the property value.
                 propertyValue = new HashSet<String>();
@@ -556,10 +543,9 @@ public abstract class AbstractRepository implements Repository {
 
                 // Update the entity.
                 this.directory.updateEntry(id, attributeMap, this.configuration.getReferentialIntegrityMap(entity.getClass()));
-            }
 
             // Otherwise this is a new entity.
-            else {
+            } else {
 
                 // Add the object class to the attribute name-attribute value map.
                 attributeMap.put("objectClass", this.configuration.getObjectClassValues(entity.getClass()));
@@ -567,13 +553,11 @@ public abstract class AbstractRepository implements Repository {
                 // Add the entity.
                 this.directory.addEntry(id, attributeMap, this.configuration.getReferentialIntegrityMap(entity.getClass()));
             }
-        }
-        catch (DirectoryException e) {
+        } catch (DirectoryException e) {
             throw new RepositoryException(
                     "Unable to persist the entity " + entity.getClass() + " identified by id '" + ((Entity)entity).getId() + "'.", 
                     e, entity.getClass());
-        }
-        catch (EntityFactoryException e) {
+        } catch (EntityFactoryException e) {
             throw new RepositoryException(
                     "Unable to persist the entity " + entity.getClass() + " identified by id '" + ((Entity)entity).getId() + "'.", 
                     e, entity.getClass());
@@ -632,8 +616,7 @@ public abstract class AbstractRepository implements Repository {
 
             // Remove the entity.
             this.directory.removeEntry((String)id);
-        }
-        catch (DirectoryException e) {
+        } catch (DirectoryException e) {
             throw new RepositoryException(
                     "Unable to remove the entity " + entityClass + " identified by id '" + id + "'.", 
                     e, entityClass);

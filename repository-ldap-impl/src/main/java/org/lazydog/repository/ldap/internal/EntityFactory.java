@@ -87,11 +87,9 @@ public final class EntityFactory<T> {
                 // Set the property value for the entity.
                 this.setPropertyValue(entity, propertyName, propertyValue);
             }
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new EntityFactoryException("Unable to instantiate the entity " + this.entityClass + ".", e, this.entityClass, null);
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             throw new EntityFactoryException("Unable to instantiate the entity " + this.entityClass + ".", e, this.entityClass, null);
         }
 
@@ -291,10 +289,9 @@ public final class EntityFactory<T> {
 
                 // Invoke the method.
                 method.invoke(entity, parameterValue);
-            }
-			
+	
             // Otherwise, this is an accessor method.
-            else {
+            } else {
 
                 // Check if the method's return type is void.
                 if (method.getReturnType() == Void.TYPE) {
@@ -313,13 +310,11 @@ public final class EntityFactory<T> {
                 // Invoke the method.
                 returnValue = method.invoke(entity);
             }
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new EntityFactoryException(
                     "Unable to invoke method '" + methodName + "' on entity " + this.entityClass + ".", 
                     e, this.entityClass, methodName);
-        }
-        catch(InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             throw new EntityFactoryException(
                     "Unable to invoke method '" + methodName + "' on entity " + this.entityClass + ".", 
                     e, this.entityClass, methodName);
@@ -344,10 +339,9 @@ public final class EntityFactory<T> {
         // Null is a valid value.
         if (value == null) {
             valid = true;
-        }
 
         // Check if the value is an expected type.
-        else if (expectedType.isInstance(value)) {
+        } else if (expectedType.isInstance(value)) {
 
             // Check if the value is a supported type.
             valid = isSupportedType(value);
@@ -375,18 +369,17 @@ public final class EntityFactory<T> {
             // Check if the value is a supported type.
             if (supportedType.isInstance(value)) {
                 isSupportedType = true;
-            }
-			
+	
             // Check if the value is a Set.
-            else if (Set.class.isInstance(value)) {
+            } else if (Set.class.isInstance(value)) {
 
                 // Check if the set has values.
                 if (((Set)value).size() > 0) {
 
                     // Check if an element of the set is a supported type.
                     isSupportedType = isSupportedType(((Set)value).toArray()[0]);
-                }
-                else {
+
+                } else {
                     isSupportedType = true;
                 }
             }

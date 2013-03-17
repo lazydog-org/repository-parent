@@ -75,8 +75,7 @@ public final class Configuration {
 			
             // Get the parser for the persistence LDAP file.
             persistenceLDAPParser = PersistenceLDAPParser.newInstance();
-        }
-        catch (ParsingException e) {
+        } catch (ParsingException e) {
             throw new ConfigurationException(
                     "Unable to parse persistence LDAP file '" + e.getConfigurationPathname() + "'.", e);
         }
@@ -88,8 +87,7 @@ public final class Configuration {
 			
             // Get the directory.
             this.directory = Directory.newInstance(getDirectoryEnvironment(persistenceLDAPParser));
-        }
-        catch (DirectoryException e) {
+        } catch (DirectoryException e) {
             throw new ConfigurationException("Unable to get the LDAP directory.", e);
         }
 
@@ -112,8 +110,7 @@ public final class Configuration {
 				
                 // Get the parser for the entity mappings file.
                 entityMappingsParser = EntityMappingsParser.newInstance(mappingFileName);
-            }
-            catch (ParsingException e) {
+            } catch (ParsingException e) {
                 throw new ConfigurationException(
                         "Unable to parse entity mappings file '" + e.getConfigurationPathname() + "'.", e);
             }
@@ -130,11 +127,9 @@ public final class Configuration {
 
                 // Validate the entity class.
                 validEntityClass(entityClass);
-            }
-            catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Unable to get the entity class " + className + ".", e);
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new ConfigurationException("Invalid entity " + entityClass + ".", e);
             }
 			
@@ -210,15 +205,13 @@ public final class Configuration {
                 // Get the directory environment.
                 Context context = new InitialContext();
                 environment = (Properties)context.lookup(jndiName);
-            }
-            catch(NamingException e) {
+            } catch(NamingException e) {
                 throw new ConfigurationException(
                         "Unable to lookup directory environment with the JNDI name '" + jndiName + "'.", e);
             }
-        }
-		
+	
         // Otherwise, the directory environment was provided in the configuration file.
-        else {
+        } else {
 
             // Get the directory environment.
             environment.setProperty(Directory.INITIAL_CONTEXT_FACTORY, persistenceLDAPParser.getInitialContextFactory());
@@ -359,12 +352,10 @@ public final class Configuration {
 
                 // Put the property name and target entity class on the map.
                 propertyTargetEntityClasses.put(propertyName, targetEntityClass);
-            }
-            catch(ClassNotFoundException e) {
+            } catch(ClassNotFoundException e) {
                 throw new ConfigurationException(
                         "Unable to get the target entity class '" + targetEntityClassName + "' for property '" + propertyName + "'.", e);
-            }
-            catch(IllegalArgumentException e) {
+            } catch(IllegalArgumentException e) {
                 throw new ConfigurationException("Invalid target entity " + targetEntityClass + ".", e);
             }
         }

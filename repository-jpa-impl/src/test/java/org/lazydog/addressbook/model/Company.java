@@ -35,17 +35,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Company implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.LAZY)
     @JoinTable(name="COMPANY_ADDRESS", joinColumns=@JoinColumn(name="COMPANY_ID"), inverseJoinColumns=@JoinColumn(name="ADDRESS_ID"))
     private List<Address> addresses = new ArrayList<Address>();
-    @OneToMany(mappedBy="company", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="company", fetch=FetchType.LAZY)
     private List<Department> departments = new ArrayList<Department>();
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable=false)
     private String name;
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.LAZY)
     @JoinTable(name="COMPANY_PHONE", joinColumns=@JoinColumn(name="COMPANY_ID"), inverseJoinColumns=@JoinColumn(name="PHONE_ID"))
     private List<Phone> phones = new ArrayList<Phone>();
     

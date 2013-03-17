@@ -110,8 +110,7 @@ public final class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
             // Add the AND logical operator to the filter string builder.
             this.filterStringBuilder.insert(0, "(&");
-        }
-        else {
+        } else {
 
             // Add the logical operator to the restrictions string builder.
             switch (criterion.getLogicalOperator()) {

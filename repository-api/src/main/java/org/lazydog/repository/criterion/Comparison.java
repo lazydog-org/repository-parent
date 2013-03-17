@@ -189,8 +189,7 @@ public final class Comparison {
                 if (firstValue) {
                     criterions.add(Comparison.eq(operand, value));
                     firstValue = false;
-                }
-                else {
+                } else {
                     criterions.add(Logical.or(Comparison.eq(operand, value)));
                 }
             }
@@ -313,8 +312,7 @@ public final class Comparison {
                 if (firstValue) {
                     criterions.add(Comparison.ne(operand, value));
                     firstValue = false;
-                }
-                else {
+                } else {
                     criterions.add(Logical.and(Comparison.ne(operand, value)));
                 }
             }

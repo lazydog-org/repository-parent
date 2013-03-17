@@ -69,8 +69,7 @@ public abstract class XMLConfigurationFileParser {
             
             // Validate the XML configuration file.
             validate(configurationStream, schemaStream);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ParsingException(
                     "Unable to validate the XML configuration file " + configurationPathname + ".", 
                     e, configurationPathname, schemaPathname);
@@ -83,8 +82,7 @@ public abstract class XMLConfigurationFileParser {
                     
                     // Close the configuration input stream.
                     configurationStream.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // Ignore.
                 }
             }
@@ -95,8 +93,7 @@ public abstract class XMLConfigurationFileParser {
             		
                     // Close the schema input stream.
                     schemaStream.close();
-            	}
-            	catch(IOException e) {
+            	} catch (IOException e) {
                     // Ignore.
             	}
             }
@@ -109,8 +106,7 @@ public abstract class XMLConfigurationFileParser {
 
             // Parse the XML configuration file.
             this.parse(configurationStream);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ParsingException(
                     "Unable to parse the configuration file " + configurationPathname + ".", 
                     e, configurationPathname, schemaPathname);
@@ -123,8 +119,7 @@ public abstract class XMLConfigurationFileParser {
 
                     // Close the input stream.
                     configurationStream.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // Ignore.
                 }
             }

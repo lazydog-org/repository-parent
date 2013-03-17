@@ -48,10 +48,9 @@ public final class Validator {
         // Check if the criteria is null.
         if (criteria == null) {
             throw new IllegalArgumentException("The criteria is null.");
-        }
 
         // Check if the criteria is not a CriteriaImpl.
-        else if (!CriteriaImpl.class.isInstance(criteria)) {
+        } else if (!CriteriaImpl.class.isInstance(criteria)) {
             throw new IllegalArgumentException("The criteria is not the correct type.");
         }
     }
@@ -112,15 +111,13 @@ public final class Validator {
         // Check if the entity class is null.
         if (entityClass == null) {
             throw new IllegalArgumentException("The entity class is null.");
-        }
 
         // Check if the entity class is not a subclass of Entity.
-        else if (!Entity.class.isAssignableFrom(entityClass)) {
+        } else if (!Entity.class.isAssignableFrom(entityClass)) {
             throw new IllegalArgumentException("The entity " + entityClass + " does not extend " + Entity.class + ".");
-        }
 
         // Check if there are supported entity classes.
-        else if (supportedEntityClasses != null && supportedEntityClasses.size() > 0) {
+        } else if (supportedEntityClasses != null && supportedEntityClasses.size() > 0) {
 
             // Loop through the supported entity classes.
             for (Class<?> supportedEntityClass : supportedEntityClasses) {
@@ -147,10 +144,9 @@ public final class Validator {
         // Check if the ID is null.
         if (id == null) {
             throw new IllegalArgumentException("The ID is null.");
-        }
 
         // Check if the ID is not a String.
-        else if (!String.class.isInstance(id)) {
+        } else if (!String.class.isInstance(id)) {
             throw new IllegalArgumentException("The ID is not a String.");
         }
     }
@@ -167,10 +163,9 @@ public final class Validator {
         // Check if the list is null.
         if (list == null) {
             throw new IllegalArgumentException("The list is null.");
-        }
 
         // Check if the list is empty.
-        else if (list.size() <= 0) {
+        } else if (list.size() <= 0) {
             throw new IllegalArgumentException("The list is empty.");
         }
     }

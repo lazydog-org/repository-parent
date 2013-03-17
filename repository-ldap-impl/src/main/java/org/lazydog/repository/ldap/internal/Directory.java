@@ -94,8 +94,7 @@ public final class Directory {
                     environment.getProperty(SECURITY_AUTHENTICATION),
                     environment.getProperty(SECURITY_CREDENTIALS),
                     environment.getProperty(SECURITY_PRINCIPAL));
-        }
-        catch (NamingException e) {
+        } catch (NamingException e) {
             throw new DirectoryException(
                     "Unable to get the directory context.", e, null);
         }
@@ -137,13 +136,11 @@ public final class Directory {
 
             // Enforce referential integrity.
             this.enforceReferentialIntegrity(dn, attributeMap, attributeReferentialIntegrityMap);
-        }
-        catch (NameAlreadyBoundException e) {
+        } catch (NameAlreadyBoundException e) {
             throw new DirectoryException(
                     "Unable to add the LDAP entry '" + dn + "' since it already exists.", e, dn);
 
-        }
-        catch(NamingException e) {
+        } catch (NamingException e) {
             throw new DirectoryException(
                     "Unable to add the LDAP entry '" + dn + "'.", e, dn);
         }
@@ -221,10 +218,9 @@ public final class Directory {
 
                         // Update the corresponding entry.
                         this.updateEntry(attributeValue, correspondingAttributeMap);
-                    }
-                    
+
                     // Check if the DN is not a corresponding attribute value.
-                    else if (!correspondingAttributeMap.get(correspondingAttributeName).contains(dn)) {
+                    } else if (!correspondingAttributeMap.get(correspondingAttributeName).contains(dn)) {
 
                         // Add this DN as a corresponding attribute value.
                         correspondingAttributeMap.get(correspondingAttributeName).add(dn);
@@ -280,17 +276,16 @@ public final class Directory {
             // Evaluate to add if the attribute is not an existing attribute.
             if (existingAttribute == null) {
                 evaluation = AttributeAction.ADD;
-            }
+
             // Evaluate to remove if the attribute does not have values, but the existing attribute has values.
-            else if (existingAttribute.size() > 0 && attribute.size() == 0) {
+            } else if (existingAttribute.size() > 0 && attribute.size() == 0) {
                 evaluation = AttributeAction.REMOVE;
-            }
+
             // Evaluate to replace if the attribute and existing attribute have values, but the values are not the same. 
-            else if ((existingAttribute.size() > 0 && attribute.size() > 0) && hasAttributeValueMismatch(attribute, existingAttribute)) {
+            } else if ((existingAttribute.size() > 0 && attribute.size() > 0) && hasAttributeValueMismatch(attribute, existingAttribute)) {
                 evaluation = AttributeAction.REPLACE;
             }
-        }
-        catch(NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
 
             // Evaluate to add if the attribute does not exist.
             evaluation = AttributeAction.ADD;
@@ -416,11 +411,9 @@ public final class Directory {
 
             // Get the attribute name-attribute value map.
             attributeMap = this.getAttributeMap(attributes);
-        }
-        catch (NameNotFoundException e) {
+        } catch (NameNotFoundException e) {
             // Ignore.
-        }
-        catch (NamingException e) {
+        } catch (NamingException e) {
             throw new DirectoryException(
                     "Unable to get the attributes '" + attributeNames + "' for LDAP entry '" + dn + "'.", e, dn);
         }
@@ -479,8 +472,7 @@ public final class Directory {
                 // Add the map to the attribute name-attribute value maps.
                 attributeMaps.put(idValue, attributeMap);
             }
-    	}
-    	catch (NamingException e) {
+    	} catch (NamingException e) {
             throw new DirectoryException(
                     "Unable to get the LDAP entries for filter '" + filter + "', searchBase '" + searchBase + 
                     "', searchScope '" + searchScope + ", and attributes '" + attributeNames + "'." , 
@@ -664,8 +656,7 @@ public final class Directory {
 			
             // Remove the entry.
             this.directoryContext.destroySubcontext(dn);
-        }
-        catch (NamingException e) {
+        } catch (NamingException e) {
             throw new DirectoryException(
                     "Unable to remove LDAP entry '" + dn + "'.", e, dn);
         }
@@ -741,11 +732,9 @@ public final class Directory {
 	        
             // Enforce referential integrity.
             this.enforceReferentialIntegrity(dn, attributeMap, attributeReferentialIntegrityMap);
-        }
-        catch (AttributeModificationException e) {
+        } catch (AttributeModificationException e) {
             throw new DirectoryException("Unable to update the LDAP entry '" + dn + "'.", e, dn);			
-        }
-        catch (NamingException e) {
+        } catch (NamingException e) {
             throw new DirectoryException("Unable to update the LDAP entry '" + dn + "'.", e, dn);
         }
 		

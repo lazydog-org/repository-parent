@@ -105,8 +105,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
                 // Add the WHERE-clause to the restrictions string builder.
                 this.restrictionsStringBuilder.append(" WHERE ");
-            }
-            else {
+            } else {
 
                 // Add the logical operator to the restrictions string builder.
                 switch (criterion.getLogicalOperator()) {
@@ -244,8 +243,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
             // Add the criterion to the restrictions.
             this.restrictions.add(criterion);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle this.
         }
 
@@ -312,8 +310,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 // Add the criterion to the joins.
                 this.joins.add(criterion);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle this.
         }
         
@@ -356,8 +353,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
                 // Add the ORDER BY-clause to the orders string builder.
                 this.ordersStringBuilder.append(" ORDER BY ");
-            }
-            else {
+            } else {
 
                 // Add a comma to the orders string builder.
                 this.ordersStringBuilder.append(", ");
@@ -380,8 +376,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
 
             // Add the criterion to the orders.
             this.orders.add(criterion);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle this.
         }
 
@@ -467,8 +462,7 @@ public class CriteriaImpl<T> implements Criteria<T>, Serializable {
                 // Add a join criterion to the join criterions.
                 joinCriterions.add(0, Join.join(qualifyOperand(property, previousProperty)));
             }
-        }
-        catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             // Reached the end of the operand.
         }
          

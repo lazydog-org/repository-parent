@@ -35,9 +35,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Department implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Company company;
-    @OneToMany(mappedBy="department", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="department", fetch=FetchType.LAZY)
     private List<Employee> employees = new ArrayList<Employee>();
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

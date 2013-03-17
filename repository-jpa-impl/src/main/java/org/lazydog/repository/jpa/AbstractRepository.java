@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import org.lazydog.repository.Criteria;
@@ -91,6 +92,13 @@ public abstract class AbstractRepository implements Repository {
      */
     @Override
     public <T,U> T find(final Class<T> entityClass, final U id) {
+        
+        // Check if the entity class does not exist.
+        // This is needed to get Hibernate to behave like EclipseLink.
+        if (entityClass == null) {
+            throw new IllegalArgumentException("The entity class cannot be null.");
+        }
+        
         return this.entityManager.find(entityClass, id);
     }
       
@@ -127,8 +135,7 @@ public abstract class AbstractRepository implements Repository {
 
             // Get the entity.
             entity = this.createQuery(entityClass, queryLanguageString, queryParameters, queryHints).getSingleResult();
-        }
-        catch(NoResultException e) {
+        } catch(NoResultException e) {
             // Ignore.
         }
 
@@ -206,6 +213,12 @@ public abstract class AbstractRepository implements Repository {
     @Override
     public <T> T persist(final T entity) {
 
+        // Check if the entity does not exist.
+        // This is needed to get OpenJPA to behave like EclipseLink.
+        if (entity == null) {
+            throw new IllegalArgumentException("The entity cannot be null.");
+        }
+        
         // Persist the entity.
         T persistedEntity = this.entityManager.merge(entity);
         this.entityManager.flush();
@@ -251,11 +264,33 @@ public abstract class AbstractRepository implements Repository {
     @Override
     public <T,U> void remove(final Class<T> entityClass, final U id) {
 
+        // Check if the entity class does not exist.
+        // This is needed to get Hibernate to behave like EclipseLink.
+        if (entityClass == null) {
+            throw new IllegalArgumentException("The entity class cannot be null.");
+        }
+        
+        // Check if the ID does not exist.
+        // This is needed to get OpenJPA to behave like EclipseLink.
+        if (id == null) {
+            throw new IllegalArgumentException("The ID cannot be null.");
+        }
+        
         // Get the entity.
         T entity = this.entityManager.getReference(entityClass, id);
+        
+        // Check if the entity exists.
+        // This is needed to get OpenJPA to behave like EclipseLink.
+        if (entity == null) {
+            throw new EntityNotFoundException("The entity with class " + entityClass.getSimpleName() + " and ID " + id + " was not found.");
+        }
 
         // Remove the entity.
         this.entityManager.remove(entity);
+        
+        // Sychronize the persistence context to the database.
+        // This is needed to get Hibernate to behave like EclipseLink.
+        this.entityManager.flush();
     }
 
     /**

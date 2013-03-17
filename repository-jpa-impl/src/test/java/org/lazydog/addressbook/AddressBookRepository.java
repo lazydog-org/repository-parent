@@ -18,28 +18,72 @@
  */
 package org.lazydog.addressbook;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Persistence;
 import org.lazydog.repository.jpa.AbstractRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Address book repository.
  *
  * @author  Ron Rickard
  */
-@Repository
-@Transactional(propagation = Propagation.MANDATORY)
 public class AddressBookRepository extends AbstractRepository {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @PostConstruct
-    protected void initialize() {
-        this.setEntityManager(this.entityManager);
+    /**
+     * Hide the constructor.
+     * 
+     * @param  persistenceUnitName  the persistence unit name.
+     */
+    private AddressBookRepository(String persistenceUnitName) {
+        this.setEntityManager(Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager());
     }
+    
+    /**
+     * Begin the transaction.
+     */
+    public void beginTransaction() {
+        this.getEntityManager().getTransaction().begin();
+    }
+    
+    /**
+     * Clear the cache.
+     */
+    public void clearCache() {
+        this.getEntityManager().clear();
+        this.getEntityManager().getEntityManagerFactory().getCache().evictAll();
+    }
+    
+    /**
+     * Close the repository.
+     */
+    public void close() {
+        this.getEntityManager().getEntityManagerFactory().close();
+    }
+    
+    /**
+     * Commit the transaction.
+     */
+    public void commitTransaction() {
+        this.getEntityManager().getTransaction().commit();
+    }
+
+    /**
+     * Get a new instance of the address book repository.
+     * 
+     * @param  persistenceUnitName  the persistence unit name.
+     * 
+     * @return  a new instance of the address book repository.
+     */
+    public static AddressBookRepository newInstance(String persistenceUnitName) {
+        return new AddressBookRepository(persistenceUnitName);
+    }
+        
+    /**
+     * Rollback the transaction.
+     */
+    public void rollbackTransaction() {
+        if (this.getEntityManager().getTransaction().isActive()) {
+            this.getEntityManager().getTransaction().rollback();
+        }
+    }
+
 }

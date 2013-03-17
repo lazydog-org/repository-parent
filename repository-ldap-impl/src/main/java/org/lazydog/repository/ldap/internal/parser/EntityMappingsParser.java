@@ -263,10 +263,9 @@ public final class EntityMappingsParser extends XMLConfigurationFileParser {
                             objectClassValue = getElementData(reader.nextEvent());
                             break;
                     }
-                }
-                
+
                 // Check if the event is an end element.
-                else if (event.isEndElement()) {
+                } else if (event.isEndElement()) {
 
                     switch(getElementName(ELEMENT_NAME.class, event.asEndElement())) {
 
@@ -301,8 +300,7 @@ public final class EntityMappingsParser extends XMLConfigurationFileParser {
                     
                     // Close the reader.
                     reader.close();
-                }
-                catch (XMLStreamException e) {
+                } catch (XMLStreamException e) {
                     // Ignore.
                 }
             }
