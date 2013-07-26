@@ -49,18 +49,30 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
-    </properties>
     <scm>
         <connection>scm:git:git@github.com:lazydog-org/repository-parent.git</connection>
         <developerConnection>scm:git:git@github.com:lazydog-org/repository-parent.git</developerConnection>
         <tag>HEAD</tag>
         <url>git@github.com:lazydog-org/repository-parent.git</url>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Internal Releases</name>
+            <url>http://maven.home/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
+    <modules>
+        <module>repository-api</module>
+        <module>repository-jpa-impl</module>
+        <module>repository-ldap-impl</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
+    </properties>
     <build>
         <pluginManagement>
             <plugins>
@@ -97,16 +109,93 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>Internal Releases</name>
-            <url>http://maven.home/content/repositories/releases</url>
-        </repository>
-    </distributionManagement>
-    <modules>
-        <module>repository-api</module>
-        <module>repository-jpa-impl</module>
-        <module>repository-ldap-impl</module>
-  </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.0.13</version>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>6.0</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>1.0.0.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+                <version>10.10.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-server-integ</artifactId>
+                <version>1.5.5</version>
+            </dependency>  
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-core-integ</artifactId>
+                <version>1.5.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-all</artifactId>
+                <version>2.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dbunit</groupId>
+                <artifactId>dbunit</artifactId>
+                <version>2.4.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>eclipselink</artifactId>
+                <version>2.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>4.1.12.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>5.0.1.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.7.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.unitils</groupId>
+                <artifactId>unitils-core</artifactId>
+                <version>3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>repository-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
