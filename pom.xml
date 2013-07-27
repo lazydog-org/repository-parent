@@ -57,7 +57,6 @@
     <scm>
         <connection>scm:git:git@github.com:lazydog-org/repository-parent.git</connection>
         <developerConnection>scm:git:git@github.com:lazydog-org/repository-parent.git</developerConnection>
-        <tag>HEAD</tag>
         <url>git@github.com:lazydog-org/repository-parent.git</url>
     </scm>
     <modules>
