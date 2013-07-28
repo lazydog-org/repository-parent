@@ -18,6 +18,7 @@
  */
 package org.lazydog.repository.jpa;
 
+import org.lazydog.repository.jpa.configuration.Configuration;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLNonTransientConnectionException;

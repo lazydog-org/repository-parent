@@ -16,21 +16,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lazydog.repository.jpa;
+package org.lazydog.repository.jpa.configuration;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import javax.inject.Qualifier;
+import org.lazydog.repository.jpa.annotation.PersistenceUnitName;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
 /**
- * Persistence unit name qualifier.
+ * Configuration.
  * 
  * @author  Ron Rickard
  */
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE})
-public @interface PersistenceUnitName { }
+@ApplicationScoped
+public class Configuration {
 
+    private static String persistenceUnitName;
+    
+    public static void setPersistenceUnitName(final String newPersistenceUnitName) {
+        persistenceUnitName = newPersistenceUnitName;
+    }
+    
+    @Produces
+    @PersistenceUnitName
+    public static String getPersistenceUnitName() {
+        return persistenceUnitName;
+    }
+}

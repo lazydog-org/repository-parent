@@ -26,7 +26,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
 import org.lazydog.repository.jpa.AbstractRepository;
-import org.lazydog.repository.jpa.PersistenceUnitName;
+import org.lazydog.repository.jpa.annotation.PersistenceUnitName;
 
 /**
  * Address book repository.
