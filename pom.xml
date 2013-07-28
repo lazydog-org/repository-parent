@@ -69,6 +69,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
+        <org.apache.myfaces.extensions.cdi.version>1.0.5</org.apache.myfaces.extensions.cdi.version>
     </properties>
     <build>
         <pluginManagement>
@@ -119,11 +120,6 @@
                 <version>6.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
-            </dependency>
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
@@ -149,9 +145,39 @@
                 <version>1.5.5</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.myfaces.extensions.cdi.core</groupId>
+                <artifactId>myfaces-extcdi-core-api</artifactId>
+                <version>${org.apache.myfaces.extensions.cdi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.myfaces.extensions.cdi.core</groupId>
+                <artifactId>myfaces-extcdi-core-impl</artifactId>
+                <version>${org.apache.myfaces.extensions.cdi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.myfaces.extensions.cdi.modules</groupId>
+                <artifactId>myfaces-extcdi-jpa1-module-api</artifactId>
+                <version>${org.apache.myfaces.extensions.cdi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.myfaces.extensions.cdi.modules</groupId>
+                <artifactId>myfaces-extcdi-jpa1-module-impl</artifactId>
+                <version>${org.apache.myfaces.extensions.cdi.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.openjpa</groupId>
                 <artifactId>openjpa-all</artifactId>
                 <version>2.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core</artifactId>
+                <version>2.0.2.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld.se</groupId>
+                <artifactId>weld-se-core</artifactId>
+                <version>2.0.2.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.dbunit</groupId>

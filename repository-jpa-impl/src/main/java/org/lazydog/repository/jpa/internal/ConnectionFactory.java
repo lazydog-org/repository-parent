@@ -16,19 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lazydog.repository.jpa;
+package org.lazydog.repository.jpa.internal;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import javax.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Connection factory.
  * 
  * @author  Ron Rickard
  */
-class ConnectionFactory {
+public class ConnectionFactory {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
     
     public enum Type {
         ECLIPSE_LINK ("org.eclipse.persistence.jpa.JpaEntityManager"),
@@ -124,6 +127,8 @@ class ConnectionFactory {
             
             // Commit the transaction.
             entityManager.getTransaction().commit();
+        } catch(Exception e) {
+            logger.error("Unable to get the EclipseLink connection.", e);
         } finally {
             
             // Rollback the transaction if necessary.
@@ -156,14 +161,8 @@ class ConnectionFactory {
             Object sessionImplObject = sessionImplClass.cast(sessionObject);
             Method connectionMethod = sessionImplObject.getClass().getMethod("connection");
             connection = (Connection)connectionMethod.invoke(sessionImplObject);       
-        } catch (ClassNotFoundException e) {
-            // Ignore.
-        } catch (IllegalAccessException e) {
-            // Ignore.
-        } catch (InvocationTargetException e) {
-            // Ignore.
-        } catch (NoSuchMethodException e) {
-            // Ignore.
+        } catch (Exception e) {
+            logger.error("Unable to get the Hibernate connection.", e);
         }
         
         return connection;
@@ -192,14 +191,8 @@ class ConnectionFactory {
             
             // Commit the transaction.
             entityManager.getTransaction().commit();
-        } catch (ClassNotFoundException e) {
-            // Ignore.
-        } catch (IllegalAccessException e) {
-            // Ignore.
-        } catch (InvocationTargetException e) {
-            // Ignore.
-        } catch (NoSuchMethodException e) {
-            // Ignore.
+        } catch (Exception e) {
+            logger.error("Unable to get the OpenJPA connection.", e);
         } finally {
             
             // Rollback the transaction if necessary.
@@ -212,11 +205,11 @@ class ConnectionFactory {
     }
     
     /**
-     * Return a new connection.
+     * Get the connection.
      * 
-     * @return  a new connection.
+     * @return  the connection.
      */
-    public Connection newConnection() {
+    public Connection getConnection() {
         
         Connection connection = null;
 
@@ -233,13 +226,13 @@ class ConnectionFactory {
     }
     
     /**
-     * Return a new connection for the type.
+     * Get the connection for the type.
      * 
      * @param  type  the type.
      * 
-     * @return  a new connection.
+     * @return  the connection.
      */
-    public Connection newConnection(Type type) {
+    public Connection getConnection(Type type) {
         
         Connection connection = null;
         

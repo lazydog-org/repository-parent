@@ -18,57 +18,63 @@
  */
 package org.lazydog.addressbook;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
 import org.lazydog.repository.jpa.AbstractRepository;
+import org.lazydog.repository.jpa.PersistenceUnitName;
 
 /**
  * Address book repository.
  *
  * @author  Ron Rickard
  */
+@ApplicationScoped
 public class AddressBookRepository extends AbstractRepository {
 
-    /**
-     * Hide the constructor.
-     * 
-     * @param  persistenceUnitName  the persistence unit name.
-     */
-    private AddressBookRepository(String persistenceUnitName) {
-        this.setEntityManager(Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager());
+    private String persistenceUnitName;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Transactional
+    @Override
+    public <T> T persist(final T entity) {
+        return super.persist(entity);
     }
     
-    /**
-     * Begin the transaction.
-     */
-    public void beginTransaction() {
-        this.getEntityManager().getTransaction().begin();
+    @Transactional
+    @Override
+    public <T,U> void remove(final Class<T> entityClass, final U id) {
+        super.remove(entityClass, id);
     }
 
     /**
-     * Commit the transaction.
-     */
-    public void commitTransaction() {
-        this.getEntityManager().getTransaction().commit();
-    }
-
-    /**
-     * Get a new instance of the address book repository.
+     * Set the persistence unit name.
      * 
      * @param  persistenceUnitName  the persistence unit name.
-     * 
-     * @return  a new instance of the address book repository.
      */
-    public static AddressBookRepository newInstance(String persistenceUnitName) {
-        return new AddressBookRepository(persistenceUnitName);
-    }
-        
-    /**
-     * Rollback the transaction.
-     */
-    public void rollbackTransaction() {
-        if (this.getEntityManager().getTransaction().isActive()) {
-            this.getEntityManager().getTransaction().rollback();
-        }
+    @Inject 
+    public void setPersistenceUnitName(@PersistenceUnitName final String persistenceUnitName) {
+        this.persistenceUnitName = persistenceUnitName;
     }
 
+    /**
+     * Startup the JDNSaaS repository.
+     */
+    @PostConstruct
+    public void startup() {
+
+        // Check if the entity manager was not injected.
+        // This will occur if this is a standalone application or Tomcat.
+        if (this.entityManager == null) {
+            
+            // Set the entity manager using the persistence unit name.
+            this.entityManager = Persistence.createEntityManagerFactory(this.persistenceUnitName).createEntityManager();
+        }
+        this.setEntityManager(this.entityManager);
+    }
 }

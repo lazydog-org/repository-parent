@@ -25,11 +25,13 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
+import org.apache.openjpa.persistence.OptimisticLockException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.jboss.weld.environment.se.Weld;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
@@ -43,6 +45,7 @@ import org.lazydog.addressbook.model.Address;
 import org.lazydog.addressbook.model.NonEntityAddress;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Comparison;
+import org.lazydog.repository.jpa.internal.ConnectionFactory;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
@@ -53,9 +56,9 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @RunWith(Parameterized.class)
 public class AbstractRepositoryTest {
 
-    private static final String ECLIPSE_LINK = "EclipseLink";
-    private static final String HIBERNATE = "Hibernate";
-    private static final String OPEN_JPA = "OpenJPA";
+    private static final String ECLIPSE_LINK_PERSISTENT_UNIT_NAME = "AddressBookEclipseLink";
+    private static final String HIBERNATE_PERSISTENT_UNIT_NAME = "AddressBookHibernate";
+    private static final String OPEN_JPA_PERSISTENT_UNIT_NAME = "AddressBookOpenJPA";
     private static final String TEST_FILE = "dataset.xml";
     private static Address expectedAddress1;
     private static Address expectedAddress2;
@@ -63,6 +66,7 @@ public class AbstractRepositoryTest {
     private static NonEntityAddress expectedAddress4;
     private static String persistenceUnitName;
     private static AddressBookRepository addressBookRepository;
+    private static Weld weld;
     
     /**
      * Initialize the abstract repository test.
@@ -73,7 +77,7 @@ public class AbstractRepositoryTest {
 
         // Check if this is a new persistence unit name.
         if (persistenceUnitName == null || !persistenceUnitName.equals(newPersistenceUnitName)) {
-    
+
             // Check if the address book repository exists.
             if (addressBookRepository != null) {
 
@@ -84,12 +88,21 @@ public class AbstractRepositoryTest {
                     // Ignore.
                 }
             }
+            
 
             // Create the address book database.
             DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;create=true");
         
+            Configuration.setPersistenceUnitName(newPersistenceUnitName);
+            
+            // (Re)Start the weld container.
+            if (weld != null) {
+                weld.shutdown();
+            }
+            weld = new Weld();
+
             // Get the address book repository.
-            addressBookRepository = AddressBookRepository.newInstance(newPersistenceUnitName);
+            addressBookRepository = weld.initialize().instance().select(AddressBookRepository.class).get();
 
             // Save the persistence unit name.
             persistenceUnitName = newPersistenceUnitName;
@@ -98,7 +111,7 @@ public class AbstractRepositoryTest {
     
     @Parameters
     public static Collection<Object[]> testData() {
-        return Arrays.asList(new Object[][] {{"AddressBookEclipseLink"}, {"AddressBookHibernate"}, {"AddressBookOpenJPA"}});
+        return Arrays.asList(new Object[][] {{ECLIPSE_LINK_PERSISTENT_UNIT_NAME}, {HIBERNATE_PERSISTENT_UNIT_NAME}, {OPEN_JPA_PERSISTENT_UNIT_NAME}});
     }
 
     @AfterClass
@@ -211,101 +224,61 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testPersist() {
-        try {
-            addressBookRepository.beginTransaction();
-            Integer id = null;
-            if (persistenceUnitName.contains(OPEN_JPA)) {
-                id = expectedAddress3.getId();
-                expectedAddress3.setId(null);
-            }
-            Address actualAddress3 = addressBookRepository.persist(expectedAddress3);
-            if (persistenceUnitName.contains(OPEN_JPA)) {
-                expectedAddress3.setId(id);
-            }
-            expectedAddress3.setId(actualAddress3.getId());
-            assertReflectionEquals(expectedAddress3, actualAddress3);
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
+        Integer id = null;
+        if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
+            id = expectedAddress3.getId();
+            expectedAddress3.setId(null);
         }
+        Address actualAddress3 = addressBookRepository.persist(expectedAddress3);
+        if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
+            expectedAddress3.setId(id);
+        }
+        expectedAddress3.setId(actualAddress3.getId());
+        assertReflectionEquals(expectedAddress3, actualAddress3);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testPersistNull() {
-        try {
-            addressBookRepository.beginTransaction();
-            addressBookRepository.persist(null);
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.persist(null);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testPersistNonEntity() {
-        try {
-            addressBookRepository.persist(expectedAddress4);
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.persist(expectedAddress4);
     }
 
     @Test
     public void testRemove() {
-        try {
-            addressBookRepository.beginTransaction();
-            addressBookRepository.remove(Address.class, expectedAddress1.getId());
-            assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.remove(Address.class, expectedAddress1.getId());
+        assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
     }
 
     @Test(expected=EntityNotFoundException.class)
     public void testRemoveNot() {
         try {
-            addressBookRepository.beginTransaction();
             addressBookRepository.remove(Address.class, expectedAddress1.getId());
             assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
             addressBookRepository.remove(Address.class, expectedAddress1.getId());
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
+        } catch (OptimisticLockException e) {
+            if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
+                throw new EntityNotFoundException("This is needed to get OpenJPA behaving like EclipseLink.");
+            }
         }
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNullClass() {
-        try {
-            addressBookRepository.beginTransaction();
-            addressBookRepository.remove(null, expectedAddress1.getId());
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.remove(null, expectedAddress1.getId());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNullId() {
-        try {
-            addressBookRepository.beginTransaction();
-            addressBookRepository.remove(Address.class, null);
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.remove(Address.class, null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRemoveNonEntity() {
-        try {
-            addressBookRepository.beginTransaction();
-            addressBookRepository.remove(NonEntityAddress.class, expectedAddress1.getId());
-            addressBookRepository.commitTransaction();
-        } finally {
-            addressBookRepository.rollbackTransaction();
-        }
+        addressBookRepository.remove(NonEntityAddress.class, expectedAddress1.getId());
     }
 
     private IDatabaseConnection getDatabaseConnection() throws Exception {
@@ -313,19 +286,19 @@ public class AbstractRepositoryTest {
         ConnectionFactory.Type type = null;
         
         // Check if the new persistence unit is for EclipseLink.
-        if (persistenceUnitName.contains(ECLIPSE_LINK)) {
+        if (persistenceUnitName.equals(ECLIPSE_LINK_PERSISTENT_UNIT_NAME)) {
             type = ConnectionFactory.Type.ECLIPSE_LINK;
 
         // Check if the new persistence unit is for Hibernate.
-        } else if (persistenceUnitName.contains(HIBERNATE)) {
+        } else if (persistenceUnitName.equals(HIBERNATE_PERSISTENT_UNIT_NAME)) {
             type = ConnectionFactory.Type.HIBERNATE;
 
         // Check if the new persistence unit is for OpenJPA.
-        } else if (persistenceUnitName.contains(OPEN_JPA)) {
+        } else if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
             type = ConnectionFactory.Type.OPEN_JPA;
         }
 
-        return new DatabaseConnection(ConnectionFactory.newInstance(addressBookRepository.getEntityManager()).newConnection(type));
+        return new DatabaseConnection(ConnectionFactory.newInstance(addressBookRepository.getEntityManager()).getConnection(type));
     }
     
     private static IDataSet getDataSet() throws Exception {
@@ -352,8 +325,5 @@ public class AbstractRepositoryTest {
         statement =  databaseConnection.getConnection().createStatement();
         statement.executeUpdate("ALTER TABLE address ALTER COLUMN id RESTART WITH " + (max + 1));
         statement.close();
-        
-         // Close the database connection.
-        databaseConnection.close();
     }
 }

@@ -37,8 +37,8 @@
             <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
             <property name="javax.persistence.jdbc.password" value="addressbookuser"/>
             <property name="hibernate.hbm2ddl.auto" value="create"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyTenSevenDialect"/>
         </properties>
     </persistence-unit>
     <persistence-unit name="AddressBookOpenJPA" transaction-type="RESOURCE_LOCAL">
@@ -54,10 +54,12 @@
             <property name="javax.persistence.jdbc.user" value="addressbookuser"/>
             <property name="javax.persistence.jdbc.password" value="addressbookuser"/>
             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
-            <property name="openjpa.Log" value="SQL=TRACE,SQLDiag=TRACE"/>
+            <property name="openjpa.Log" value="SQL=WARN,SQLDiag=WARN"/>
             <property name="openjpa.jdbc.DBDictionary" value="derby"/>
             <property name="openjpa.ConnectionRetainMode" value="transaction"/>
             <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
+            <property name="openjpa.Optimistic" value="false"/>
+            <property name="openjpa.LockManager" value="none"/>
         </properties>
     </persistence-unit>
 </persistence>

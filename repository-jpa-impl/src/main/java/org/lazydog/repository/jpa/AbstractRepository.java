@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.Repository;
+import org.lazydog.repository.jpa.internal.ConnectionFactory;
 import org.lazydog.repository.jpa.internal.CriteriaImpl;
 
 /**
@@ -189,7 +189,7 @@ public abstract class AbstractRepository implements Repository {
      * @return  the connection.
      */
     protected Connection getConnection() {
-        return ConnectionFactory.newInstance(entityManager).newConnection();
+        return ConnectionFactory.newInstance(this.entityManager).getConnection();
     }
     
     /**
@@ -285,21 +285,12 @@ public abstract class AbstractRepository implements Repository {
         if (id == null) {
             throw new IllegalArgumentException("The ID cannot be null.");
         }
-        
+
         // Get the entity.
         T entity = this.entityManager.getReference(entityClass, id);
-        
-        // Check if the entity exists.
-        // This is needed to get OpenJPA to behave like EclipseLink.
-        if (entity == null) {
-            throw new EntityNotFoundException("The entity with class " + entityClass.getSimpleName() + " and ID " + id + " was not found.");
-        }
 
         // Remove the entity.
         this.entityManager.remove(entity);
-        
-        // Sychronize the persistence context to the database.
-        // This is needed to get Hibernate to behave like EclipseLink.
         this.entityManager.flush();
     }
 
