@@ -35,8 +35,7 @@ public class ConnectionFactory {
     
     public enum Type {
         ECLIPSE_LINK ("org.eclipse.persistence.jpa.JpaEntityManager"),
-        HIBERNATE    ("org.hibernate.ejb.HibernateEntityManager"),
-        OPEN_JPA     ("org.apache.openjpa.persistence.OpenJPAEntityManager");
+        HIBERNATE    ("org.hibernate.ejb.HibernateEntityManager");
         
         private String entityManagerClassName;
         
@@ -99,15 +98,6 @@ public class ConnectionFactory {
     }
 
     /**
-     * Does the OpenJPA package exist.
-     * 
-     * @return  true if the package exists, otherwise false.
-     */
-    private boolean doesOpenJPAPackageExist() {
-        return doesPackageExist(Type.OPEN_JPA.getEntityManagerClassName());
-    }
-    
-    /**
      * Get the connection using EclipseLink.
      * 
      * @return  the connection.
@@ -167,43 +157,7 @@ public class ConnectionFactory {
         
         return connection;
     }
-        
-    /**
-     * Get the connection using OpenJPA.
-     * 
-     * @return  the connection.
-     */
-    private Connection getOpenJPAConnection() {
-        
-        // Initialize the connection.
-        Connection connection = null;
 
-        try {
-            
-            // Begin the transaction.
-            entityManager.getTransaction().begin();
-            
-            // Get the connection using reflection.
-            Class openJPAEntityManagerClass = Class.forName("org.apache.openjpa.persistence.OpenJPAEntityManager");
-            Object openJPAEntityManagerObject = openJPAEntityManagerClass.cast(entityManager);
-            Method getConnectionMethod = openJPAEntityManagerObject.getClass().getMethod("getConnection");
-            connection = (Connection)getConnectionMethod.invoke(openJPAEntityManagerObject);
-            
-            // Commit the transaction.
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            logger.error("Unable to get the OpenJPA connection.", e);
-        } finally {
-            
-            // Rollback the transaction if necessary.
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-        }
-        
-        return connection;
-    }
-    
     /**
      * Get the connection.
      * 
@@ -218,8 +172,6 @@ public class ConnectionFactory {
             connection = this.getEclipseLinkConnection();
         } else if (this.doesHibernatePackageExist()) {
             connection = this.getHibernateConnection();
-        } else if (this.doesOpenJPAPackageExist()) {
-            connection = this.getOpenJPAConnection();
         }
 
         return connection;
@@ -247,11 +199,6 @@ public class ConnectionFactory {
             case HIBERNATE:
                 if (this.doesHibernatePackageExist()) {
                     connection = this.getHibernateConnection();
-                }
-                break;
-            case OPEN_JPA:
-                if (this.doesOpenJPAPackageExist()) {
-                    connection = this.getOpenJPAConnection();
                 }
                 break;
         }

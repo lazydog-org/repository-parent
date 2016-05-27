@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lazydog.repository.jpa.configuration;
+package org.lazydog.repository.jpa.bootstrap;
 
-import org.lazydog.repository.jpa.annotation.PersistenceUnitName;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 
 /**
  * Configuration.
@@ -30,15 +31,14 @@ import javax.enterprise.inject.Produces;
 @ApplicationScoped
 public class Configuration {
 
-    private static String persistenceUnitName;
-    
-    public static void setPersistenceUnitName(final String newPersistenceUnitName) {
-        persistenceUnitName = newPersistenceUnitName;
+    private static EntityManager entityManager;
+
+    public static void createEntityManager(final String persistenceUnitName) {
+        entityManager = Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
     }
     
     @Produces
-    @PersistenceUnitName
-    public static String getPersistenceUnitName() {
-        return persistenceUnitName;
+    public static EntityManager getEntityManager() {
+        return entityManager;
     }
 }

@@ -18,15 +18,8 @@
  */
 package org.lazydog.addressbook;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
 import org.lazydog.repository.jpa.AbstractRepository;
-import org.lazydog.repository.jpa.annotation.PersistenceUnitName;
 
 /**
  * Address book repository.
@@ -36,45 +29,4 @@ import org.lazydog.repository.jpa.annotation.PersistenceUnitName;
 @ApplicationScoped
 public class AddressBookRepository extends AbstractRepository {
 
-    private String persistenceUnitName;
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Transactional
-    @Override
-    public <T> T persist(final T entity) {
-        return super.persist(entity);
-    }
-    
-    @Transactional
-    @Override
-    public <T,U> void remove(final Class<T> entityClass, final U id) {
-        super.remove(entityClass, id);
-    }
-
-    /**
-     * Set the persistence unit name.
-     * 
-     * @param  persistenceUnitName  the persistence unit name.
-     */
-    @Inject 
-    public void setPersistenceUnitName(@PersistenceUnitName final String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
-    }
-
-    /**
-     * Startup the JDNSaaS repository.
-     */
-    @PostConstruct
-    public void startup() {
-
-        // Check if the entity manager was not injected.
-        // This will occur if this is a standalone application or Tomcat.
-        if (this.entityManager == null) {
-            
-            // Set the entity manager using the persistence unit name.
-            this.entityManager = Persistence.createEntityManagerFactory(this.persistenceUnitName).createEntityManager();
-        }
-        this.setEntityManager(this.entityManager);
-    }
 }

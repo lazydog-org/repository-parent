@@ -22,9 +22,12 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.Repository;
 import org.lazydog.repository.jpa.internal.ConnectionFactory;
@@ -35,8 +38,11 @@ import org.lazydog.repository.jpa.internal.CriteriaImpl;
  * 
  * @author  Ron Rickard
  */
+
+@ApplicationScoped
 public abstract class AbstractRepository implements Repository {
 
+    @Inject
     private EntityManager entityManager;
 
     /**
@@ -188,7 +194,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @return  the connection.
      */
-    protected Connection getConnection() {
+    public Connection getConnection() {
         return ConnectionFactory.newInstance(this.entityManager).getConnection();
     }
     
@@ -209,7 +215,7 @@ public abstract class AbstractRepository implements Repository {
      * 
      * @return  the entity manager.
      */
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return this.entityManager;
     }
 
@@ -220,6 +226,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the persisted entity.
      */
+    @Transactional
     @Override
     public <T> T persist(final T entity) {
 
@@ -243,6 +250,7 @@ public abstract class AbstractRepository implements Repository {
      *
      * @return  the persisted list of entities.
      */
+    @Transactional
     @Override
     public <T> List<T> persistList(final List<T> entities) {
 
@@ -271,6 +279,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  entityClass  the entity class.
      * @param  id           the ID.
      */
+    @Transactional
     @Override
     public <T,U> void remove(final Class<T> entityClass, final U id) {
 
@@ -300,6 +309,7 @@ public abstract class AbstractRepository implements Repository {
      * @param  entityClass  the entity class.
      * @param  ids          the IDs.
      */
+    @Transactional
     @Override
     public <T,U> void removeList(final Class<T> entityClass, final List<U> ids) {
 
@@ -309,14 +319,8 @@ public abstract class AbstractRepository implements Repository {
             // Remove the entity.
             this.remove(entityClass, id);
         }
-    }
-
-    /**
-     * Set the entity manager.
-     *
-     * @param  entityManager  the entity manager.
-     */
-    protected void setEntityManager(final EntityManager entityManager) {
-        this.entityManager = entityManager;
+        
+        // Clear the entity manager.
+        this.entityManager.clear();
     }
 }

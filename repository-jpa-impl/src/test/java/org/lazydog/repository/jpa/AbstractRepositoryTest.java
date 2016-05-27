@@ -18,7 +18,6 @@
  */
 package org.lazydog.repository.jpa;
 
-import org.lazydog.repository.jpa.configuration.Configuration;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLNonTransientConnectionException;
@@ -26,7 +25,6 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
-import org.apache.openjpa.persistence.OptimisticLockException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -46,6 +44,7 @@ import org.lazydog.addressbook.model.Address;
 import org.lazydog.addressbook.model.NonEntityAddress;
 import org.lazydog.repository.Criteria;
 import org.lazydog.repository.criterion.Comparison;
+import org.lazydog.repository.jpa.bootstrap.Configuration;
 import org.lazydog.repository.jpa.internal.ConnectionFactory;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -59,14 +58,13 @@ public class AbstractRepositoryTest {
 
     private static final String ECLIPSE_LINK_PERSISTENT_UNIT_NAME = "AddressBookEclipseLink";
     private static final String HIBERNATE_PERSISTENT_UNIT_NAME = "AddressBookHibernate";
-    private static final String OPEN_JPA_PERSISTENT_UNIT_NAME = "AddressBookOpenJPA";
-    private static final String TEST_FILE = "dataset.xml";
+    private static final String TEST_FILE = "META-INF/dataset.xml";
     private static Address expectedAddress1;
     private static Address expectedAddress2;
     private static Address expectedAddress3;
+    private static AddressBookRepository addressBookRepository;
     private static NonEntityAddress expectedAddress4;
     private static String persistenceUnitName;
-    private static AddressBookRepository addressBookRepository;
     private static Weld weld;
     
     /**
@@ -90,17 +88,17 @@ public class AbstractRepositoryTest {
                 }
             }
             
-
             // Create the address book database.
             DriverManager.getConnection("jdbc:derby:memory:./target/addressbook;create=true");
-        
-            Configuration.setPersistenceUnitName(newPersistenceUnitName);
-            
+
             // (Re)Start the weld container.
             if (weld != null) {
                 weld.shutdown();
             }
             weld = new Weld();
+            
+            // Initialize the entity manager.
+            Configuration.createEntityManager(newPersistenceUnitName);
 
             // Get the address book repository.
             addressBookRepository = weld.initialize().instance().select(AddressBookRepository.class).get();
@@ -112,7 +110,7 @@ public class AbstractRepositoryTest {
     
     @Parameters
     public static Collection<Object[]> testData() {
-        return Arrays.asList(new Object[][] {{ECLIPSE_LINK_PERSISTENT_UNIT_NAME}, {HIBERNATE_PERSISTENT_UNIT_NAME}, {OPEN_JPA_PERSISTENT_UNIT_NAME}});
+        return Arrays.asList(new Object[][] {{ECLIPSE_LINK_PERSISTENT_UNIT_NAME}, {HIBERNATE_PERSISTENT_UNIT_NAME}});
     }
 
     @AfterClass
@@ -179,7 +177,7 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testFindNot() {
-        assertNull(addressBookRepository.find(Address.class, new Integer(3)));
+        assertNull(addressBookRepository.find(Address.class, 3));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -202,7 +200,7 @@ public class AbstractRepositoryTest {
     @Test
     public void testFindByCriteriaNot() {
         Criteria<Address> criteria = addressBookRepository.getCriteria(Address.class);
-        criteria.add(Comparison.eq("id", new Integer(3)));
+        criteria.add(Comparison.eq("id", 3));
         assertNull(addressBookRepository.find(Address.class, criteria));
     }
 
@@ -225,15 +223,7 @@ public class AbstractRepositoryTest {
 
     @Test
     public void testPersist() {
-        Integer id = null;
-        if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
-            id = expectedAddress3.getId();
-            expectedAddress3.setId(null);
-        }
         Address actualAddress3 = addressBookRepository.persist(expectedAddress3);
-        if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
-            expectedAddress3.setId(id);
-        }
         expectedAddress3.setId(actualAddress3.getId());
         assertReflectionEquals(expectedAddress3, actualAddress3);
     }
@@ -256,15 +246,9 @@ public class AbstractRepositoryTest {
 
     @Test(expected=EntityNotFoundException.class)
     public void testRemoveNot() {
-        try {
-            addressBookRepository.remove(Address.class, expectedAddress1.getId());
-            assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
-            addressBookRepository.remove(Address.class, expectedAddress1.getId());
-        } catch (OptimisticLockException e) {
-            if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
-                throw new EntityNotFoundException("This is needed to get OpenJPA behaving like EclipseLink.");
-            }
-        }
+        addressBookRepository.remove(Address.class, expectedAddress1.getId());
+        assertNull(addressBookRepository.find(Address.class, expectedAddress1.getId()));
+        addressBookRepository.remove(Address.class, expectedAddress1.getId());
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -293,10 +277,6 @@ public class AbstractRepositoryTest {
         // Check if the new persistence unit is for Hibernate.
         } else if (persistenceUnitName.equals(HIBERNATE_PERSISTENT_UNIT_NAME)) {
             type = ConnectionFactory.Type.HIBERNATE;
-
-        // Check if the new persistence unit is for OpenJPA.
-        } else if (persistenceUnitName.equals(OPEN_JPA_PERSISTENT_UNIT_NAME)) {
-            type = ConnectionFactory.Type.OPEN_JPA;
         }
 
         return new DatabaseConnection(ConnectionFactory.newInstance(addressBookRepository.getEntityManager()).getConnection(type));
